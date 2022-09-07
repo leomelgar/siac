@@ -1,0 +1,48 @@
+<form action="/newColegio" method="POST" class="card bg-black text-light">
+  <div class="card-body p-4">
+    <h1 class="h5 mb-4">Agregar Datos del Colegio</h1>
+
+    <div class="mb-3">
+      <label for="nombre">Nombre:</label>
+      <input
+        type="text"
+        name="nombre"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="escriba el nombre completo"
+        autofocus
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="direccion">Direccion:</label>
+      <input
+        type="text"
+        name="direccion"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="calle n° - Ciudad"
+        required
+      />
+    </div>
+
+    <div class="mb-3">
+      <label for="telefono">telefono:</label>
+      <input
+        type="text"
+        name="telefono"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="+54 codigo area + numero"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="email">Email:</label>
+      <input
+        type="text"
+        name="email"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="ej: colegio@dominio.com.ar"
+      />
+    </div>
+
+    <button class="btn btn-primary">Guardar</button>
+  </div>
+</form>

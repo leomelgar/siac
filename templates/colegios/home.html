@@ -1,0 +1,40 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Colegios | Home
+{% endblock %}
+
+{% block body %}
+
+    <!-- FORM -->
+<div class="row">
+
+  <div class="col-md-4">
+      <!-- MESSAGE -->
+      {% include 'partials/_message.html' %}
+
+      <!-- FORM -->
+      {%  include 'partials/_formColegio.html' %}
+  </div>
+    <!-- contacts list -->
+  <div class="col-md-8">
+    <h2>Gestion de Colegios</h2>
+      {% for colegio in colegios %}
+        <div class="card mb-1 bg-black text-white">
+          <div class="card-body py-2 px-3">
+            <div class="d-flex justify-content-between">
+              <h5 class="card-title h6">{{ colegio.nombre}}</h5>
+              <div>
+                <a href="{{ url_for('colegios.updateColegio', idColegios=colegio.idColegios) }}" class="btn btn-dark btn-sm rounded-0">Edit</a>
+                <a href="{{ url_for('colegios.deleteColegio', idColegios=colegio.idColegios) }}" class="btn btn-danger btn-sm rounded-0">Delete</a>
+              </div>
+            </div>
+            <p class="card-text">{{ colegio.direccion }}</p>
+            <p class="card-text">{{ colegio.telefono }}</p>
+            <p class="card-text">{{ colegio.email }}</p>
+          </div>
+        </div>
+      {% endfor %}
+  </div>
+</div>
+{% endblock %}

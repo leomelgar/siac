@@ -1,0 +1,57 @@
+{% extends "layout.html" %} {% block body %}
+
+<div class="col-md-4 offset-md-4">
+  <div class="card card-body bg-dark text-white">
+    <h1>Actualizar Datos del Colegio</h1>
+
+    <form action="{{url_for('colegios.updateColegio', idColegios=colegio.idColegios)}}" method="POST">
+      <div class="mb-3">
+        <label for="nombre">Nombre:</label>
+        <input
+          type="text"
+          name="nombre"
+          value="{{colegio.nombre}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="escriba el nombre completo"
+          autofocus
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="direccion">Direccion:</label>
+        <input
+          type="text"
+          name="direccion"
+          value="{{colegio.direccion}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="calle n° - Ciudad"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="telefono">telefono:</label>
+        <input
+          type="text"
+          name="telefono"
+          value="{{colegio.telefono}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="+54 codigo area + numero"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email">Email:</label>
+        <input
+          type="text"
+          name="email"
+          value="{{colegio.email}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="ej: colegio@dominio.com.ar"
+        />
+      </div>
+      <button class="btn btn-primary">Actualizar</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

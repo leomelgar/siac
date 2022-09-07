@@ -1,0 +1,133 @@
+{% extends "layout.html" %} {% block body %}
+
+<!-- <div class="col-md-4 offset-md-4 p-5">
+  <div class="card card-body bg-dark text-white">
+    <h1>Actualizar Datos del Docente</h1>
+
+    <form action="{{url_for('docentes.updateDocente', idDocente=docente.idDocente)}}" method="POST">
+      <div class="mb-3">
+        <label for="nombre">Nombre:</label>
+        <input
+          type="text"
+          name="nombre"
+          value="{{docente.nombre}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="escriba el nombre"
+          autofocus
+        />
+      </div>
+      <div class="mb-3">
+        <label for="apellido">Apellido:</label>
+        <input
+          type="text"
+          name="apellido"
+          value="{{docente.apellido}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="escriba el apellido"
+          autofocus
+        />
+      </div>
+      <div class="mb-3">
+        <label for="cuil">Cuil:</label>
+        <input
+          type="text"
+          name="cuil"
+          value="{{docente.cuil}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="Cuil sin guiones"
+          autofocus
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="direccion">Direccion:</label>
+        <input
+          type="text"
+          name="direccion"
+          value="{{docente.direccion}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="calle n° - Ciudad"
+          required
+        />
+      </div>
+
+      <div class="mb-3">
+        <label for="telefono">telefono:</label>
+        <input
+          type="text"
+          name="telefono"
+          value="{{docente.telefono}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="+54 codigo area + numero"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email">Email:</label>
+        <input
+          type="text"
+          name="email"
+          value="{{docente.email}}"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="ej: docente@dominio.com.ar"
+        />
+      </div>
+      <button class="btn btn-primary">Actualizar</button>
+    </form>
+  </div>
+</div> -->
+<div class="container">
+  <div class="row gy-5 justify-content-md-center">
+<div class="col-6 border p-4 border-primary border-3 opacity-75">
+  <div class=""><h3 class="text-white">Actualizar Datos del Docente</h3></div>
+<form action="{{url_for('docentes.updateDocente', idDocente=docente.idDocente)}}" method="POST">
+  <div class="mb-3 row">
+    <div class="col-auto">
+      <label for="nombre" class="col-form-label text-white">Nombre</label>
+    </div>
+    <div class="col-auto">
+      <input type="text" name="nombre" value="{{docente.nombre}}" class="form-control rounded-0 bg-dark border-0 text-white">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <div class="col-auto">
+      <label for="apellido" class="col-form-label text-white">Apellido</label>
+    </div>
+    <div class="col-auto">
+      <input type="text" name="apellido" value="{{docente.apellido}}" class="form-control rounded-0 bg-dark border-0 text-white">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label text-white">Cuil</label>
+    <div class="col-sm-6">
+      <input type="text" name="cuil" value="{{docente.cuil}}" class="form-control rounded-0 bg-dark border-0 text-white">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <div class="col-auto">
+      <label for="direccion" class="col-form-label text-white">Direcion</label>
+    </div>
+    <div class="col-auto">
+      <input type="text" name="direccion" value="{{docente.direccion}}" class="form-control rounded-0 bg-dark border-0 text-white">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <div class="col-auto">
+      <label for="telefono" class="col-form-label text-white">Telefono</label>
+    </div>
+    <div class="col-auto">
+      <input type="text" name="telefono" value="{{docente.telefono}}" class="form-control rounded-0 bg-dark border-0 text-white">
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <label for="staticEmail" class="col-sm-2 col-form-label text-white">Email</label>
+    <div class="col-sm-6">
+      <input type="text" name="email" value="{{docente.email}}" class="form-control rounded-0 bg-dark border-0 text-white">
+    </div>
+  </div>
+  <button class="btn btn-primary">Actualizar</button>
+</form>
+</div>
+</div>
+</div>
+
+{% endblock %}
