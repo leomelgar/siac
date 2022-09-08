@@ -6,7 +6,7 @@ class Colegio(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
     docentes = db.relationship('Docente',backref='colegio', lazy='dynamic')
-    alumnos = db.relationship('Alumno',backref='colegio', lazy='dynamic')
+    #alumnos = db.relationship('Alumno',backref='colegio', lazy='dynamic')
 
     def __init__(self, nombre, direccion, telefono, email):
         self.nombre=nombre
@@ -35,29 +35,50 @@ class Docente(db.Model):
         self.email=email
         self.colegio_id=colegio_id
 
+class Tutor(db.Model):
+    idTutor = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(45))
+    apellido = db.Column(db.String(45))
+    cuil = db.Column(db.String(15))
+    parentezco = db.Column(db.String(8))
+    direccion = db.Column(db.String(100))
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(200))
+    alumnos = db.relationship('Alumno',backref='tutor', lazy='dynamic')
+    
+    def __init__(self, nombre, apellido, cuil, parentezco, direccion, telefono, email):
+        self.nombre=nombre
+        self.apellido=apellido
+        self.cuil=cuil
+        self.parentezco=parentezco
+        self.direccion=direccion
+        self.telefono=telefono
+        self.email=email
+        
+
 class Alumno(db.Model):
     idAlumno = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(45))
     apellido = db.Column(db.String(45))
     cuil = db.Column(db.String(15))
     fechaNac = db.Column(db.Date)
+    sexo = db.Column(db.String(10))
     direccion = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
-    fechaInscripcion = db.Column(db.Date) #fecha de alta del alumno, cuando se inscribe por primera vez en el colegio
-    reInscripcion = db.Column(db.Date, nullable=True) #reinscripto-fecha en la cual se volvio a inscribir, para cursar otro año
-    añoCursada = db.Column(db.String(8), nullable=True)#el año que esta cursando el alumno
-    colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
+    tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
+    #fechaInscripcion = db.Column(db.Date) #fecha de alta del alumno, cuando se inscribe por primera vez en el colegio
+    #reInscripcion = db.Column(db.Date, nullable=True) #reinscripto-fecha en la cual se volvio a inscribir, para cursar otro año
+    #añoCursada = db.Column(db.String(8), nullable=True)#el año que esta cursando el alumno
+    #colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
 
-    def __init__(self, nombre, apellido, cuil, fechaNac, direccion, telefono, email, fechaInscripcion, reInscripcion, añoCursada, colegio_id):
+    def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, tutor_id):
         self.nombre=nombre
         self.apellido=apellido
         self.cuil=cuil
         self.fechaNac=fechaNac
+        self.sexo=sexo
         self.direccion=direccion
         self.telefono=telefono
         self.email=email
-        self.fechaInscripcion=fechaInscripcion
-        self.reInscripcion=reInscripcion
-        self.añoCursada=añoCursada
-        self.colegio_id=colegio_id
+        self.tutor_id=tutor_id

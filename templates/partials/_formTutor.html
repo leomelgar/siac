@@ -1,0 +1,40 @@
+<form action="/newTutor" method="POST" class="row g-3">
+  <div class="col-md-6">
+    <label for="nombre" class="form-label">Nombre</label>
+    <input type="text" name="nombre" class="form-control" >
+  </div>
+  <div class="col-md-6">
+    <label for="apellido" class="form-label">Apellido</label>
+    <input type="text" name="apellido" class="form-control">
+  </div>
+  <div class="col-12">
+    <label for="direccion" class="form-label">Direccion</label>
+    <input type="text" class="form-control" name="direccion" placeholder="calle - nro - ciudad ">
+  </div>
+  <div class="col-md-6">
+    <label for="cuil" class="form-label">Cuil</label>
+    <input type="text" class="form-control" name="cuil" placeholder="nro de cuil sin guiones">
+  </div>
+  <div class="col-md-6">
+    <label for="inputState" class="form-label">Parentezco</label>
+    <select name="parentezco" class="form-select">
+      <option selected>elegir...</option>
+      <option>Padre</option>
+      <option>Madre</option>
+      <option>Hermano/a</option>
+      <option>Abuelo/a</option>
+      <option>Otro</option>
+    </select>
+  </div>
+  <div class="col-md-6">
+    <label for="telefono" class="form-label">Telefono</label>
+    <input type="text" class="form-control" name="telefono" placeholder="cod area + nro celular o fijo">
+  </div>
+  <div class="col-6">
+    <label for="email" class="form-label">Email</label>
+    <input type="email" class="form-control" name="email" placeholder="usuario@dominio">
+  </div>
+  <div class="col-12">
+    <button type="submit" class="btn btn-primary">Guardar</button>
+  </div>
+</form>

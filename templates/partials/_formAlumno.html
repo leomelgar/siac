@@ -1,6 +1,17 @@
 <form action="/newAlumno" method="POST" class="card bg-black text-light">
     <div class="card-body p-4">
       <div class="mb-3">
+        <label for="tutor">tutor:</label>
+        <input
+          type="text"
+          name="tutor_id"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          value="{{ tutor.idTutor }}"
+          autofocus
+          required
+        />
+      </div>
+      <div class="mb-3">
         <label for="nombre">Nombre:</label>
         <input
           type="text"
@@ -42,6 +53,16 @@
         />
       </div>
       <div class="mb-3">
+        <label for="cuil">Sexo:</label>
+        <input
+          type="text"
+          name="sexo"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="Masculino - Femenino - Otro"
+          required
+        />
+      </div>
+      <div class="mb-3">
         <label for="direccion">Direccion:</label>
         <input
           type="text"
@@ -68,17 +89,7 @@
           class="form-control rounded-0 bg-dark border-0 text-white"
           placeholder="ej: colegio@dominio.com.ar"
         />
-      </div>
-      <div class="mb-3">
-        <label for="cuil">Fecha Inscripcion:</label>
-        <input
-          type="date"
-          name="fechaInscripcion"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          required
-        />
-      </div>
-  
+      </div>  
       <button class="btn btn-primary">Guardar</button>
     </div>
   </form>
