@@ -2,6 +2,7 @@ from flask import Flask
 from routes.contacts import contacts
 from routes.colegios import colegios
 from routes.docentes import docentes
+from routes.alumnos import alumnos
 from flask_sqlalchemy import SQLAlchemy
 from config import DATABASE_CONNECTION_URI
 
@@ -21,3 +22,4 @@ SQLAlchemy(app)
 app.register_blueprint(contacts)
 app.register_blueprint(colegios)
 app.register_blueprint(docentes)
+app.register_blueprint(alumnos)

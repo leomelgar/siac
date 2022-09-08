@@ -1,0 +1,131 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Alumnos | Home
+{% endblock %}
+
+{% block body %}
+    <!-- FORM -->
+<div class="row">
+  <div class="col-md-3">
+   <!-- menu lateral -->
+    <div class="flex-shrink-0 p-3 bg-white">
+      <a href="#" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
+        <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
+        <span class="fs-5 fw-semibold">Menu</span>
+      </a>
+      <ul class="list-unstyled ps-0">
+        <li class="mb-1">
+          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+            Alumnos
+          </button>
+          <div class="collapse show" id="home-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Consultas</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Notificaciones</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Reportes</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="border-top my-3"></li>
+          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
+            Asignaturas
+          </button>
+          <div class="collapse" id="dashboard-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Overview</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Weekly</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Monthly</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Annually</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="border-top my-3"></li>
+          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
+            Orders
+          </button>
+          <div class="collapse" id="orders-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">New</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Processed</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Shipped</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Returned</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="border-top my-3"></li>
+        <li class="mb-1">
+          <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#account-collapse" aria-expanded="false">
+            Account
+          </button>
+          <div class="collapse" id="account-collapse">
+            <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">New...</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Profile</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Settings</a></li>
+              <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Sign out</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div> 
+  <div class="col-md-9">
+       <!-- MESSAGE -->
+       {% include 'partials/_message.html' %}
+       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarDocente">
+         Agregar Alumno
+       </button>
+       <!-- Modal Agregar Alumno-->
+           <div class="modal fade" id="agregarDocente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+             <div class="modal-dialog modal-dialog-scrollable">
+               <div class="modal-content">
+                 <div class="modal-header">
+                   <h5 class="modal-title" id="exampleModalLabel">Agregar Datos del Alumno</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 </div>
+                 <div class="modal-body">
+                   {%  include 'partials/_formAlumno.html' %}
+                 </div>
+                 <div class="modal-footer">
+                   <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
+                   <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                 </div>
+               </div>
+             </div>
+           </div>
+    <h2 class="text-secondary">Gestion Alumnos</h2>
+    <table class="table table-dark table-hover">
+      <thead>
+        <tr>
+          <th scope="col">Apellido</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Cuil</th>
+          <th scope="col">Fecha Nac</th>
+          <th scope="col">Direccion</th>
+          <th scope="col">Telefono</th>
+          <th scope="col">Email</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alumno in alumnos %}
+        <tr>
+          <td>{{alumno.apellido}}</td>
+          <td>{{alumno.nombre}}</td>
+          <td>{{alumno.cuil}}</td>
+          <td>{{alumno.fechNac}}</td>
+          <td>{{alumno.direccion}}</td>
+          <td>{{alumno.telefono}}</td>
+          <td>{{alumno.email}}</td>
+          <td><div>
+            <a href="#" class="btn btn-outline-secondary btn-sm rounded-0">Edit</a>
+            <a href="#" class="btn btn btn-outline-danger btn-sm rounded-0">Delete</a>
+          </div></td>
+        </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

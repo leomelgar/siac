@@ -44,10 +44,10 @@ class Alumno(db.Model):
     direccion = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
-    fechaInscripcion = db.Column(db.DateTime)
-    reInscripcion = db.Column(db.DateTime)
-    añoCursada = db.Column(db.String(1))
-    colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'))
+    fechaInscripcion = db.Column(db.Date) #fecha de alta del alumno, cuando se inscribe por primera vez en el colegio
+    reInscripcion = db.Column(db.Date, nullable=True) #reinscripto-fecha en la cual se volvio a inscribir, para cursar otro año
+    añoCursada = db.Column(db.String(8), nullable=True)#el año que esta cursando el alumno
+    colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
 
     def __init__(self, nombre, apellido, cuil, fechaNac, direccion, telefono, email, fechaInscripcion, reInscripcion, añoCursada, colegio_id):
         self.nombre=nombre
