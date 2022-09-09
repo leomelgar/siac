@@ -9,9 +9,30 @@ def home():
     alumnos = Alumno.query.all()
     return render_template('/alumnos/home.html', alumnos=alumnos)
 
-@alumnos.route('/inscripcion')
+# @alumnos.route('/inscripcion')
+# def inscripcion():
+#     #tutores = Tutor.query.all()
+#     return render_template('/alumnos/new.html')
+
+# @alumnos.route('/browserTutor', methods=["POST","GET"])
+# def show_tutor():
+#     if request.method == "POST" and 'tag' in request.form:
+#         tag = request.fomr['tag']
+#         search = "%{}%".format(tag)
+#         tutor = Tutor.query.filter(Tutor.apellido.like(search))
+#         #print (tutor.idTutor) 
+#         return render_template('/alumnos/new.html', tutor=tutor)
+
+@alumnos.route('/inscripcion', methods=["POST","GET"])
+#@alumnos.route('/inscripcion/<tutor>', methods=["POST","GET"])
 def inscripcion():
-     return render_template('/alumnos/new.html')
+    tutores = Tutor.query.order_by(Tutor.apellido.asc())
+    if request.method == "POST" and 'tag' in request.form:
+        tag = request.form['tag']
+        search = "%{}%".format(tag)
+        tutores = Tutor.query.filter(Tutor.apellido.like(search))
+        return render_template('/alumnos/new.html', tutores=tutores, tag=tag)
+    return render_template('/alumnos/new.html', tutores=tutores)
 
 @alumnos.route('/newTutor', methods=['POST'])
 def new_tutor():
@@ -41,7 +62,7 @@ def new_alumno():
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
-        tutor_id = request.form['idTutor']
+        tutor_id = request.form['tutor_id']
         #fechaInscripcion = request.form['fechaInscripcion']
         #reInscripcion = "2022/09/09" #realizar correccion. ver el tema de un alumno cuando se reinscribe
         #añoCursada = "primer" #realizar correccion para asignar el año de cursada
