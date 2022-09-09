@@ -1,19 +1,19 @@
 <form action="/newTutor" method="POST" class="row g-3">
   <div class="col-md-6">
     <label for="nombre" class="form-label">Nombre</label>
-    <input type="text" name="nombre" class="form-control" >
+    <input type="text" name="nombre" class="form-control" required >
   </div>
   <div class="col-md-6">
     <label for="apellido" class="form-label">Apellido</label>
-    <input type="text" name="apellido" class="form-control">
+    <input type="text" name="apellido" class="form-control" required>
   </div>
   <div class="col-12">
     <label for="direccion" class="form-label">Direccion</label>
-    <input type="text" class="form-control" name="direccion" placeholder="calle - nro - ciudad ">
+    <input type="text" class="form-control" name="direccion" placeholder="calle - nro - ciudad " required>
   </div>
   <div class="col-md-6">
     <label for="cuil" class="form-label">Cuil</label>
-    <input type="text" class="form-control" name="cuil" placeholder="nro de cuil sin guiones">
+    <input type="text" class="form-control" name="cuil" placeholder="nro de cuil sin guiones" required>
   </div>
   <div class="col-md-6">
     <label for="inputState" class="form-label">Parentezco</label>
@@ -28,7 +28,7 @@
   </div>
   <div class="col-md-6">
     <label for="telefono" class="form-label">Telefono</label>
-    <input type="text" class="form-control" name="telefono" placeholder="cod area + nro celular o fijo">
+    <input type="text" class="form-control" name="telefono" placeholder="cod area + nro celular o fijo" required>
   </div>
   <div class="col-6">
     <label for="email" class="form-label">Email</label>
