@@ -32,7 +32,7 @@ def inscripcion():
         search = "%{}%".format(tag)
         tutores = Tutor.query.filter(Tutor.apellido.like(search))
         return render_template('/alumnos/new.html', tutores=tutores, tag=tag)
-    return render_template('/alumnos/new.html', tutores=tutores)
+    return render_template('/alumnos/new.html')
 
 @alumnos.route('/newTutor', methods=['POST'])
 def new_tutor():
