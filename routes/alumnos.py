@@ -20,7 +20,7 @@ def home():
 #         tag = request.fomr['tag']
 #         search = "%{}%".format(tag)
 #         tutor = Tutor.query.filter(Tutor.apellido.like(search))
-#         #print (tutor.idTutor) 
+#         #print (tutor.idTutor)
 #         return render_template('/alumnos/new.html', tutor=tutor)
 
 @alumnos.route('/inscripcion', methods=["POST","GET"])
