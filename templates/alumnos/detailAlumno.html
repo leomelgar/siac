@@ -38,7 +38,7 @@
                 <td>{{alumno.telefono}}</td>
                 <td>{{alumno.email}}</td>
                 <td><div>
-                  <a href="#" class="btn-outline-info btn-sm rounded-0">Editar</a>
+                  <a href="#" class="btn btn btn-outline-info btn-sm rounded-0">Editar</a>
                 </div></td>
               </tr>
                 {% endif %}
@@ -48,7 +48,26 @@
       </div>
       <div class="row">
         <div class="col-md-6 themed-grid-col">
-            Matricula
+          <h2 class="text-secondary">Matricula</h2>
+          <hr class="my-4">
+          <div class="card text-center mb-1 bg-black text-white">
+            <div class="card-body py-2 px-3">
+              <div class="">
+                <ul class="list-group">
+                  <li class="list-group-item">
+                    <label class="form-check-label">Fecha Alta:</label>
+                    {{matricula.fechaInscripcion}}
+                  </li>
+                  <li class="list-group-item">
+                    <label class="form-check-label">Condicion:</label>{{matricula.condicionIngreso}}
+                  </li>
+                  <li class="list-group-item">
+                    <label class="form-check-label">Cursa:</label>{{matricula.añoAcademico}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
         <div class="col-md-6 themed-grid-col">Estado Academico</div>
       </div>
@@ -61,19 +80,19 @@
             <div class="d-flex justify-content-between">
             <form>
                 <div class="row mb-6 p-2">
-                  <label for="inputEmail3" class="col-sm-6 col-form-label">Apellido</label>
+                  <label class="col-sm-6 col-form-label">Apellido</label>
                   <div class="col-sm-6">
                     <span type="email" class="form-control">Apellido</span>
                   </div>
                 </div>
                 <div class="row mb-6 p-2">
-                  <label for="inputPassword3" class="col-sm-6 col-form-label">Nombre</label>
+                  <label class="col-sm-6 col-form-label">Nombre</label>
                   <div class="col-sm-6">
                     <span type="email" class="form-control">Nombre</span>
                   </div>
                 </div>
                 <div class="row mb-6 p-2">
-                    <label for="inputPassword3" class="col-sm-6 col-form-label">Parentezco</label>
+                    <label class="col-sm-6 col-form-label">Parentezco</label>
                     <div class="col-sm-6">
                       <span type="email" class="form-control">Parentezco</span>
                     </div>

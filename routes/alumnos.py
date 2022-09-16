@@ -15,18 +15,17 @@ def view(alumno):
     alumno = Alumno.query.get(alumno)
     return render_template('/alumnos/view.html', alumno=alumno)
 
-def calculateAge(birthDate):
+def calculateAge(birthDate):#funcion para calcular la edad del alumno
     today = date.today()
     age = today.year-birthDate.year-((today.month, today.day)<(birthDate.month, birthDate.day))
     return age
-
-print(calculateAge(date(1997, 2, 3)), "years")
 
 @alumnos.route('/alumnos/detailAlumno/<alumno>', methods=["POST","GET"])
 def detailAlumno(alumno):
     alumno = Alumno.query.get(alumno)
     age = calculateAge(alumno.fechaNac)
-    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age)
+    matricula = Matricula.query.get(alumno.idAlumno)
+    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age, matricula=matricula)
 
 @alumnos.route('/inscripcion', methods=["POST","GET"])
 @alumnos.route('/inscripcion/<tutor>', methods=["POST","GET"])
