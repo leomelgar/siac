@@ -40,17 +40,17 @@ class Tutor(db.Model):
     nombre = db.Column(db.String(45))
     apellido = db.Column(db.String(45))
     cuil = db.Column(db.String(15))
-    parentezco = db.Column(db.String(8))
+    parentesco = db.Column(db.String(8))
     direccion = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
     alumnos = db.relationship('Alumno',backref='tutor', lazy='dynamic')
     
-    def __init__(self, nombre, apellido, cuil, parentezco, direccion, telefono, email):
+    def __init__(self, nombre, apellido, cuil, parentesco, direccion, telefono, email):
         self.nombre=nombre
         self.apellido=apellido
         self.cuil=cuil
-        self.parentezco=parentezco
+        self.parentesco=parentesco
         self.direccion=direccion
         self.telefono=telefono
         self.email=email
