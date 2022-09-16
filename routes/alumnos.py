@@ -24,8 +24,9 @@ def calculateAge(birthDate):#funcion para calcular la edad del alumno
 def detailAlumno(alumno):
     alumno = Alumno.query.get(alumno)
     age = calculateAge(alumno.fechaNac)
-    matricula = Matricula.query.get(alumno.idAlumno)
-    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age, matricula=matricula)
+    matricula = Matricula.query.filter_by(alumno_id=alumno.idAlumno).first()
+    tutor = Tutor.query.get(alumno.tutor_id)
+    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age, matricula=matricula, tutor=tutor)
 
 @alumnos.route('/inscripcion', methods=["POST","GET"])
 @alumnos.route('/inscripcion/<tutor>', methods=["POST","GET"])
@@ -47,12 +48,12 @@ def new_tutor():
         nombre = request.form['nombre']
         apellido = request.form['apellido']
         cuil = request.form['cuil']
-        parentezco = request.form['parentezco']
+        parentesco = request.form['parentesco']
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
 
-        new_tutor = Tutor(nombre, apellido, cuil, parentezco, direccion, telefono, email)
+        new_tutor = Tutor(nombre, apellido, cuil, parentesco, direccion, telefono, email)
         db.session.add(new_tutor)
         db.session.commit()
         flash('Tutor Agregado Correctamente!')

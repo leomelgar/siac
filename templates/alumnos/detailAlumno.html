@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-  Matricula
+  Informacion Alumno
 {% endblock %}
 
 {% block body %}
@@ -55,6 +55,10 @@
               <div class="">
                 <ul class="list-group">
                   <li class="list-group-item">
+                    <label class="form-check-label">n° Matricula:</label>
+                    {{matricula.idMatricula}}
+                  </li>
+                  <li class="list-group-item">
                     <label class="form-check-label">Fecha Alta:</label>
                     {{matricula.fechaInscripcion}}
                   </li>
@@ -69,7 +73,10 @@
             </div>
           </div>
         </div>
-        <div class="col-md-6 themed-grid-col">Estado Academico</div>
+        <div class="col-md-6 themed-grid-col">
+          <h2 class="text-secondary">Estado Academico</h2>
+        <hr class="my-4">
+        </div>
       </div>
     </div>
     <div class="col-md-4 themed-grid-col">
@@ -77,26 +84,44 @@
         <hr class="my-4">
         <div class="card mb-1 bg-black text-white">
           <div class="card-body py-2 px-3">
-            <div class="d-flex justify-content-between">
+            <div class="justify-content-between">
             <form>
                 <div class="row mb-6 p-2">
-                  <label class="col-sm-6 col-form-label">Apellido</label>
-                  <div class="col-sm-6">
-                    <span type="email" class="form-control">Apellido</span>
+                  <label class="col-sm-5 col-form-label">Apellido</label>
+                  <div class="col-sm-7">
+                    <span type="email" class="form-control">{{tutor.apellido}}</span>
                   </div>
                 </div>
                 <div class="row mb-6 p-2">
-                  <label class="col-sm-6 col-form-label">Nombre</label>
-                  <div class="col-sm-6">
-                    <span type="email" class="form-control">Nombre</span>
+                  <label class="col-sm-5 col-form-label">Nombre</label>
+                  <div class="col-sm-7">
+                    <span type="email" class="form-control">{{tutor.nombre}}</span>
                   </div>
                 </div>
                 <div class="row mb-6 p-2">
-                    <label class="col-sm-6 col-form-label">Parentezco</label>
-                    <div class="col-sm-6">
-                      <span type="email" class="form-control">Parentezco</span>
+                    <label class="col-sm-5 col-form-label">Parentesco</label>
+                    <div class="col-sm-7">
+                      <span type="email" class="form-control">{{tutor.parentesco}}</span>
                     </div>
+                </div>
+                <div class="row mb-6 p-2">
+                  <label class="col-sm-5 col-form-label">Direccion</label>
+                  <div class="col-sm-7">
+                    <span type="email" class="form-control">{{tutor.direccion}}</span>
                   </div>
+                </div>
+                <div class="row mb-6 p-2">
+                  <label class="col-sm-5 col-form-label">Telefono</label>
+                  <div class="col-sm-7">
+                    <span type="email" class="form-control">{{tutor.telefono}}</span>
+                  </div>
+                </div>
+                <div class="row mb-6 p-2">
+                  <label class="col-sm-5 col-form-label">Email</label>
+                  <div class="col-sm-7">
+                    <span type="email" class="form-control">{{tutor.email}}</span>
+                  </div>
+                </div>
               </form>
               </div>
           </div>
