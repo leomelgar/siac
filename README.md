@@ -1,14 +1,16 @@
-## Flask SQLAlchemy CRUD
+## SIAC - Sistema Integral de Administracion de un Colegio
 
-this project is a CRUD application using flask and mysql using SQLAlchemy
-
-### Installation with docker-compose
-
-```
-git clone https://github.com/FaztWeb/flask-sqlalchemy-crud
-cd flask-sqlalchemy-crud
-docker-compose up
-```
+Este proyecto tiene como base un ejemplo CRUD realizado por FaztWeb con flask, mysql y SQLAlchemy en Python.
+## Descripcion del Proyecto
+Es un sistema para usar en un colegio secundario para gestionar los docentes y alumnos. 
+## Gestion Docente
+    -   CRUD de docentes 
+    -   control de asistencia
+## Gestion Alumnos
+    -   CRUD de alumnos
+        -   pre-inscripcion, se registran los datos del potencial alumno como asi tambien de un tutor responsable.
+    -   Matricula. es la inscripcion del alumno.
+    -   Control de asistencia
 
 ### Manual Installation
 
@@ -28,8 +30,8 @@ MYSQL_PORT=
 ```
 
 ```
-git clone https://github.com/FaztWeb/flask-sqlalchemy-crud
-cd flask-sqlalchemy-crud
+git clone https://github.com/leomelgar/siac
+cd siac
 pip install -r requirements.txt
 python index.py
 ```

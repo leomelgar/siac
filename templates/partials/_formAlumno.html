@@ -1,0 +1,96 @@
+<form action="/newAlumno" method="POST" class="card bg-black text-light">
+    <div class="card-body p-4">
+      <div class="mb-3">
+        <label for="tutor">tutor:</label>
+        <input
+          type="text"
+          name="tutor_id"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          value="{{ tutor.idTutor }}"
+          autofocus
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="nombre">Nombre:</label>
+        <input
+          type="text"
+          name="nombre"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="escriba el nombre"
+          autofocus
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="apellido">Apellido:</label>
+        <input
+          type="text"
+          name="apellido"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="escriba el apellido"
+          autofocus
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="cuil">Cuil:</label>
+        <input
+          type="text"
+          name="cuil"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="cuil sin guiones"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="cuil">Fecha de Nacimiento:</label>
+        <input
+          type="date"
+          name="fechaNac"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="cuil">Sexo:</label>
+        <input
+          type="text"
+          name="sexo"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="Masculino - Femenino - Otro"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="direccion">Direccion:</label>
+        <input
+          type="text"
+          name="direccion"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="calle n° - Ciudad"
+          required
+        />
+      </div>
+      <div class="mb-3">
+        <label for="telefono">telefono:</label>
+        <input
+          type="text"
+          name="telefono"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="+54 codigo area + numero"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="email">Email:</label>
+        <input
+          type="text"
+          name="email"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          placeholder="ej: colegio@dominio.com.ar"
+        />
+      </div>  
+      <button class="btn btn-primary">Guardar</button>
+    </div>
+  </form>
+  
