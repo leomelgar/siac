@@ -28,18 +28,31 @@ def detailAlumno(alumno):
     tutor = Tutor.query.get(alumno.tutor_id)
     return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age, matricula=matricula, tutor=tutor)
 
-@alumnos.route('/inscripcion', methods=["POST","GET"])
-@alumnos.route('/inscripcion/<tutor>', methods=["POST","GET"])
-def inscripcion():
-    # if request.method == "POST":
-
-    # tutores = Tutor.query.order_by(Tutor.apellido.asc())
-    if request.method == "POST" and 'tag' in request.form:
+@alumnos.route('/searchTutor', methods=['POST'])#buscar un tutor antes de tomar los datos del futuro alumno
+def search_tutor():
+    #if request.method == "POST" and 'tag' in request.form:
+    if request.method == "POST":
         tag = request.form['tag']
         search = "%{}%".format(tag)
-        #tutores = Tutor.query.filter_by(apellido=search).first()
+        #tutor = Tutor.query.filter_by(apellido=search).first()
         tutores = Tutor.query.filter(Tutor.apellido.like(search))
         return render_template('/alumnos/new.html', tutores=tutores, tag=tag)
+
+@alumnos.route('/inscripcionConTutor/<tutor>', methods=["POST","GET"])
+def inscripcion_tutor(tutor):
+    print(tutor)
+    return render_template('/alumnos/new.html', tutor=tutor)
+
+
+@alumnos.route('/inscripcion')
+#@alumnos.route('/inscripcion/<tutor>', methods=["POST","GET"])
+def inscripcion():
+    # tutores = Tutor.query.order_by(Tutor.apellido.asc())
+    #if request.method == "POST":
+    #     tag = request.form['tag']
+    #     search = "%{}%".format(tag)
+    #     tutores = Tutor.query.filter(Tutor.apellido.like(search))
+    #     return render_template('/alumnos/new.html', tutor=tutor)
     return render_template('/alumnos/new.html')
 
 @alumnos.route('/newTutor', methods=['POST'])
