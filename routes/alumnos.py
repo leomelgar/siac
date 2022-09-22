@@ -110,3 +110,20 @@ def matricular(alumno_id):
         flash('matricula realizada correctamente, ya es Alumno!')
         return redirect(url_for('alumnos.home'))
     return render_template('/alumnos/matricula.html', alumno=alumno)
+
+@alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
+def update_alumno(alumno):
+    alumno = Alumno.query.get(alumno)
+    if request.method == "POST":
+        alumno.nombre = request.form['nombre']
+        alumno.apellido = request.form['apellido']
+        alumno.cuil = request.form['cuil']
+        alumno.fechaNac = request.form['fechaNac']
+        alumno.sexo = request.form['sexo']
+        alumno.direccion = request.form['direccion']
+        alumno.telefono = request.form['telefono']
+        alumno.email = request.form['email']
+        db.session.commit()
+        flash('Datos Actualizados!')
+        return redirect(url_for('alumnos.detailAlumno', alumno=alumno.idAlumno))
+    return render_template("/alumnos/updateAlumno.html", alumno=alumno)
