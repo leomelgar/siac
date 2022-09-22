@@ -92,15 +92,16 @@ def new_alumno():
         #return render_template('/alumnos/view.html', alumno=alumno)
         return redirect(url_for('alumnos.view', alumno=new_alumno.idAlumno))
 
-@alumnos.route('/alumnos/matricula/<alumno>', methods=["POST", "GET"])
-def matricular(alumno):
+@alumnos.route('/alumnos/matricula/<alumno_id>', methods=["POST", "GET"])
+def matricular(alumno_id):
+    alumno = Alumno.query.get(alumno_id)
     if request.method == "POST":
         fechaInscripcion = request.form['fechaInscripcion']
         reInscripcion = request.form['reInscripcion']
         añoAcademico = request.form['añoAcademico']
         condicionIngreso = request.form['condicionIngreso']
-        alumno_id = alumno
-        colegio_id = 4 #falta añadir logica para asignar el colegio
+        alumno_id = alumno_id
+        colegio_id = 8 #falta añadir logica para asignar el colegio
 
         new_matricula = Matricula(fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id)
         db.session.add(new_matricula)
