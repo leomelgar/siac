@@ -100,7 +100,7 @@ def matricular(alumno):
         añoAcademico = request.form['añoAcademico']
         condicionIngreso = request.form['condicionIngreso']
         alumno_id = alumno
-        colegio_id = 8
+        colegio_id = 4 #falta añadir logica para asignar el colegio
 
         new_matricula = Matricula(fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id)
         db.session.add(new_matricula)
