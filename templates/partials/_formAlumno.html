@@ -1,16 +1,20 @@
 <form action="/newAlumno" method="POST" class="card bg-black text-light">
     <div class="card-body p-4">
+      {% if tutor %}
       <div class="mb-3">
-        <label for="tutor">Tutor:</label>
-        <input
-          type="text"
+        <label for="tutor">Tutor:</label><h3>{{tutor.apellido}}, {{tutor.nombre}}</h3>
+        <!-- <label for="tutor_id" name="tutor_id" value="{{tutor.idTutor}}"></label> -->
+        <input type="text"
           name="tutor_id"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          value="{{tutor}}"
+          class="form-control-plaintext invisible"
+          value="{{tutor.idTutor}}"
           autofocus
+          readonly
           required
         />
+        {% endif %}
       </div>
+      
       <div class="mb-3">
         <label for="nombre">Nombre:</label>
         <input

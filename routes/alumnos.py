@@ -40,8 +40,9 @@ def search_tutor():
 
 @alumnos.route('/inscripcionConTutor/<tutor>', methods=["POST","GET"])
 def inscripcion_tutor(tutor):
-    print(tutor)
-    return render_template('/alumnos/new.html', tutor=tutor)
+    t = Tutor.query.get(tutor)
+    print(t.apellido)
+    return render_template('/alumnos/new.html', tutor=t)
 
 
 @alumnos.route('/inscripcion')
