@@ -1,3 +1,4 @@
+from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.colege import Alumno, Tutor, Matricula
 from utils.db import db
@@ -5,9 +6,17 @@ from datetime import date
 
 alumnos = Blueprint("alumnos", __name__)
 
-@alumnos.route('/alumnos/home') #listado de alumnos
+@alumnos.route('/alumnos/home', methods=["POST","GET"]) #listado de alumnos
 def home():
     alumnos = Alumno.query.all()
+    if request.method == "POST" and 'tag' in request.form:
+        tag = request.form['tag']
+        search = "%{}%".format(tag)
+        alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+        if not alumnos:
+            flash('No existe registro...')
+        else:
+            return render_template('/alumnos/home.html', alumnos=alumnos)
     return render_template('/alumnos/home.html', alumnos=alumnos)
 
 @alumnos.route('/alumnos/view/<alumno>', methods=["POST", "GET"]) #vista de alumno luego de pre-inscripcion, deriva a la vista para matricular
