@@ -80,7 +80,7 @@ def new_tutor():
         db.session.add(new_tutor)
         db.session.commit()
         flash('Tutor Agregado Correctamente!')
-        return render_template('/alumnos/new.html', tutor=new_tutor.idTutor)
+        return render_template('/alumnos/new.html', tutor=new_tutor)
 
 @alumnos.route('/newAlumno', methods=['POST'])
 def new_alumno():
