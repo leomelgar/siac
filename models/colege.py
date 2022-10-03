@@ -45,7 +45,7 @@ class Tutor(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
     alumnos = db.relationship('Alumno',backref='tutor', lazy='dynamic')
-    
+
     def __init__(self, nombre, apellido, cuil, parentesco, direccion, telefono, email):
         self.nombre=nombre
         self.apellido=apellido
@@ -54,7 +54,7 @@ class Tutor(db.Model):
         self.direccion=direccion
         self.telefono=telefono
         self.email=email
-        
+
 
 class Alumno(db.Model):
     idAlumno = db.Column(db.Integer, primary_key=True)
@@ -97,4 +97,12 @@ class Matricula(db.Model):
         self.condicionIngreso=condicionIngreso
         self.alumno_id=alumno_id
         self.colegio_id=colegio_id
-       
+
+class Asignatura(db.Model):
+    idAsignatura = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(20))
+    descripcion = db.Column(db.String(50))
+
+    def __init__(self, nombre, descripcion):
+        self.nombre = nombre
+        self.descripcion = descripcion
