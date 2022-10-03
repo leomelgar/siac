@@ -12,14 +12,14 @@
     </div> 
     <div class="col-md-9">
         <h3 class="text-white">Matricula</h3> 
-        <form action="{{url_for('alumnos.matricular', alumno=alumno)}}" method="POST" class="bg-black ">
+        <form action="{{url_for('alumnos.matricular', alumno_id=alumno.idAlumno)}}" method="POST" class="bg-black ">
             <div class="card-body p-4">
+              <div class="mb-3 text-center">
+                <h3 class="text-light" for="Alumno">{{alumno.apellido}}, {{alumno.nombre}}</h3>
+                <!-- <label for="idAlumno" name="alumno_id" value="{{alumno.idAlumno}}">{{alumno.idAlumno}}</label> -->
+              </div>
               <div class="mb-3">
                 <label class="text-light" for="tutor">Fecha Inscripcion:</label>
-                <!-- <script>
-                  date = new Date().toLocaleDateString();
-                  document.write(date);
-              </script> -->
               <input
               type="date"
               name="fechaInscripcion"
@@ -28,7 +28,7 @@
               required
               />
               </div>
-              <div class="mb-3 disable">
+              <div class="mb-3">
                 <label for="nombre">Fecha Re-Inscripcion:</label>
                 <input
                   type="date"
@@ -45,15 +45,14 @@
                     <div class="form-check form-check-inline">
                       <input class="form-check-input" type="radio" name="condicionIngreso" value="Ingresante">
                       <label class="form-check-label" for="condicionIngreso">Nuevo Ingresante</label>
-                      <input class="" type="text" name="añoAcademico" value="1er_Año">
                     </div>
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample" type="radio" name="condicionIngreso" value="PaseDeEstablecimiento">
+                      <input class="form-check-input" type="radio" name="condicionIngreso" value="PaseDeEstablecimiento">
                       <label class="form-check-label" for="condicionIngreso">Pase de Establecimiento</label>
                     </div>
-                    <div class="collapse" id="collapseExample">
-                      <label for="inputState" class="form-label">Año Academico</label>
-                      <select name="añoAcademico" class="form-select">
+                    <div class="form-check form-check-inline">
+                      <label class="form-label">Año Academico:</label>
+                      <select name="añoAcademico" class="form-select form-check-inline">
                         <option selected>elegir...</option>
                         <option>1er_Año</option>
                         <option>2do_Año</option>
