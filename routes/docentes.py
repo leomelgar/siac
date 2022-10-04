@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Docente, Colegio
+from models.colege import Docente, Colegio, Asignatura
 from utils.db import db
 
 docentes = Blueprint("docentes", __name__)
@@ -36,7 +36,7 @@ def updateDocente(idDocente):
       docente.cuil = request.form['cuil']
       docente.direccion = request.form['direccion']
       docente.telefono  = request.form['telefono']
-      docente.email = request.form['email']  
+      docente.email = request.form['email']
       db.session.commit()
       flash('Datos Actualizados!')
       return redirect(url_for('docentes.home'))
@@ -49,3 +49,8 @@ def deleteDocente(idDocente):
     db.session.commit()
     flash('Docente Borrado!')
     return redirect(url_for('docentes.home'))
+
+@docentes.route("/asignaturas")
+def asignaturas():
+    asignaturas = Asignatura.query.all()
+    return render_template("/docentes/asignaturas.html", asignaturas=asignaturas)
