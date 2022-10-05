@@ -25,7 +25,7 @@ class Docente(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'))
-    cargaAcademica = db.relationship('CargaAcademica',backref='cargaAcademica', lazy='dynamic')
+    cargaAcademica = db.relationship('Catedra',backref='cargaAcademica', lazy='dynamic')
 
     def __init__(self, nombre, apellido, cuil, direccion, telefono, email, colegio_id):
         self.nombre=nombre
@@ -103,13 +103,13 @@ class Asignatura(db.Model):
     idAsignatura = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(20))
     descripcion = db.Column(db.String(50))
-    horasCatedra = db.relationship('CargaAcademica',backref='horasCatedra', lazy='dynamic')
+    horasCatedra = db.relationship('Catedra',backref='horasCatedra', lazy='dynamic')
 
     def __init__(self, nombre, descripcion):
         self.nombre = nombre
         self.descripcion = descripcion
 
-class CargaAcademica(db.Model):
+class Catedra(db.Model):
     idCargaAcademica = db.Column(db.Integer, primary_key=True)
     cargaHoraria = db.Column(db.Float)   #cantidad de horas asignadas a la materia o asignatura
     tipoCargo = db.Column(db.String(16)) #docente, administrativo, profesional, tecnico
