@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.colege import Alumno, Tutor, Matricula
 from utils.db import db
