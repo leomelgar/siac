@@ -123,3 +123,14 @@ class CargaAcademica(db.Model):
         self.caracter=caracter
         self.asignatura_id=asignatura_id
         self.docente_id=docente_id
+
+class Aula(db.Model):
+    idAula = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(6))
+    capacidad = db.Column(db.String(2))
+    ubicacion = db.Column(db.String(10))
+
+    def __init__(self, nombre, capacidad, ubicacion):
+        self.nombre = nombre
+        self.capacidad = capacidad
+        self.ubicacion = ubicacion
