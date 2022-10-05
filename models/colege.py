@@ -25,7 +25,7 @@ class Docente(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'))
-    asignatura = db.relationship('Asignatura',backref='asignatura', lazy='dynamic')
+    cargaAcademica = db.relationship('CargaAcademica',backref='cargaAcademica', lazy='dynamic')
 
     def __init__(self, nombre, apellido, cuil, direccion, telefono, email, colegio_id):
         self.nombre=nombre
@@ -69,7 +69,6 @@ class Alumno(db.Model):
     email = db.Column(db.String(200))
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
     matricular = db.relationship('Matricula',backref='matricular', lazy='dynamic')
-    asignatura = db.relationship('Asignatura',backref='asignatura', lazy='dynamic')
 
     def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, tutor_id):
         self.nombre=nombre
@@ -104,6 +103,7 @@ class Asignatura(db.Model):
     idAsignatura = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(20))
     descripcion = db.Column(db.String(50))
+    horasCatedra = db.relationship('CargaAcademica',backref='horasCatedra', lazy='dynamic')
 
     def __init__(self, nombre, descripcion):
         self.nombre = nombre
@@ -114,12 +114,12 @@ class CargaAcademica(db.Model):
     cargaHoraria = db.Column(db.Float)   #cantidad de horas asignadas a la materia o asignatura
     tipoCargo = db.Column(db.String(16)) #docente, administrativo, profesional, tecnico
     caracter = db.Column(db.String(10))  #titural, interino, suplente
-    alumno_id = db.Column(db.Integer, db.ForeignKey('alumno.idAlumno'))
+    asignatura_id = db.Column(db.Integer, db.ForeignKey('asignatura.idAsignatura'))
     docente_id = db.Column(db.Integer, db.ForeignKey('docente.idDocente'))
 
-    def __init__(self, cargaHoraria, tipoCargo, caracter, alumno_id, docente_id):
+    def __init__(self, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
         self.cargaHoraria=cargaHoraria
         self.tipoCargo=tipoCargo
         self.caracter=caracter
-        self.alumno_id=alumno_id
+        self.asignatura_id=asignatura_id
         self.docente_id=docente_id
