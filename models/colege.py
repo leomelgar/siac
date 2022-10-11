@@ -111,13 +111,15 @@ class Asignatura(db.Model):
 
 class Catedra(db.Model):
     idCargaAcademica = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(16))
     cargaHoraria = db.Column(db.Float)   #cantidad de horas asignadas a la materia o asignatura
     tipoCargo = db.Column(db.String(16)) #docente, administrativo, profesional, tecnico
     caracter = db.Column(db.String(10))  #titural, interino, suplente
     asignatura_id = db.Column(db.Integer, db.ForeignKey('asignatura.idAsignatura'))
     docente_id = db.Column(db.Integer, db.ForeignKey('docente.idDocente'))
 
-    def __init__(self, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
+    def __init__(self, nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
+        self.nombre=nombre
         self.cargaHoraria=cargaHoraria
         self.tipoCargo=tipoCargo
         self.caracter=caracter
