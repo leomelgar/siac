@@ -9,64 +9,9 @@
     <h2 class="text-secondary text-center"></h2>
     <div class="col-md-3">
       <!-- menu lateral -->
-       <div class="flex-shrink-0 p-3 bg-white">
-         <a href="/" class="d-flex align-items-center pb-3 mb-3 link-dark text-decoration-none border-bottom">
-           <svg class="bi pe-none me-2" width="30" height="24"><use xlink:href="#bootstrap"/></svg>
-           <span class="fs-5 fw-semibold">Menu</span>
-         </a>
-         <ul class="list-unstyled ps-0">
-           <li class="mb-1">
-             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
-               Home
-             </button>
-             <div class="collapse show" id="home-collapse">
-               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                 <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Overview</a></li>
-                 <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Updates</a></li>
-                 <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Reports</a></li>
-               </ul>
-             </div>
-           </li>
-           <li class="mb-1">
-             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#dashboard-collapse" aria-expanded="false">
-               Asignaturas
-             </button>
-             <div class="collapse" id="dashboard-collapse">
-               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                 <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Ver</a></li>
-               </ul>
-             </div>
-           </li>
-           <li class="mb-1">
-             <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#orders-collapse" aria-expanded="false">
-               Catedras
-             </button>
-             <div class="collapse" id="orders-collapse">
-               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                 <li><a href="{{url_for('catedras.catedra')}}" class="link-dark d-inline-flex text-decoration-none rounded">Nueva</a></li>
-                 <li><a href="{{url_for('catedras.list')}}" class="link-dark d-inline-flex text-decoration-none rounded">Ver Todas</a></li>
-               </ul>
-             </div>
-           </li>
-           <li class="border-top my-3"></li>
-         </ul>
-       </div>
+      {% include 'partials/_sidebarDteCdra.html' %}
     </div>
     <div class="col-md-9">
-      <!-- {% for catedra in catedras %}
-      <div class="card mb-1 bg-black text-white">
-        <div class="card-body py-2 px-3">
-          <div class="d-flex justify-content-between">
-            <h5 class="card-title h6">{{ catedra.nombre }}</h5>
-            <div>
-              <a href="{{ url_for('catedras.view', idCatedra=catedra.idCatedra) }}" class="btn btn-dark btn-sm rounded-0">Ver+</a>
-            </div>
-          </div>
-          <p class="card-text">{{ catedra.cargaHoraria }}</p>
-          <p class="card-text">{{ catedra.caracter }}</p>
-        </div>
-      </div>
-      {% endfor %} -->
       <div class="container px-4 py-5 text-white" id="icon-grid">
         <h2 class="pb-2 border-bottom">Catedras</h2>
     
