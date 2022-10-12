@@ -102,7 +102,7 @@ class Matricula(db.Model):
 class Asignatura(db.Model):
     idAsignatura = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(20))
-    descripcion = db.Column(db.String(50))
+    descripcion = db.Column(db.String(100))
     horasCatedra = db.relationship('Catedra',backref='horasCatedra', lazy='dynamic')
 
     def __init__(self, nombre, descripcion):

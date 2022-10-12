@@ -49,8 +49,3 @@ def deleteDocente(idDocente):
     db.session.commit()
     flash('Docente Borrado!')
     return redirect(url_for('docentes.home'))
-
-@docentes.route("/asignaturas")
-def asignaturas():
-    asignaturas = Asignatura.query.all()
-    return render_template("/docentes/asignaturas.html", asignaturas=asignaturas)
