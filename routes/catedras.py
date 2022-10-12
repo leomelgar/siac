@@ -37,8 +37,14 @@ def new_catedra():
         flash('Catedra asignada correctamente!')
         return render_template('/catedras/view.html', catedra=new_catedra, docente=docente, asignatura=asignatura)
 
-# @catedras.route('/catedras/view/<idCatedra>', methods=["POST"])
-# def view(idCatedra):
-#     catedra = Catedra.query.get(idCatedra)
-#     return redirect(url_for())
+@catedras.route('/catedras/view/<idCatedra>', methods=["POST","GET"])
+def view(idCatedra):
+    catedra = Catedra.query.get(idCatedra)
+    docente = Docente.query.get(catedra.docente_id)
+    asignatura = Asignatura.query.get(catedra.asignatura_id)
+    return render_template('/catedras/view.html', catedra=catedra, docente=docente, asignatura=asignatura)
 
+@catedras.route('/catedras/list')
+def list():
+    catedras = Catedra.query.all()
+    return  render_template('/catedras/list.html', catedras=catedras)
