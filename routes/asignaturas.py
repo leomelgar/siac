@@ -20,3 +20,22 @@ def new():
         db.session.commit()
         flash('Asignatura agregada!')
         return redirect(url_for('asignaturas.list'))
+
+@asignaturas.route("/asignaturas/update/<idAsignatura>", methods=["POST","GET"])
+def update(idAsignatura):
+    asignatura = Asignatura.query.get(idAsignatura)
+    if request.method == "POST":
+        asignatura.nombre = request.form['nombre']
+        asignatura.descripcion = request.form['descripcion']
+        db.session.commit()
+        flash('Asignatura actualizada!')
+        return redirect(url_for('asignaturas.list'))
+    return render_template("/asignaturas/update.html", asignatura=asignatura)
+
+@asignaturas.route("/asignaturas/delete/<idAsignatura>")
+def delete(idAsignatura):
+    asignatura = Asignatura.query.get(idAsignatura)
+    db.session.delete(asignatura)
+    db.session.commit()
+    flash('Asignatura Borrada correctamente!')
+    return redirect(url_for('asignaturas.list'))
