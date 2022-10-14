@@ -9,8 +9,17 @@
         <li class="nav-item">
           <a class="nav-link" aria-current="page" href="/colegios/home">Colegios</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" aria-current="page" href="/docentes/home">Docentes</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Seccion Docentes
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('docentes.home') }}">Docentes</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ url_for('catedras.list') }}">Catedras</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{ url_for('asignaturas.list') }}">Asignaturas</a></li>
+          </ul>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -20,7 +29,7 @@
             <li><a class="dropdown-item" href="/alumnos/home">Alumnos</a></li>
             <li><a class="dropdown-item" href="{{ url_for('alumnos.inscripcion') }}">inscripcion</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Matricula</a></li>
+            <li><a class="dropdown-item" href="#">Cursadas</a></li>
           </ul>
         </li>
       </ul>
