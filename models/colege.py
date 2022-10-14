@@ -90,6 +90,7 @@ class Matricula(db.Model):
     #fechaEgreso = db.Column(db.Date, nullable=True)#fecha que sale del establecimiento-ya sea por promocion(finalizacion de estudios) o cambio de colegio
     alumno_id = db.Column(db.Integer, db.ForeignKey('alumno.idAlumno'))
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
+    curso_matricula = db.relationship('Curso', backref='curso_matricula', lazy='dynamic')
 
     def __init__(self, fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id):
         self.fechaInscripcion=fechaInscripcion
@@ -117,6 +118,7 @@ class Catedra(db.Model):
     caracter = db.Column(db.String(10))  #titural, interino, suplente
     asignatura_id = db.Column(db.Integer, db.ForeignKey('asignatura.idAsignatura'))
     docente_id = db.Column(db.Integer, db.ForeignKey('docente.idDocente'))
+    curso_catedra = db.relationship('Curso', backref='curso_catedra', lazy='dynamic')
 
     def __init__(self, nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
         self.nombre=nombre
@@ -131,8 +133,49 @@ class Aula(db.Model):
     nombre = db.Column(db.String(6))
     capacidad = db.Column(db.String(2))
     ubicacion = db.Column(db.String(10))
+    curso_aula = db.relationship('Curso',backref='curso_aula', lazy='dynamic')
 
     def __init__(self, nombre, capacidad, ubicacion):
         self.nombre = nombre
         self.capacidad = capacidad
         self.ubicacion = ubicacion
+
+class Horario(db.Model):
+    idHorario = db.Column(db.Integer, primary_key=True)
+    dia = db.Column(db.String(3))
+    hora = db.Column(db.String(13))
+    descripcion = db.Column(db.String(8))
+    curso_horario = db.relationship('Curso', backref='curso_horario', lazy='dynamic')
+
+    def __init__(self, dia, hora, descripcion):
+        self.dia  = dia
+        self.hora = hora
+        self.descripcion = descripcion
+
+class Turno(db.Model):
+    idturno = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(6))
+    curso_turno = db.relationship('Curso', backref='curso_aula', lazy='dynamic')
+
+    def __init__(self, nombre):
+        self.nombre = nombre
+
+class Curso(db.Model):
+    idCurso = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(7))
+    aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
+    turno_id = db.Column(db.Integer, db.ForeignKey('turno.idTurno'))
+    horario_id = db.Column(db.Integer, db.ForeignKey('horario.idHorario'))
+    matricula_id = db.Column(db.Integer, db.Foreignkey('matricula.idMatricula'))
+    catedra_id = db.Column(db.Integer, db.ForeignKey('catedra.idCatedra'))
+
+    def __init__(self, nombre, aula_id, turno_id, horario_id, matricula_id, catedra_id):
+        self.nombre = nombre
+        self.aula_id = aula_id
+        self.turno_id = turno_id
+        self.horario_id = horario_id
+        self.matricula_id = matricula_id
+        self.catedra_id = catedra_id
+
+
+
