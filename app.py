@@ -5,6 +5,7 @@ from routes.docentes import docentes
 from routes.alumnos import alumnos
 from routes.catedras import catedras
 from routes.asignaturas import asignaturas
+from routes.cursos import cursos
 from flask_sqlalchemy import SQLAlchemy
 from config import DATABASE_CONNECTION_URI
 
@@ -27,3 +28,4 @@ app.register_blueprint(docentes)
 app.register_blueprint(alumnos)
 app.register_blueprint(catedras)
 app.register_blueprint(asignaturas)
+app.register_blueprint(cursos)
