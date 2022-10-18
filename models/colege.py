@@ -120,15 +120,17 @@ class Catedra(db.Model):
     caracter = db.Column(db.String(10))  #titural, interino, suplente
     asignatura_id = db.Column(db.Integer, db.ForeignKey('asignatura.idAsignatura'))
     docente_id = db.Column(db.Integer, db.ForeignKey('docente.idDocente'))
-    curso_catedra = db.relationship('Curso', backref='curso_catedra', lazy='dynamic')
+    curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'))
+    
 
-    def __init__(self, nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
+    def __init__(self, nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id, curso_id):
         self.nombre=nombre
         self.cargaHoraria=cargaHoraria
         self.tipoCargo=tipoCargo
         self.caracter=caracter
         self.asignatura_id=asignatura_id
         self.docente_id=docente_id
+        self.curso_id = curso_id
 
 class Aula(db.Model):
     idAula = db.Column(db.Integer, primary_key=True)
@@ -169,17 +171,15 @@ class Curso(db.Model):
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
     turno_id = db.Column(db.Integer, db.ForeignKey('turno.idTurno'))
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.idHorario'))
-    #matricula_id = db.Column(db.Integer, db.ForeignKey('matricula.idMatricula'))
-    catedra_id = db.Column(db.Integer, db.ForeignKey('catedra.idCatedra'))
+    curso_catedra = db.relationship('Catedra', backref='curso_catedra', lazy='dynamic')
     curso_matricula = db.relationship('Matricula', backref='curso_matricula', lazy='dynamic')
 
-    def __init__(self, nombre, division, aula_id, turno_id, horario_id, catedra_id):
+    def __init__(self, nombre, division, aula_id, turno_id, horario_id):
         self.nombre = nombre
         self.division = division
         self.aula_id = aula_id
         self.turno_id = turno_id
         self.horario_id = horario_id
-        self.catedra_id = catedra_id
 
 
 

@@ -20,8 +20,8 @@
         <thead>
           <tr>
             <th scope="col">Nombre</th>
-            <th scope="col">Docente</th>
-            <th scope="col">Asignatura</th>
+            <!-- <th scope="col">Docente</th>
+            <th scope="col">Asignatura</th> -->
             <th scope="col"></th>
           </tr>
         </thead>
@@ -29,8 +29,8 @@
           {% for catedra in catedras %}
           <tr>
             <td>{{catedra.nombre}}</td>
-            <td>{{catedra.docente_id}}</td>
-            <td>{{catedra.asignatura_id}}</td>
+            <!-- <td>{{catedra.docente_id}}</td>
+            <td>{{catedra.asignatura_id}}</td> -->
             <td><div><a href="#">
                 <input class="form-check-input" type="checkbox" name="catedra_id" value={{catedra.idCatedra}}>
               </a>
