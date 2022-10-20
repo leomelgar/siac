@@ -31,12 +31,20 @@ def add_curso():
     if request.method=="POST":
         nombre = request.form['nombre']
         division = request.form['division']
+        periodo = request.form['periodo']
         aula_id = request.form['aula_id']
         turno_id = request.form['turno_id']
         horario_id = request.form['horario_id']
-
-        new_curso = Curso(nombre,division,aula_id,turno_id,horario_id)
+        idCatedra = request.form['catedra_id']
+        
+        new_curso = Curso(nombre,division,periodo,aula_id,turno_id,horario_id)
         db.session.add(new_curso)
         db.session.commit()
+
+        catedra = Catedra.query.get(idCatedra)
+        catedra.curso_id = new_curso.idCurso
+        db.session.add(catedra)
+        db.session.commit()
+
         flash('Curso añadido correctamente!')
         return redirect(url_for('cursos.home'))

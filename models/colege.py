@@ -168,15 +168,17 @@ class Curso(db.Model):
     idCurso = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(7))
     division = db.Column(db.String(7))
+    periodo = db.Column(db.String(4))
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
     turno_id = db.Column(db.Integer, db.ForeignKey('turno.idTurno'))
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.idHorario'))
     curso_catedra = db.relationship('Catedra', backref='curso_catedra', lazy='dynamic')
     curso_matricula = db.relationship('Matricula', backref='curso_matricula', lazy='dynamic')
 
-    def __init__(self, nombre, division, aula_id, turno_id, horario_id):
+    def __init__(self, nombre, division, periodo, aula_id, turno_id, horario_id):
         self.nombre = nombre
         self.division = division
+        self.periodo = periodo
         self.aula_id = aula_id
         self.turno_id = turno_id
         self.horario_id = horario_id
