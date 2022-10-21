@@ -7,7 +7,12 @@ cursos = Blueprint("cursos", __name__)
 
 @cursos.route('/cursos/home')
 def home():
-    cursos = Curso.query.all()
+    #cursos = Curso.query.all()
+    #cursos = Curso.query.join(Aula, Curso.aula_id==Aula.idAula).add_columns(Curso.curso, Curso.division, Curso.periodo, Aula.nombre)
+    #consulta = "SELECT * FROM contactsdb.curso JOIN contactsdb.aula ON contactsdb.curso.aula_id = contactsdb.aula.idAula"
+    #cursos = db.session.execute(consulta)
+    cursos = Curso.query.join(Aula, Curso.aula_id==Aula.idAula).join(Turno, Curso.turno_id==Turno.idTurno).add_columns(Curso.curso, Curso.division, Curso.periodo, Aula.nombre, Turno.turno)
+    
     return render_template('/cursos/home.html', cursos=cursos)
 
 @cursos.route('/cursos/nuevo', methods=["POST","GET"])

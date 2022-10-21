@@ -24,15 +24,20 @@
           <th scope="col">Curso</th>
           <th scope="col">Division</th>
           <th scope="col">Periodo Lectivo</th>
+          <th scope="col">Aula</th>
+          <th scope="col">Turno</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         {% for curso in cursos %}
         <tr>
-          <td>{{curso.nombre}}</td>
+          <td>{{curso.curso}}</td>
           <td>{{curso.division}}</td>
           <td>{{curso.periodo}}</td>
+          <td>{{curso.nombre}}</td>
+          <td>{{curso.turno}}</td>
+          <td></td>
           <td><div>
             <a href="#" class="btn btn-outline-secondary btn-sm rounded-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

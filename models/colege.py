@@ -158,7 +158,7 @@ class Horario(db.Model):
 
 class Turno(db.Model):
     idTurno = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(6))
+    turno = db.Column(db.String(6))
     curso_turno = db.relationship('Curso', backref='curso_turno', lazy='dynamic')
 
     def __init__(self, nombre):
@@ -166,7 +166,7 @@ class Turno(db.Model):
 
 class Curso(db.Model):  
     idCurso = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(7))
+    curso = db.Column(db.String(7))
     division = db.Column(db.String(7))
     periodo = db.Column(db.String(4))
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
