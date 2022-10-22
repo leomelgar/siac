@@ -148,7 +148,6 @@ class Horario(db.Model):
     dia = db.Column(db.String(3))
     hora = db.Column(db.String(13))
     descripcion = db.Column(db.String(8))
-    curso_horario = db.relationship('Curso', backref='curso_horario', lazy='dynamic')
     fk_horario_catedra_curso = db.relationship('Curso_Catedra', backref='fk_horario_catedra_curso', lazy='dynamic')
 
 
@@ -172,7 +171,6 @@ class Curso(db.Model):
     periodo = db.Column(db.String(4))
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
     turno_id = db.Column(db.Integer, db.ForeignKey('turno.idTurno'))
-    #curso_catedra = db.relationship('Catedra', backref='curso_catedra', lazy='dynamic')
     curso_matricula = db.relationship('Matricula', backref='curso_matricula', lazy='dynamic')
     fk_curso_catedra = db.relationship('Curso_Catedra', backref='fk_curso_catedra', lazy='dynamic')
 

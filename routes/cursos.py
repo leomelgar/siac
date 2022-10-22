@@ -20,7 +20,6 @@ def new():
     catedras = Catedra.query.all()
     aulas = Aula.query.all()
     turnos = Turno.query.all()
-    horarios = Horario.query.all()
     if request.method == "POST" and 'tag' in request.form:
         tag = request.form['tag']
         search = "%{}%".format(tag)
@@ -28,8 +27,8 @@ def new():
         if not catedras:
             flash("No existe registro...")
         else:
-            return render_template('/cursos/curso.html', catedras=catedras, aulas=aulas, turnos=turnos, horarios=horarios)
-    return render_template('/cursos/curso.html', catedras=catedras, aulas=aulas, turnos=turnos, horarios=horarios)
+            return render_template('/cursos/curso.html', catedras=catedras, aulas=aulas, turnos=turnos)
+    return render_template('/cursos/curso.html', catedras=catedras, aulas=aulas, turnos=turnos)
 
 @cursos.route('/cursos/add_curso', methods=["POST"])
 def add_curso():
@@ -39,10 +38,9 @@ def add_curso():
         periodo = request.form['periodo']
         aula_id = request.form['aula_id']
         turno_id = request.form['turno_id']
-        horario_id = request.form['horario_id']
         idCatedra = request.form['catedra_id']
         
-        new_curso = Curso(nombre,division,periodo,aula_id,turno_id,horario_id)
+        new_curso = Curso(nombre,division,periodo,aula_id,turno_id)
         db.session.add(new_curso)
         db.session.commit()
 
