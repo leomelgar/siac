@@ -120,7 +120,7 @@ class Catedra(db.Model):
     caracter = db.Column(db.String(10))  #titural, interino, suplente
     asignatura_id = db.Column(db.Integer, db.ForeignKey('asignatura.idAsignatura'))
     docente_id = db.Column(db.Integer, db.ForeignKey('docente.idDocente'))
-    fk_catedra_curso = db.relationship('Curso_Catedra', backref='fk_fk_catedra_curso', lazy='dynamic')
+    fk_catedra_clase = db.relationship('Clase', backref='fk_fk_catedra_clase', lazy='dynamic')
     
 
     def __init__(self, nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
@@ -148,7 +148,7 @@ class Horario(db.Model):
     dia = db.Column(db.String(3))
     hora = db.Column(db.String(13))
     descripcion = db.Column(db.String(8))
-    fk_horario_catedra_curso = db.relationship('Curso_Catedra', backref='fk_horario_catedra_curso', lazy='dynamic')
+    fk_horario_clase = db.relationship('Clase', backref='fk_horario_clase', lazy='dynamic')
 
 
     def __init__(self, dia, hora, descripcion):
@@ -161,8 +161,8 @@ class Turno(db.Model):
     turno = db.Column(db.String(6))
     curso_turno = db.relationship('Curso', backref='curso_turno', lazy='dynamic')
 
-    def __init__(self, nombre):
-        self.nombre = nombre
+    def __init__(self, turno):
+        self.turno = turno
 
 class Curso(db.Model):  
     idCurso = db.Column(db.Integer, primary_key=True)
@@ -172,7 +172,7 @@ class Curso(db.Model):
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
     turno_id = db.Column(db.Integer, db.ForeignKey('turno.idTurno'))
     curso_matricula = db.relationship('Matricula', backref='curso_matricula', lazy='dynamic')
-    fk_curso_catedra = db.relationship('Curso_Catedra', backref='fk_curso_catedra', lazy='dynamic')
+    fk_clase = db.relationship('Clase', backref='fk_clase', lazy='dynamic')
 
     def __init__(self, nombre, division, periodo, aula_id, turno_id):
         self.nombre = nombre
@@ -181,8 +181,8 @@ class Curso(db.Model):
         self.aula_id = aula_id
         self.turno_id = turno_id
 
-class Curso_Catedra(db.Model):
-    idCurso_Catedra = db.Column(db.Integer, primary_key=True)
+class Clase(db.Model):
+    idClase = db.Column(db.Integer, primary_key=True)
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'))
     catedra_id = db.Column(db.Integer, db.ForeignKey('catedra.idCatedra'))
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.idHorario'))
