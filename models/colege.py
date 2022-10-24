@@ -183,11 +183,13 @@ class Curso(db.Model):
 
 class Clase(db.Model):
     idClase = db.Column(db.Integer, primary_key=True)
+    nombre_clase = db.Column(db.String(20))
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'))
     catedra_id = db.Column(db.Integer, db.ForeignKey('catedra.idCatedra'))
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.idHorario'))
 
-    def __init__(self, curso_id, catedra_id, horario_id):
+    def __init__(self, nombre_clase, curso_id, catedra_id, horario_id):
+        self.nombre_clase = nombre_clase
         self.curso_id = curso_id
         self.catedra_id = catedra_id
         self.horario_id = horario_id
