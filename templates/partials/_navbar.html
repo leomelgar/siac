@@ -32,6 +32,17 @@
             <li><a class="dropdown-item" href="{{url_for('cursos.home')}}">Cursadas</a></li>
           </ul>
         </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Registros Academicos
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="{{ url_for('clases.home') }}">Clases</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('clases.nueva_clase') }}">Agregar Clase</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{{url_for('cursos.home')}}">Cursos</a></li>
+          </ul>
+        </li>
       </ul>
     </div>
   </div>
