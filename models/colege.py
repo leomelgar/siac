@@ -114,7 +114,7 @@ class Asignatura(db.Model):
 
 class Catedra(db.Model):
     idCatedra = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(16))
+    nombre_cat = db.Column(db.String(16))
     cargaHoraria = db.Column(db.Float)   #cantidad de horas asignadas a la materia o asignatura
     tipoCargo = db.Column(db.String(16)) #docente, administrativo, profesional, tecnico
     caracter = db.Column(db.String(10))  #titural, interino, suplente
@@ -123,8 +123,8 @@ class Catedra(db.Model):
     fk_catedra_clase = db.relationship('Clase', backref='fk_fk_catedra_clase', lazy='dynamic')
     
 
-    def __init__(self, nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
-        self.nombre=nombre
+    def __init__(self, nombre_cat, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
+        self.nombre_cat=nombre_cat
         self.cargaHoraria=cargaHoraria
         self.tipoCargo=tipoCargo
         self.caracter=caracter
