@@ -22,14 +22,14 @@ def catedra():
 @catedras.route('/catedras/new', methods=["POST"])
 def new_catedra():
     if request.method == "POST":
-        nombre = request.form["nombre"]
+        nombre_cat = request.form["nombre"]
         cargaHoraria = request.form["cargaHoraria"]
         tipoCargo = request.form["tipoCargo"]
         caracter = request.form["caracter"]
         asignatura_id = request.form["asignatura_id"]
         docente_id = request.form["docente_id"]
 
-        new_catedra = Catedra(nombre, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id)
+        new_catedra = Catedra(nombre_cat, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id)
         db.session.add(new_catedra)
         db.session.commit()
         docente = Docente.query.get(docente_id)
