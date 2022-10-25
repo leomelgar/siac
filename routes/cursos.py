@@ -23,7 +23,7 @@ def new():
     if request.method == "POST" and 'tag' in request.form:
         tag = request.form['tag']
         search = "%{}%".format(tag)
-        catedras = Catedra.query.filter(Catedra.nombre.like(search))
+        catedras = Catedra.query.filter(Catedra.nombre_cat.like(search))
         if not catedras:
             flash("No existe registro...")
         else:
@@ -33,14 +33,14 @@ def new():
 @cursos.route('/cursos/add_curso', methods=["POST"])
 def add_curso():
     if request.method=="POST":
-        nombre = request.form['nombre']
+        curso = request.form['curso']
         division = request.form['division']
         periodo = request.form['periodo']
         aula_id = request.form['aula_id']
         turno_id = request.form['turno_id']
         idCatedra = request.form['catedra_id']
         
-        new_curso = Curso(nombre,division,periodo,aula_id,turno_id)
+        new_curso = Curso(curso,division,periodo,aula_id,turno_id)
         db.session.add(new_curso)
         db.session.commit()
 

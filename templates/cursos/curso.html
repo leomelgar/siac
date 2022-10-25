@@ -28,7 +28,7 @@
         <tbody>
           {% for catedra in catedras %}
           <tr>
-            <td>{{catedra.nombre}}</td>
+            <td>{{catedra.nombre_cat}}</td>
             <!-- <td>{{catedra.docente_id}}</td>
             <td>{{catedra.asignatura_id}}</td> -->
             <td><div><a href="#">
@@ -50,7 +50,7 @@
         <select class="form-select form-select-sm mb-3" name="turno_id" aria-label=".form-select-lg">
             <option selected>Turno</option>
             {% for turno in turnos %}
-            <option value="{{turno.idTurno}}">{{turno.nombre}}</option>
+            <option value="{{turno.idTurno}}">{{turno.turno}}</option>
             {% endfor %}
           </select>
           <select class="form-select form-select-sm mb-3" name="horario_id" aria-label=".form-select-lg">
@@ -59,7 +59,7 @@
             <option value="{{horario.idHorario}}">{{horario.descripcion}}</option>
             {% endfor %}
           </select>
-          <select class="form-select form-select-sm mb-3" name="nombre" aria-label=".form-select-lg">
+          <select class="form-select form-select-sm mb-3" name="curso" aria-label=".form-select-lg">
             <option selected>Nombre del Curso</option>
             <option value="1er año">Primer Año</option>
             <option value="2do año">Segundo Año</option>
@@ -77,7 +77,7 @@
             <option value="sexta">sexta</option>
           </select>
           <div class="row mb-3">
-            <label for="periodo class="col-sm-2 col-form-label text-white">Periodo Lectivo</label>
+            <label for="periodo" class="col-sm-2 col-form-label text-white">Periodo Lectivo</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" name="periodo" placeholder="Periodo Lectivo - Año" required>
             </div>

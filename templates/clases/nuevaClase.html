@@ -15,7 +15,7 @@
         <button class="btn btn-outline-success" type="submit">Buscar</button>
     </form>
     <hr class="my-4">
-    <form action="/cursos/add_curso" method="post">
+    <form action="/clases/add_clase" method="post">
       <table class="table table-dark table-hover">
         <thead>
           <tr>
@@ -30,7 +30,7 @@
             <td>{{catedra.nombre_cat}}</td>
             <td>{{catedra.apellido}}, {{catedra.nombre}}</td>
             <td><div><a href="#">
-                <input class="form-check-input" type="checkbox" name="catedra_id" value={{catedra.idCatedra}}>
+                <input class="form-check-input" type="radio" name="catedra_id" value={{catedra.idCatedra}}>
               </a>
               </div></td>
           </tr>
@@ -39,31 +39,20 @@
       </table>
     </div>
     <div class="col-md-6">
+        <h2 class="text-secondary">Curso</h2>
+        <select class="form-select mb-3" size="5" name="curso_id" aria-label="size 3 select curso">
+        {% for curso in cursos %}
+            <option value="{{curso.idCurso}}">{{curso.curso}} - {{curso.division}}</option>
+        {% endfor %}
+        </select>
         <h2 class="text-secondary">Horario</h2>
-        <select class="form-select mb-3" size="5" name="aula_id" aria-label="size 3 select aula">
+        <select class="form-select mb-3" size="5" name="horario_id" aria-label="size 3 select aula">
         {% for horario in horarios %}
             <option value="{{horario.idHorario}}">{{horario.dia}}, {{horario.hora}} - {{horario.descripcion}} </option>
         {% endfor %}
-        <!-- </select>
-          <select class="form-select form-select-sm mb-3" name="nombre" aria-label=".form-select-lg">
-            <option selected>Nombre del Curso</option>
-            <option value="1er año">Primer Año</option>
-            <option value="2do año">Segundo Año</option>
-            <option value="3er año">Tercer Año</option>
-            <option value="4to año">Cuarto Año</option>
-            <option value="5to año">Quinto Año</option>
-          </select>
-          <select class="form-select form-select-sm mb-3" name="division" aria-label=".form-select-lg">
-            <option selected>Division del Curso</option>
-            <option value="primera">Primera</option>
-            <option value="segunda">Segunda Año</option>
-            <option value="tercera">Tercera</option>
-            <option value="cuarta">Cuarta</option>
-            <option value="quinta">Quinta</option>
-            <option value="sexta">sexta</option>
-          </select> -->
+        </select>
           <div class="row mb-3">
-            <label for="nombre_clase" class="col-sm-2 col-form-label text-white">Nombre de la Clase</label>
+            <label for="nombre_clase" class="col-sm-2 col-form-label text-white">Nombre de Clase</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" name="nombre_clase" placeholder="Nombre descriptivo de la clase" required>
             </div>
