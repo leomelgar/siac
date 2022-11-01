@@ -46,5 +46,6 @@ def view(idCatedra):
 
 @catedras.route('/catedras/list')
 def list():
-    catedras = Catedra.query.all()
+    #catedras = Catedra.query.all()
+    catedras = Catedra.query.join(Docente, Catedra.docente_id==Docente.idDocente).add_columns(Catedra.idCatedra, Catedra.nombre_cat, Catedra.cargaHoraria, Catedra.caracter, Docente.apellido, Docente.nombre)
     return  render_template('/catedras/list.html', catedras=catedras)
