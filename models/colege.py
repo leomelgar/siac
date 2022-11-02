@@ -114,7 +114,7 @@ class Asignatura(db.Model):
 
 class Catedra(db.Model):
     idCatedra = db.Column(db.Integer, primary_key=True)
-    nombre_cat = db.Column(db.String(16))
+    nombre_cat = db.Column(db.String(20))
     cargaHoraria = db.Column(db.Float)   #cantidad de horas asignadas a la materia o asignatura
     tipoCargo = db.Column(db.String(16)) #docente, administrativo, profesional, tecnico
     caracter = db.Column(db.String(10))  #titural, interino, suplente
