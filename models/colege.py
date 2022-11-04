@@ -174,8 +174,8 @@ class Curso(db.Model):
     curso_matricula = db.relationship('Matricula', backref='curso_matricula', lazy='dynamic')
     fk_clase = db.relationship('Clase', backref='fk_clase', lazy='dynamic')
 
-    def __init__(self, nombre, division, periodo, aula_id, turno_id):
-        self.nombre = nombre
+    def __init__(self, nombre_curso, division, periodo, aula_id, turno_id):
+        self.nombre_curso = nombre_curso
         self.division = division
         self.periodo = periodo
         self.aula_id = aula_id

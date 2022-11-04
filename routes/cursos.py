@@ -11,7 +11,7 @@ def home():
     #cursos = Curso.query.join(Aula, Curso.aula_id==Aula.idAula).add_columns(Curso.curso, Curso.division, Curso.periodo, Aula.nombre)
     #consulta = "SELECT * FROM contactsdb.curso JOIN contactsdb.aula ON contactsdb.curso.aula_id = contactsdb.aula.idAula"
     #cursos = db.session.execute(consulta)
-    cursos = Curso.query.join(Aula, Curso.aula_id==Aula.idAula).join(Turno, Curso.turno_id==Turno.idTurno).add_columns(Curso.idCurso, Curso.nombre_curso, Curso.division, Curso.periodo, Aula.nombre, Aula.capacidad, Aula.ubicacion, Turno.turno)
+    cursos = Curso.query.join(Aula, Curso.aula_id==Aula.idAula).join(Turno, Curso.turno_id==Turno.idTurno).add_columns(Curso.idCurso, Curso.nombre_curso, Curso.division, Curso.periodo, Aula.nombre, Aula.capacidad, Aula.ubicacion, Turno.turno).order_by(Curso.nombre_curso)
     
     return render_template('/cursos/home.html', cursos=cursos)
 
@@ -24,13 +24,13 @@ def new():
 @cursos.route('/cursos/add_curso', methods=["POST"])
 def add_curso():
     if request.method=="POST":
-        nombre_curso = request.form['curso']
+        nombre_curso = request.form['nombre_curso']
         division = request.form['division']
         periodo = request.form['periodo']
         aula_id = request.form['aula_id']
         turno_id = request.form['turno_id']
-        
-        new_curso = Curso(nombre_curso,division,periodo,aula_id,turno_id)
+       
+        new_curso = Curso(nombre_curso, division, periodo, aula_id, turno_id)
         db.session.add(new_curso)
         db.session.commit()
         flash('Curso añadido correctamente!')
