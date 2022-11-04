@@ -8,7 +8,7 @@ clases = Blueprint("clases", __name__)
 @clases.route('/clases/home')
 def home():
     #clases = Clase.query.all()
-    clases = Clase.query.join(Catedra, Clase.catedra_id==Catedra.idCatedra).join(Curso, Clase.curso_id==Curso.idCurso).join(Horario, Clase.horario_id==Horario.idHorario).add_columns(Clase.idClase, Clase.nombre_clase, Catedra.nombre_cat, Curso.curso, Curso.division, Horario.dia, Horario.descripcion)
+    clases = Clase.query.join(Catedra, Clase.catedra_id==Catedra.idCatedra).join(Curso, Clase.curso_id==Curso.idCurso).join(Horario, Clase.horario_id==Horario.idHorario).add_columns(Clase.idClase, Clase.nombre_clase, Catedra.nombre_cat, Curso.nombre_curso, Curso.division, Horario.dia, Horario.descripcion)
     return render_template('/clases/home.html', clases=clases)
 
 @clases.route('/clases/nuevaClase', methods=["POST","GET"])
