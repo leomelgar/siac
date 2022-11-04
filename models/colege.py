@@ -166,7 +166,7 @@ class Turno(db.Model):
 
 class Curso(db.Model):  
     idCurso = db.Column(db.Integer, primary_key=True)
-    curso = db.Column(db.String(7))
+    nombre_curso = db.Column(db.String(7), nullable=False)
     division = db.Column(db.String(7))
     periodo = db.Column(db.String(4))
     aula_id = db.Column(db.Integer, db.ForeignKey('aula.idAula'))
