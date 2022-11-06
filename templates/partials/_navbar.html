@@ -26,10 +26,10 @@
             Seccion Alumnos
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/alumnos/home">Alumnos</a></li>
-            <li><a class="dropdown-item" href="{{ url_for('alumnos.inscripcion') }}">inscripcion</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('alumnos.inscripcion') }}">Pre-Inscripcion</a></li>
+            <li><a class="dropdown-item" href="{{url_for('alumnos.home')}}">Nomina Pre-Inscriptos</a></li>
             <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="{{url_for('cursos.home')}}">Cursadas</a></li>
+            <li><a class="dropdown-item" href="#">Alumnos</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown">
