@@ -64,6 +64,19 @@
                     </div>
                   </div>
               </div>
+              <div class="card text-bg-secondary mb-3 mb-3">
+                <div class="card-header">
+                  <label>Aula/Curso:</label>
+                </div>
+                <div class="form-check form-check-inline p-2">
+                  <select name="curso_id" class="form-select form-check-inline">
+                    <option selected>elegir...</option>
+                    {% for curso in cursos %}
+                    <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}}</option>
+                    {% endfor %}
+                  </select>
+                </div>
+            </div>
               <button class="btn btn-primary">Guardar</button>
             </div>
           </form>

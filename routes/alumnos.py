@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Alumno, Tutor, Matricula
+from models.colege import Alumno, Tutor, Matricula, Curso
 from utils.db import db
 from datetime import date
 
@@ -105,6 +105,7 @@ def new_alumno():
 @alumnos.route('/alumnos/matricula/<alumno_id>', methods=["POST", "GET"])
 def matricular(alumno_id):
     alumno = Alumno.query.get(alumno_id)
+    cursos = Curso.query.all()
     if request.method == "POST":
         fechaInscripcion = request.form['fechaInscripcion']
         reInscripcion = request.form['reInscripcion']
@@ -112,13 +113,14 @@ def matricular(alumno_id):
         condicionIngreso = request.form['condicionIngreso']
         alumno_id = alumno_id
         colegio_id = 8 #falta añadir logica para asignar el colegio
+        curso_id = request.form['curso_id']
 
-        new_matricula = Matricula(fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id)
+        new_matricula = Matricula(fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
         db.session.add(new_matricula)
         db.session.commit()
         flash('matricula realizada correctamente, ya es Alumno!')
         return redirect(url_for('alumnos.home'))
-    return render_template('/alumnos/matricula.html', alumno=alumno)
+    return render_template('/alumnos/matricula.html', alumno=alumno, cursos=cursos)
 
 @alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
 def update_alumno(alumno):

@@ -71,7 +71,7 @@ class Alumno(db.Model):
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
     matricular = db.relationship('Matricula',backref='matricular', lazy='dynamic')
 
-    def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, tutor_id):
+    def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, fechaPreinscripcion, tutor_id):
         self.nombre=nombre
         self.apellido=apellido
         self.cuil=cuil
@@ -80,6 +80,7 @@ class Alumno(db.Model):
         self.direccion=direccion
         self.telefono=telefono
         self.email=email
+        self.fechaPreinscripcion=fechaPreinscripcion
         self.tutor_id=tutor_id
 
 class Matricula(db.Model):
@@ -91,7 +92,7 @@ class Matricula(db.Model):
     #fechaEgreso = db.Column(db.Date, nullable=True)#fecha que sale del establecimiento-ya sea por promocion(finalizacion de estudios) o cambio de colegio
     alumno_id = db.Column(db.Integer, db.ForeignKey('alumno.idAlumno'))
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
-    curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'))
+    curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'), nullable=True)
     #curso_matricula = db.relationship('Curso', backref='curso_matricula', lazy='dynamic')
 
     def __init__(self, fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id):
