@@ -67,6 +67,7 @@ class Alumno(db.Model):
     direccion = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
+    fechaPreinscripcion = db.Column(db.Date)
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
     matricular = db.relationship('Matricula',backref='matricular', lazy='dynamic')
 

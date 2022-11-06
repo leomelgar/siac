@@ -74,8 +74,9 @@ def new_tutor():
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
+        fechaPreinscripcion = date.today()
 
-        new_tutor = Tutor(nombre, apellido, cuil, parentesco, direccion, telefono, email)
+        new_tutor = Tutor(nombre, apellido, cuil, parentesco, direccion, telefono, email, fechaPreinscripcion)
         db.session.add(new_tutor)
         db.session.commit()
         flash('Tutor Agregado Correctamente!')
