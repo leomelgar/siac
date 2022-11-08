@@ -5,19 +5,44 @@ from datetime import date
 
 alumnos = Blueprint("alumnos", __name__)
 
-@alumnos.route('/alumnos/home', methods=["POST","GET"]) #listado de alumnos
-def home():
-    alumnos = Alumno.query.all()
-    if request.method == "POST" and 'tag' in request.form:
-        tag = request.form['tag']
-        search = "%{}%".format(tag)
-        alumnos = Alumno.query.filter(Alumno.apellido.like(search))
-        if not alumnos:
-            flash('No existe registro...')
-        else:
-            return render_template('/alumnos/home.html', alumnos=alumnos)
-    return render_template('/alumnos/home.html', alumnos=alumnos)
+# @alumnos.route('/alumnos/home', methods=["POST","GET"]) #listado de alumnos
+# def home():
+#     alumnos = Alumno.query.all()
+#     if request.method == "POST" and 'tag' in request.form:
+#         tag = request.form['tag']
+#         search = "%{}%".format(tag)
+#         alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+#         if not alumnos:
+#             flash('No existe registro...')
+#         else:
+#             return render_template('/alumnos/home.html', alumnos=alumnos)
+#     return render_template('/alumnos/home.html', alumnos=alumnos)
 
+@alumnos.route('/alumnos/home/<estado>', methods=["POST","GET"]) #listado de alumnos
+def home(estado):
+    if estado=="1":#pre-inscriptos
+        alumnos = Alumno.query.filter(Alumno.inscripto.like('1'))
+        if request.method == "POST" and 'tag' in request.form:
+            tag = request.form['tag']
+            search = "%{}%".format(tag)
+            alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+            if not alumnos:
+                flash('No existe registro...')
+            else:
+                return render_template('/alumnos/home.html', estado=1, alumnos=alumnos)
+        return render_template('/alumnos/home.html', estado=1, alumnos=alumnos)
+    else:#alumnos inscriptos
+        alumnos = Alumno.query.filter(Alumno.inscripto.like('0'))
+        if request.method == "POST" and 'tag' in request.form:
+            tag = request.form['tag']
+            search = "%{}%".format(tag)
+            alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+            if not alumnos:
+                flash('No existe registro...')
+            else:
+                return render_template('/alumnos/home.html', estado=0, alumnos=alumnos)
+        return render_template('/alumnos/home.html', estado=0, alumnos=alumnos)
+        
 @alumnos.route('/alumnos/view/<alumno>', methods=["POST", "GET"]) #vista de alumno luego de pre-inscripcion, deriva a la vista para matricular
 def view(alumno):
     alumno = Alumno.query.get(alumno)

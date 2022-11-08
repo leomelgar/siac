@@ -16,8 +16,8 @@
        {% include 'partials/_message.html' %}
     <h2 class="text-secondary">Gestion Alumnos</h2>
     <!-- {% include 'partials/_searchTutor.html' %} -->
-    <form action="/alumnos/home" method="POST" class="d-flex" role="search">
-      <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search">
+    <form action="/alumnos/home/{{estado}}" method="POST" class="d-flex" role="search">
+      <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search" required>
       <button class="btn btn-outline-success" type="submit">Buscar</button>
     </form>
     <hr class="my-4">

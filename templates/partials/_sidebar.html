@@ -11,7 +11,7 @@
         <div class="collapse show" id="home-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li><a href="{{ url_for('alumnos.inscripcion') }}" class="link-dark d-inline-flex text-decoration-none rounded">Pre Inscribir</a></li>
-            <li><a href="{{ url_for('alumnos.home') }}" class="link-dark d-inline-flex text-decoration-none rounded">Listado</a></li>
+            <li><a href="{{ url_for('alumnos.home', estado=1) }}" class="link-dark d-inline-flex text-decoration-none rounded">Listado</a></li>
           </ul>
         </div>
       </li>
@@ -21,7 +21,7 @@
         </button>
         <div class="collapse" id="dashboard-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-            <li><a href="{{ url_for('alumnos.home') }}" class="link-dark d-inline-flex text-decoration-none rounded">Nomina</a></li>
+            <li><a href="{{ url_for('alumnos.home', estado=0) }}" class="link-dark d-inline-flex text-decoration-none rounded">Nomina</a></li>
           </ul>
         </div>
       </li>

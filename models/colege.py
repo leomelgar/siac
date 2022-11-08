@@ -68,10 +68,11 @@ class Alumno(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
     fechaPreinscripcion = db.Column(db.Date)
+    inscripto = db.Column(db.String(1))#estado si es 0 no esta preinscripto, si es 1 esta pre inscripto
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
     matricular = db.relationship('Matricula',backref='matricular', lazy='dynamic')
 
-    def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, fechaPreinscripcion, tutor_id):
+    def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id):
         self.nombre=nombre
         self.apellido=apellido
         self.cuil=cuil
@@ -81,6 +82,7 @@ class Alumno(db.Model):
         self.telefono=telefono
         self.email=email
         self.fechaPreinscripcion=fechaPreinscripcion
+        self.inscripto=inscripto
         self.tutor_id=tutor_id
 
 class Matricula(db.Model):
