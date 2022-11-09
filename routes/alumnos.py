@@ -99,9 +99,9 @@ def new_tutor():
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
-        fechaPreinscripcion = date.today()
+        
 
-        new_tutor = Tutor(nombre, apellido, cuil, parentesco, direccion, telefono, email, fechaPreinscripcion)
+        new_tutor = Tutor(nombre, apellido, cuil, parentesco, direccion, telefono, email)
         db.session.add(new_tutor)
         db.session.commit()
         flash('Tutor Agregado Correctamente!')
@@ -118,9 +118,11 @@ def new_alumno():
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
+        fechaPreinscripcion = date.today()
+        inscripto = '1'
         tutor_id = request.form['tutor_id']
 
-        new_alumno = Alumno(nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, tutor_id)
+        new_alumno = Alumno(nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id)
         db.session.add(new_alumno)
         db.session.commit()
         flash('Pre-Inscripcion realizada!')
@@ -142,9 +144,11 @@ def matricular(alumno_id):
 
         new_matricula = Matricula(fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
         db.session.add(new_matricula)
+        alumno.inscripto = '0'
         db.session.commit()
+        
         flash('matricula realizada correctamente, ya es Alumno!')
-        return redirect(url_for('alumnos.home'))
+        return redirect(url_for('alumnos.home', estado=0))
     return render_template('/alumnos/matricula.html', alumno=alumno, cursos=cursos)
 
 @alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])

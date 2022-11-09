@@ -67,7 +67,7 @@ class Alumno(db.Model):
     direccion = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(200))
-    fechaPreinscripcion = db.Column(db.Date)
+    fechaPreinscripcion = db.Column(db.Date)#fecha de pre inscripcion por primera vez en el colegio - se regista por unica vez
     inscripto = db.Column(db.String(1))#estado si es 0 no esta preinscripto, si es 1 esta pre inscripto
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
     matricular = db.relationship('Matricula',backref='matricular', lazy='dynamic')
@@ -87,8 +87,8 @@ class Alumno(db.Model):
 
 class Matricula(db.Model):
     idMatricula = db.Column(db.Integer, primary_key=True)
-    fechaInscripcion = db.Column(db.Date) #fecha de alta del alumno, cuando se inscribe por primera vez en el colegio
-    reInscripcion = db.Column(db.Date, nullable=True) #reinscripto-fecha en la cual se volvio a inscribir, para cursar otro año
+    fechaInscripcion = db.Column(db.Date) #fecha de alta como alumno en un nuevo año lectivo
+    #reInscripcion = db.Column(db.Date, nullable=True) #reinscripto-fecha en la cual se volvio a inscribir, para cursar otro año
     añoAcademico = db.Column(db.String(8), nullable=False)#el año que esta cursando el alumno
     condicionIngreso = db.Column(db.String(22), nullable=False)#ingresante a primer año o por pase de otro establecimiento
     #fechaEgreso = db.Column(db.Date, nullable=True)#fecha que sale del establecimiento-ya sea por promocion(finalizacion de estudios) o cambio de colegio
