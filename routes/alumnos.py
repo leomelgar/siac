@@ -135,14 +135,13 @@ def matricular(alumno_id):
     cursos = Curso.query.all()
     if request.method == "POST":
         fechaInscripcion = request.form['fechaInscripcion']
-        reInscripcion = request.form['reInscripcion']
         añoAcademico = request.form['añoAcademico']
         condicionIngreso = request.form['condicionIngreso']
         alumno_id = alumno_id
         colegio_id = 8 #falta añadir logica para asignar el colegio
         curso_id = request.form['curso_id']
 
-        new_matricula = Matricula(fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
+        new_matricula = Matricula(fechaInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
         db.session.add(new_matricula)
         alumno.inscripto = '0'
         db.session.commit()
