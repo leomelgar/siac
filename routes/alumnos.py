@@ -22,26 +22,32 @@ alumnos = Blueprint("alumnos", __name__)
 def home(estado):
     if estado=="1":#pre-inscriptos
         alumnos = Alumno.query.filter(Alumno.inscripto.like('1'))
+        cantidad = Alumno.query.filter(Alumno.inscripto==1).count()
+        title = "Pre Insriptos"
         if request.method == "POST" and 'tag' in request.form:
             tag = request.form['tag']
             search = "%{}%".format(tag)
-            alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+            alumnos = alumnos.filter(Alumno.apellido.like(search))
+            cantidad = alumnos.count()
             if not alumnos:
                 flash('No existe registro...')
             else:
-                return render_template('/alumnos/home.html', estado=1, alumnos=alumnos)
-        return render_template('/alumnos/home.html', estado=1, alumnos=alumnos)
+                return render_template('/alumnos/home.html', estado=1, alumnos=alumnos, cantidad=cantidad, title=title)
+        return render_template('/alumnos/home.html', estado=1, alumnos=alumnos,cantidad=cantidad, title=title)
     else:#alumnos inscriptos
         alumnos = Alumno.query.filter(Alumno.inscripto.like('0'))
+        cantidad = Alumno.query.filter(Alumno.inscripto==0).count()
+        title = "Alumnos"
         if request.method == "POST" and 'tag' in request.form:
             tag = request.form['tag']
             search = "%{}%".format(tag)
-            alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+            alumnos = alumnos.filter(Alumno.apellido.like(search))
+            cantidad = alumnos.count()
             if not alumnos:
                 flash('No existe registro...')
             else:
-                return render_template('/alumnos/home.html', estado=0, alumnos=alumnos)
-        return render_template('/alumnos/home.html', estado=0, alumnos=alumnos)
+                return render_template('/alumnos/home.html', estado=0, alumnos=alumnos, cantidad=cantidad, title=title)
+        return render_template('/alumnos/home.html', estado=0, alumnos=alumnos, cantidad=cantidad, title=title)
         
 @alumnos.route('/alumnos/view/<alumno>', methods=["POST", "GET"]) #vista de alumno luego de pre-inscripcion, deriva a la vista para matricular
 def view(alumno):
