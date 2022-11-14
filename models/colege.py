@@ -97,9 +97,8 @@ class Matricula(db.Model):
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'), nullable=True)
     #curso_matricula = db.relationship('Curso', backref='curso_matricula', lazy='dynamic')
 
-    def __init__(self, fechaInscripcion, reInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id):
+    def __init__(self, fechaInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id):
         self.fechaInscripcion=fechaInscripcion
-        self.reInscripcion=reInscripcion
         self.añoAcademico=añoAcademico
         self.condicionIngreso=condicionIngreso
         self.alumno_id=alumno_id
