@@ -1,0 +1,85 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Matricula
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-3">
+     <!-- menu lateral -->
+      {% include 'partials/_sidebar.html' %}
+    </div> 
+    <div class="col-md-9">
+        <h3 class="text-white">Matricula</h3> 
+        <form action="{{url_for('alumnos.update_matricula', matricula=matricula.idMatricula)}}" method="POST" class="bg-black ">
+            <div class="card-body p-4">
+              <div class="mb-3 text-center">
+                <h3 class="text-light" for="Alumno">{{alumno.apellido}}, {{alumno.nombre}}</h3>
+              </div>
+              <div class="mb-3">
+                <label class="text-light" for="tutor">Fecha Inscripcion:</label>
+              <input
+              type="date"
+              name="fechaInscripcion"
+              class="form-control rounded-0 bg-dark border-0 text-white"
+              autofocus
+              required
+              value="{{matricula.fechaInscripcion}}"
+              />
+              </div>
+              <div class="card text-bg-secondary mb-3 mb-3">
+                  <div class="card-header">
+                    <label>Condicion de Ingreso:</label> <span class="badge bg-success text-wrap"> {{ matricula.condicionIngreso}}</span>
+                  </div>
+                  <div class="card-body">
+                    <!-- <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="condicionIngreso" value="Ingresante">
+                      <label class="form-check-label" for="condicionIngreso">Nuevo Ingresante</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="condicionIngreso" value="PaseDeEstablecimiento">
+                      <label class="form-check-label" for="condicionIngreso">Pase de Establecimiento</label>
+                    </div> -->
+                    <div class="form-check form-check-inline">
+                      <label class="form-label">Año Academico:</label> <span class="badge bg-success text-wrap"> {{ matricula.añoAcademico}}</span>
+                      <select name="añoAcademico" class="form-select form-check-inline">
+                        <option selected value="{{matricula.añoAcademico}}">{{matricula.añoAcademico}}</option>
+                        <option value="1er_Año">1er_Año</option>
+                        <option value="2do_Año">2do_Año</option>
+                        <option value="3er_Año">3er_Año</option>
+                        <option value="4to_Año">4to_Año</option>
+                        <option value="5to_Año">5to_Año</option>
+                        <option value="6to_Año">6to_Año</option>
+                      </select>
+                    </div>
+                  </div>
+              </div>
+              <div class="card text-bg-secondary mb-3 mb-3">
+                <div class="card-header">
+                  <label>Aula/Curso:</label> <span class="badge bg-success text-wrap"> {{curso.nombre_curso}}, {{curso.division}} division</span>
+                </div>
+                <div class="form-check form-check-inline p-2">
+                  <select name="curso_id" class="form-select form-check-inline">
+                    <option selected>elegir...</option>
+                    {% for curso in cursos %}
+                    <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division</option>
+                    {% endfor %}
+                  </select>
+                </div>
+            </div>
+            <div class=" col-md-4 btn-group" role="group" aria-label="Basic radio toggle button group">
+              <button class="btn btn-sm btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
+                  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                </svg> Guardar</button>
+              <a class="btn btn-outline-danger btn-sm" href="{{url_for('alumnos.home', estado=1)}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-square" viewBox="0 0 16 16">
+                  <path d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                </svg> Cancelar</a>
+            </div>
+
+            </div>
+          </form>
+    </div>
+</div>
+{% endblock %}

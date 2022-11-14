@@ -135,6 +135,23 @@ def new_alumno():
         #return render_template('/alumnos/view.html', alumno=alumno)
         return redirect(url_for('alumnos.view', alumno=new_alumno.idAlumno))
 
+@alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
+def update_alumno(alumno):
+    alumno = Alumno.query.get(alumno)
+    if request.method == "POST":
+        alumno.nombre = request.form['nombre']
+        alumno.apellido = request.form['apellido']
+        alumno.cuil = request.form['cuil']
+        alumno.fechaNac = request.form['fechaNac']
+        alumno.sexo = request.form['sexo']
+        alumno.direccion = request.form['direccion']
+        alumno.telefono = request.form['telefono']
+        alumno.email = request.form['email']
+        db.session.commit()
+        flash('Datos Actualizados!')
+        return redirect(url_for('alumnos.detailAlumno', alumno=alumno.idAlumno))
+    return render_template("/alumnos/updateAlumno.html", alumno=alumno)
+
 @alumnos.route('/alumnos/matricula/<alumno_id>', methods=["POST", "GET"])
 def matricular(alumno_id):
     alumno = Alumno.query.get(alumno_id)
@@ -156,19 +173,19 @@ def matricular(alumno_id):
         return redirect(url_for('alumnos.home', estado=0))
     return render_template('/alumnos/matricula.html', alumno=alumno, cursos=cursos)
 
-@alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
-def update_alumno(alumno):
-    alumno = Alumno.query.get(alumno)
+@alumnos.route('/alumnos/updateMatricula/<matricula>', methods=["POST","GET"])
+def update_matricula(matricula):
+    matricula = Matricula.query.get(matricula)
+    alumno = Alumno.query.get(matricula.alumno_id)
+    cursos = Curso.query.all()
+    curso = Curso.query.get(matricula.curso_id)
     if request.method == "POST":
-        alumno.nombre = request.form['nombre']
-        alumno.apellido = request.form['apellido']
-        alumno.cuil = request.form['cuil']
-        alumno.fechaNac = request.form['fechaNac']
-        alumno.sexo = request.form['sexo']
-        alumno.direccion = request.form['direccion']
-        alumno.telefono = request.form['telefono']
-        alumno.email = request.form['email']
+        matricula.fechaInscripcion = request.form['fechaInscripcion']
+        matricula.añoAcademico = request.form['añoAcademico']
+        matricula.condicionIngreso = request.form['condicionIngreso']
+        matricula.curso_id = request.form['curso_id']
+       
         db.session.commit()
         flash('Datos Actualizados!')
         return redirect(url_for('alumnos.detailAlumno', alumno=alumno.idAlumno))
-    return render_template("/alumnos/updateAlumno.html", alumno=alumno)
+    return render_template("/alumnos/updateMatricula.html", matricula=matricula, alumno=alumno, curso=curso, cursos=cursos)
