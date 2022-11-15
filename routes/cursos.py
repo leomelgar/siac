@@ -43,3 +43,8 @@ def delete(idCurso):
     db.session.commit()
     flash('Curso Borrado!')
     return redirect(url_for('cursos.home'))
+
+@cursos.route('/cursos/listadoAlumnos/<curso_id>', methods=["GET", "POST"])
+def listado_alumnos(curso_id):
+    curso = Curso.query.get(curso_id)
+    
