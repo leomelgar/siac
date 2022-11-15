@@ -30,17 +30,20 @@
               </div>
               <div class="card text-bg-secondary mb-3 mb-3">
                   <div class="card-header">
-                    <label>Condicion de Ingreso:</label> <span class="badge bg-success text-wrap"> {{ matricula.condicionIngreso}}</span>
+                    <label>Condicion de Ingreso:</label>
                   </div>
                   <div class="card-body">
-                    <!-- <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="condicionIngreso" value="Ingresante">
+                    {% if matricula.condicionIngreso == "Ingresante" %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" checked name="condicionIngreso" value="Ingresante">
                       <label class="form-check-label" for="condicionIngreso">Nuevo Ingresante</label>
                     </div>
+                    {% else %}
                     <div class="form-check form-check-inline">
-                      <input class="form-check-input" type="radio" name="condicionIngreso" value="PaseDeEstablecimiento">
+                      <input class="form-check-input" type="radio" checked name="condicionIngreso" value="PaseDeEstablecimiento">
                       <label class="form-check-label" for="condicionIngreso">Pase de Establecimiento</label>
-                    </div> -->
+                    </div>
+                    {% endif %}
                     <div class="form-check form-check-inline">
                       <label class="form-label">Año Academico:</label> <span class="badge bg-success text-wrap"> {{ matricula.añoAcademico}}</span>
                       <select name="añoAcademico" class="form-select form-check-inline">
@@ -61,7 +64,7 @@
                 </div>
                 <div class="form-check form-check-inline p-2">
                   <select name="curso_id" class="form-select form-check-inline">
-                    <option selected>elegir...</option>
+                    <option selected value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division</option>
                     {% for curso in cursos %}
                     <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division</option>
                     {% endfor %}
