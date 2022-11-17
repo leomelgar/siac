@@ -44,7 +44,11 @@ def delete(idCurso):
     flash('Curso Borrado!')
     return redirect(url_for('cursos.home'))
 
+#listado de alumnos por curso
 @cursos.route('/cursos/listadoAlumnos/<curso_id>', methods=["GET", "POST"])
 def listado_alumnos(curso_id):
     curso = Curso.query.get(curso_id)
+    #curso = Matricula.query.filter_by(curso_id=curso_id).first()
+    print(curso)
+    return render_template('/cursos/listAlumnos.html', curso=curso)
     
