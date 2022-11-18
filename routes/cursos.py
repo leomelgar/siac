@@ -1,6 +1,6 @@
 from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Curso, Catedra, Aula, Docente, Turno, Matricula, Horario
+from models.colege import Curso, Alumno, Aula, Docente, Turno, Matricula, Horario
 from utils.db import db
 
 cursos = Blueprint("cursos", __name__)
@@ -48,7 +48,7 @@ def delete(idCurso):
 @cursos.route('/cursos/listadoAlumnos/<curso_id>', methods=["GET", "POST"])
 def listado_alumnos(curso_id):
     curso = Curso.query.get(curso_id)
-    #curso = Matricula.query.filter_by(curso_id=curso_id).first()
-    print(curso)
-    return render_template('/cursos/listAlumnos.html', curso=curso)
+    listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.apellido, Alumno.nombre, Alumno.cuil, )
+    cantidad = listado.count()
+    return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, cantidad=cantidad)
     
