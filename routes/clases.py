@@ -1,6 +1,6 @@
 from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Clase, Curso, Catedra, Horario, Docente
+from models.colege import Clase, Curso, Catedra, Horario, Docente, Matricula, Alumno
 from utils.db import db
 
 clases = Blueprint("clases", __name__)
@@ -40,6 +40,12 @@ def add_clase():
         db.session.commit()
         flash('Clase añadido correctamente!')
         return redirect(url_for('clases.home'))
+
+@clases.route('/clases/listado/<idClase>')
+def listado(idClase):
+    clase = Clase.query.get(idClase)
+    listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.apellido, Alumno.nombre)
+    return render_template('/clases/listado.html',listado=listado, clase=clase)
 
 @clases.route('/clases/delete/<idClase>')
 def delete(idClase):
