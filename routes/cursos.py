@@ -51,5 +51,8 @@ def listado_alumnos(curso_id):
     curso = Curso.query.get(curso_id)
     listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.apellido, Alumno.nombre, Alumno.cuil)
     aula = Aula.query.get(curso.aula_id)
-    return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, cantidad=math.trunc(listado.count()/4), capacidad = aula.capacidad)
+    # for i in listado:
+    #     print(i)
+    # print(listado.count())
+    return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, cantidad=math.trunc(listado.count()/3), capacidad = aula.capacidad)
     
