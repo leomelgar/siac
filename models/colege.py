@@ -196,3 +196,16 @@ class Clase(db.Model):
         self.curso_id = curso_id
         self.catedra_id = catedra_id
         self.horario_id = horario_id
+
+class Calificacion(db.Model):
+    idCalificacion = db.Column(db.Integer, primary_key=True)
+    nota_1 = db.Column(db.Integer)
+    nota_2 = db.Column(db.Integer)
+    nota_3 = db.Column(db.Integer)
+    notaFinal = db.Column(db.Float)
+
+    def __init__(self, nota_1, nota_2, nota_3, notaFinal):
+        self.nota_1 = nota_1
+        self.nota_2 = nota_2
+        self.nota_3 = nota_3
+        self.notaFinal = notaFinal

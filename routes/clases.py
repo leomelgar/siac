@@ -54,3 +54,16 @@ def delete(idClase):
     db.session.commit()
     flash('Clase Borrada!')
     return redirect(url_for('clases.home'))
+
+@clases.route('/clases/calificar/<alumno_id>', methods=['POST','GET'])
+def calificar(alumno_id):
+    alumno = Alumno.query.get(alumno_id)
+    if request.method == 'POST':
+        nota_1 = request.form['nota_1']
+        nota_2 = request.form['nota_2']
+        nota_3 = request.form['nota_3']
+
+        new_calificacion = Calificacion(nota_1,nota_2,nota_3,alumno_id)
+        db.session.add(new_calificacion)
+        db.session.commit()
+        flash('Calificacion Añadida!')
