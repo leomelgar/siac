@@ -45,9 +45,9 @@ def add_clase():
 def listado(idClase):
     clase = Clase.query.get(idClase)
     listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre)
-    cantidad = listado.count()/3
-    # for i in listado:
-    #     print(i)
+    cantidad = listado.count()/2
+    for i in listado:
+        print(i)
     return render_template('/clases/listado.html',listado=listado, clase=clase, cantidad=cantidad)
 
 @clases.route('/clases/delete/<idClase>')
@@ -62,7 +62,7 @@ def delete(idClase):
 def calificar(alumno_id,clase_id):
     alumno = Alumno.query.get(alumno_id)
     clase = Clase.query.get(clase_id)
-    asignatura = Catedra.query.join(Clase, Catedra.idCatedra==clase.idClase).join(Asignatura, Catedra.asignatura_id==Asignatura.idAsignatura).add_columns(Catedra.idCatedra,Catedra.nombre_cat,Asignatura.idAsignatura,Asignatura.nombre)
+    asignatura = Catedra.query.join(Clase, Catedra.idCatedra==clase.catedra_id).join(Asignatura, Catedra.asignatura_id==Asignatura.idAsignatura).add_columns(Catedra.idCatedra,Catedra.nombre_cat,Asignatura.idAsignatura,Asignatura.nombre)
     for i in asignatura:
         print(i)
     if request.method == 'POST':
