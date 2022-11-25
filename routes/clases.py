@@ -1,6 +1,6 @@
 from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Clase, Curso, Catedra, Horario, Docente, Matricula, Alumno
+from models.colege import Clase, Curso, Catedra, Horario, Docente, Matricula, Alumno, Calificacion, Asignatura
 from utils.db import db
 
 clases = Blueprint("clases", __name__)
@@ -41,11 +41,14 @@ def add_clase():
         flash('Clase añadido correctamente!')
         return redirect(url_for('clases.home'))
 
-@clases.route('/clases/listado/<idClase>')
+@clases.route('/clases/listado/<idClase>')#listado de alumnos por clase
 def listado(idClase):
     clase = Clase.query.get(idClase)
-    listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.apellido, Alumno.nombre)
-    return render_template('/clases/listado.html',listado=listado, clase=clase)
+    listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre)
+    cantidad = listado.count()/3
+    # for i in listado:
+    #     print(i)
+    return render_template('/clases/listado.html',listado=listado, clase=clase, cantidad=cantidad)
 
 @clases.route('/clases/delete/<idClase>')
 def delete(idClase):
@@ -55,15 +58,22 @@ def delete(idClase):
     flash('Clase Borrada!')
     return redirect(url_for('clases.home'))
 
-@clases.route('/clases/calificar/<alumno_id>', methods=['POST','GET'])
-def calificar(alumno_id):
+@clases.route('/clases/calificar/<alumno_id>/<clase_id>', methods=['POST','GET']) #asignar nota a un alumno
+def calificar(alumno_id,clase_id):
     alumno = Alumno.query.get(alumno_id)
+    clase = Clase.query.get(clase_id)
+    asignatura = Catedra.query.join(Clase, Catedra.idCatedra==clase.idClase).join(Asignatura, Catedra.asignatura_id==Asignatura.idAsignatura).add_columns(Catedra.idCatedra,Catedra.nombre_cat,Asignatura.idAsignatura,Asignatura.nombre)
+    for i in asignatura:
+        print(i)
     if request.method == 'POST':
         nota_1 = request.form['nota_1']
         nota_2 = request.form['nota_2']
         nota_3 = request.form['nota_3']
+        notaFinal = (nota_1+nota_2+nota_3)/3
 
-        new_calificacion = Calificacion(nota_1,nota_2,nota_3,alumno_id)
+        new_calificacion = Calificacion(nota_1,nota_2,nota_3,notaFinal,alumno_id)
         db.session.add(new_calificacion)
         db.session.commit()
         flash('Calificacion Añadida!')
+        return redirect(url_for('clases.listado', idClase=clase_id))
+    return render_template('/clases/calificacion.html', alumno=alumno, asignatura=asignatura)

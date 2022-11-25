@@ -1,0 +1,58 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Calificacion
+{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-3">
+    <!-- menu lateral -->
+    {% include 'partials/_sidebarClase.html' %}
+   </div>
+    <div class="col-md-6">
+      {% include 'partials/_message.html' %}
+      <h2 class="text-secondary text-center">Alumno: {{alumno.apellido}}, {{alumno.nombre}}</h2>
+      {%for asignatura in asignatura%}
+      <h2 class="text-secondary text-center">Asignatura: {{asignatura.nombre}} </h2>
+      {% endfor %}
+    <hr class="my-4">
+    <form action="/clases/calificar" method="POST">
+        <div class="card-body p-4 text-white">
+            {% if not nota_1 %}
+            <div class="mb-3">
+              <label for="cuil">Nota Primer Trimestre:</label>
+              <input
+                type="float"
+                name="nota_1"
+                class="form-control rounded-0 bg-dark border-0 text-white"
+                placeholder="ingresar nota"
+                required
+              />
+            </div>
+            {% elif not nota_2%}
+            <div class="mb-3">
+              <label for="telefono">Nota Segundo Trimestre:</label>
+              <input
+                type="float"
+                name="nota_2"
+                class="form-control rounded-0 bg-dark border-0 text-white"
+                placeholder="ingresar nota"
+              />
+            </div>
+            {% else %}
+            <div class="mb-3">
+              <label for="nota_3">Nota Tercer Trimestre:</label>
+              <input
+                type="float"
+                name="nota_3"
+                class="form-control rounded-0 bg-dark border-0 text-white"
+                placeholder="ingresar nota"
+              />
+            </div>
+            {% endif %}
+            <button class="btn btn-primary">Guardar</button>
+        </div>
+    </form>
+  </div>
+{% endblock %}

@@ -190,6 +190,7 @@ class Clase(db.Model):
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'))
     catedra_id = db.Column(db.Integer, db.ForeignKey('catedra.idCatedra'))
     horario_id = db.Column(db.Integer, db.ForeignKey('horario.idHorario'))
+    fk_calificacion = db.relationship('Calificacion', backref='fk_calificacion', lazy='dynamic')
 
     def __init__(self, nombre_clase, curso_id, catedra_id, horario_id):
         self.nombre_clase = nombre_clase
@@ -197,15 +198,27 @@ class Clase(db.Model):
         self.catedra_id = catedra_id
         self.horario_id = horario_id
 
+class Boletin(db.Model):
+    idBoletin = db.Column(db.Integer, primary_key=True)
+    alumno_id = db.Column(db.Integer, db.ForeignKey('alumno.idAlumno'))
+    fk_calificacion_boletin = db.relationship('Calificacion', backref='fk_calificacion_boletin', lazy='dynamic')
+
+    def __init__(self, alumno_id):
+        self.alumno_id = alumno_id
+
+
 class Calificacion(db.Model):
     idCalificacion = db.Column(db.Integer, primary_key=True)
     nota_1 = db.Column(db.Integer)
     nota_2 = db.Column(db.Integer)
     nota_3 = db.Column(db.Integer)
     notaFinal = db.Column(db.Float)
+    clase_id = db.Column(db.Integer, db.ForeignKey('clase.idClase'))
+    boletin_id = db.Column(db.Integer, db.ForeignKey('boletin.idBoletin'))
 
-    def __init__(self, nota_1, nota_2, nota_3, notaFinal):
+    def __init__(self, nota_1, nota_2, nota_3, notaFinal, clase_id):
         self.nota_1 = nota_1
         self.nota_2 = nota_2
         self.nota_3 = nota_3
         self.notaFinal = notaFinal
+        self.clase_id = clase_id
