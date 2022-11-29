@@ -2,6 +2,7 @@ from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.colege import Clase, Curso, Catedra, Horario, Docente, Matricula, Alumno, Calificacion, Asignatura
 from utils.db import db
+import math
 
 clases = Blueprint("clases", __name__)
 
@@ -45,7 +46,7 @@ def add_clase():
 def listado(idClase):
     clase = Clase.query.get(idClase)
     listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre)
-    cantidad = listado.count()/2
+    cantidad = math.trunc(listado.count()/3)
     for i in listado:
         print(i)
     return render_template('/clases/listado.html',listado=listado, clase=clase, cantidad=cantidad)
