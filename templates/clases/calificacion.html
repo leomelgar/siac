@@ -17,13 +17,21 @@
       <h2 class="text-secondary text-center">Asignatura: {{asignatura.nombre}} </h2>
       {% endfor %}
     <hr class="my-4">
-    <form action="/clases/calificar" method="POST">
+    <form action="/clases/nota" method="POST">
         <div class="card-body p-4 text-white">
+          <div class="mb-3">
+            <input
+              type="number"
+              name="clase_id"
+              value="{{clase.idClase}}"
+              class="form-control rounded-0 bg-dark border-0 text-white"
+            />
+          </div>
             {% if not nota_1 %}
             <div class="mb-3">
               <label for="cuil">Nota Primer Trimestre:</label>
               <input
-                type="float"
+                type="number"
                 name="nota_1"
                 class="form-control rounded-0 bg-dark border-0 text-white"
                 placeholder="ingresar nota"
@@ -34,7 +42,7 @@
             <div class="mb-3">
               <label for="telefono">Nota Segundo Trimestre:</label>
               <input
-                type="float"
+                type="number"
                 name="nota_2"
                 class="form-control rounded-0 bg-dark border-0 text-white"
                 placeholder="ingresar nota"
@@ -44,7 +52,7 @@
             <div class="mb-3">
               <label for="nota_3">Nota Tercer Trimestre:</label>
               <input
-                type="float"
+                type="number"
                 name="nota_3"
                 class="form-control rounded-0 bg-dark border-0 text-white"
                 placeholder="ingresar nota"

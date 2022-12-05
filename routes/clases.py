@@ -3,6 +3,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from models.colege import Clase, Curso, Catedra, Horario, Docente, Matricula, Alumno, Calificacion, Asignatura
 from utils.db import db
 import math
+from sqlalchemy import select
 
 clases = Blueprint("clases", __name__)
 
@@ -45,7 +46,8 @@ def add_clase():
 @clases.route('/clases/listado/<idClase>')#listado de alumnos por clase
 def listado(idClase):
     clase = Clase.query.get(idClase)
-    listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre)
+    #listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre, Calificacion.nota_1, Calificacion.nota_2, Calificacion.nota_3, Calificacion.notaFinal)
+    listado = select([Clase, Curso], use_labels=True).select_from(Curso.join(Clase).join(Matricula)).where(Curso.idCurso==clase.idClase)
     cantidad = math.trunc(listado.count()/3)
     for i in listado:
         print(i)
@@ -63,18 +65,41 @@ def delete(idClase):
 def calificar(alumno_id,clase_id):
     alumno = Alumno.query.get(alumno_id)
     clase = Clase.query.get(clase_id)
-    asignatura = Catedra.query.join(Clase, Catedra.idCatedra==clase.catedra_id).join(Asignatura, Catedra.asignatura_id==Asignatura.idAsignatura).add_columns(Catedra.idCatedra,Catedra.nombre_cat,Asignatura.idAsignatura,Asignatura.nombre)
+    asignatura = Catedra.query.join(Clase, Catedra.idCatedra==clase.catedra_id).join(Asignatura, Catedra.asignatura_id==Asignatura.idAsignatura).join(Calificacion, clase.idClase==Calificacion.clase_id).add_columns(Catedra.idCatedra,Catedra.nombre_cat,Asignatura.idAsignatura,Asignatura.nombre)
     for i in asignatura:
         print(i)
+    # if request.method == 'POST':
+    #     nota_1 = request.form['nota_1']
+    #     nota_2 = request.form['nota_2']
+    #     nota_3 = request.form['nota_3']
+    #     notaFinal = (nota_1+nota_2+nota_3)/3
+
+    #     new_calificacion = Calificacion(nota_1,nota_2,nota_3,notaFinal)
+    #     db.session.add(new_calificacion)
+    #     db.session.commit()
+    #     flash('Calificacion Añadida!')
+    #     return redirect(url_for('clases.listado', idClase=clase_id))
+    return render_template('/clases/calificacion.html', alumno=alumno, asignatura=asignatura, clase=clase)
+
+@clases.route('/clases/nota', methods=['POST'])
+def nota():
     if request.method == 'POST':
         nota_1 = request.form['nota_1']
+        nota_2 = 0
+        nota_3 = 0
+        notaFinal = (int(nota_1) + int(nota_2) + int(nota_3))/3
+        clase_id = request.form['clase_id']
+    elif nota_1 and not nota_2:
         nota_2 = request.form['nota_2']
+        nota_3 = 0
+        notaFinal = (int(nota_1) + int(nota_2) + int(nota_3))/3
+        clase_id = request.form['clase_id']
+    else:
         nota_3 = request.form['nota_3']
-        notaFinal = (nota_1+nota_2+nota_3)/3
-
-        new_calificacion = Calificacion(nota_1,nota_2,nota_3,notaFinal,alumno_id)
-        db.session.add(new_calificacion)
-        db.session.commit()
-        flash('Calificacion Añadida!')
-        return redirect(url_for('clases.listado', idClase=clase_id))
-    return render_template('/clases/calificacion.html', alumno=alumno, asignatura=asignatura)
+        notaFinal = (int(nota_1) + int(nota_2) + int(nota_3))/3
+        clase_id = request.form['clase_id']
+    new_calificacion = Calificacion(nota_1,nota_2,nota_3,notaFinal,clase_id)
+    db.session.add(new_calificacion)
+    db.session.commit()
+    flash('Calificacion Añadida!')
+    return redirect(url_for('clases.listado', idClase=clase_id))

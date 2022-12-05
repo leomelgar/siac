@@ -32,10 +32,10 @@
         <tr>
           <td>{{listado.apellido}}</td>
           <td>{{listado.nombre}}</td>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>{{listado.nota_1}}</td>
+          <td>{{listado.nota_2}}</td>
+          <td>{{listado.nota_3}}</td>
+          <td>{{listado.notaFinal}}</td>
           <td><div>
             <a href="{{url_for('clases.calificar', alumno_id=listado.idAlumno, clase_id=clase.idClase)}}" class="btn btn-outline-success btn-sm rounded-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
