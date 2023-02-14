@@ -12,9 +12,22 @@
    </div>
     <div class="col-md-9">
       {% include 'partials/_message.html' %}
-      <span class="badge bg-success text-wrap"><h6>Curso: {{curso.nombre_curso}}, {{curso.division}} division</h6></span>
-      <!-- <h4 class="text-white">Cantidad de Alumnos: {{cantidad}} de {{capacidad}}</h4> -->
-      <span class="badge bg-secondary text-wrap"><h6>Cantidad de Alumnos: {{cantidad}} de {{capacidad}}</h6></span>
+      <div>
+        <div class="row">
+          <div class="col">
+            <span class="badge bg-success text-wrap"><h6>Curso: {{curso.nombre_curso}}, {{curso.division}} division</h6></span>
+          </div>
+          <div class="col">
+            <span class="badge bg-secondary text-wrap"><h6>Cantidad de Alumnos: {{cantidad}} de {{capacidad}}</h6></span>
+          </div>
+          <div class="col">
+            <a href="{{url_for('cursos.home')}}" class="btn btn-outline-primary btn-sm rounded-0">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+              </svg> Volver</a>
+          </div>
+        </div>
+      </div>
       <hr class="my-4">
     <table class="table table-dark table-hover">
       <thead>
