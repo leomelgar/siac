@@ -47,7 +47,8 @@ def add_clase():
 def listado(idClase):
     clase = Clase.query.get(idClase)
     #listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre, Calificacion.nota_1, Calificacion.nota_2, Calificacion.nota_3, Calificacion.notaFinal)
-    listado = select([Clase, Curso], use_labels=True).select_from(Curso.join(Clase).join(Matricula)).where(Curso.idCurso==clase.idClase)
+    listado = Curso.query.join(Clase, Curso.idCurso==clase.curso_id).join(Matricula, Curso.idCurso==Matricula.curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno,Alumno.apellido, Alumno.nombre)
+    #listado = select([Clase, Curso], use_labels=True).select_from(Curso.join(Clase).join(Matricula)).where(Curso.idCurso==clase.idClase)
     cantidad = math.trunc(listado.count()/3)
     for i in listado:
         print(i)
