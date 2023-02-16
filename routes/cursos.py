@@ -55,4 +55,12 @@ def listado_alumnos(curso_id):
     #     print(i)
     # print(listado.count())
     return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, cantidad=math.trunc(listado.count()/3), capacidad = aula.capacidad)
-    
+
+#agregar alumnos a un curso determinado
+@cursos.route('/cursos/agregarAlumno/<curso_id>', methods=["GET", "POST"])
+def addAlumno(curso_id):
+    curso = Curso.query.get(curso_id)
+    listado = Alumno.query.filter_by(inscripto=1)
+    for i in listado:
+        print(i)
+    return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, opcion = "agregar")
