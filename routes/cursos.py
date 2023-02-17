@@ -49,7 +49,7 @@ def delete(idCurso):
 @cursos.route('/cursos/listadoAlumnos/<curso_id>', methods=["GET", "POST"])
 def listado_alumnos(curso_id):
     curso = Curso.query.get(curso_id)
-    listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.apellido, Alumno.nombre, Alumno.cuil)
+    listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno, Alumno.apellido, Alumno.nombre, Alumno.cuil)
     aula = Aula.query.get(curso.aula_id)
     # for i in listado:
     #     print(i)
@@ -60,7 +60,8 @@ def listado_alumnos(curso_id):
 @cursos.route('/cursos/agregarAlumno/<curso_id>', methods=["GET", "POST"])
 def addAlumno(curso_id):
     curso = Curso.query.get(curso_id)
-    listado = Alumno.query.filter_by(inscripto=1)
-    for i in listado:
-        print(i)
+    if curso.nombre_curso == "1er año":
+        listado = Alumno.query.filter_by(inscripto=1)#lista solo los alumnos que van a cursar 1er año
+    else:
+        listado = Alumno.query.filter_by(inscripto=0)#lista los alumnos que van a cursar de 2do año en adelante
     return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, opcion = "agregar")

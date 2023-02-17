@@ -5,6 +5,20 @@
 {% endblock %}
 
 {% block body %}
+<script>
+  function calcularAños(fechaNacimiento) {
+    // var today = new Date();
+    // //Restamos los años
+    // años = today.getFullYear() - año;
+    // // Si no ha llegado su cumpleaños le restamos el año por cumplir
+    // if (fechaNacimiento.getMonth() > (today.getMonth()) || fechaNacimiento.getDay() > today.getDay())
+    //     años--;
+    // return años;
+    var dato = fechaNacimiento - 1;
+    console.log(dato);
+    return dato;
+}
+</script>
 <div class="row">
   <div class="col-md-3">
     <!-- menu lateral -->
@@ -30,12 +44,15 @@
         </div>
       </div>
       <hr class="my-4">
+      <!-- Formulario para seleccionar los alumnos p/ ingresar a un curso -->
+    <form action="/cursos/add_alumno" method="post">
     <table class="table table-dark table-hover">
       <thead>
         <tr>
           <th scope="col">Apellido</th>
           <th scope="col">Nombre</th>
           <th scope="col">Cuil</th>
+          <th scope="col">Fecha Nac</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -45,17 +62,20 @@
           <td>{{listado.apellido}}</td>
           <td>{{listado.nombre}}</td>
           <td>{{listado.cuil}}</td>
+          <td><script>calcularAños(1985);</script></td>
           <td><div>
-            <a href="#" class="btn btn-outline-secondary btn-sm rounded-0">
+            <input class="form-check-input" type="checkbox" value="{{listado.idAlumno}}" name="" id="">
+            <!-- <a href="#" class="btn btn-outline-secondary btn-sm rounded-0">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
               <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
               <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-            </svg> Agregar</a>
+            </svg> Agregar</a> -->
           </div></td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+  </form>
     {% else %}
     <!-- opcion de listar alumnos por clase -->
     <div>
