@@ -63,5 +63,6 @@ def addAlumno(curso_id):
     if curso.nombre_curso == "1er año":
         listado = Alumno.query.filter_by(inscripto=1)#lista solo los alumnos que van a cursar 1er año
     else:
+        #listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno, Alumno.apellido, Alumno.nombre, Alumno.cuil, Alumno.fechaNac, Alumno.inscripto, Matricula.idMatricula)
         listado = Alumno.query.filter_by(inscripto=0)#lista los alumnos que van a cursar de 2do año en adelante
     return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, opcion = "agregar")
