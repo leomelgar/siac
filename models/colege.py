@@ -94,7 +94,7 @@ class Matricula(db.Model):
     alumno_id = db.Column(db.Integer, db.ForeignKey('alumno.idAlumno'))
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'), nullable=True)
-    #curso_matricula = db.relationship('Curso', backref='curso_matricula', lazy='dynamic')
+    legajo_matricula = db.relationship('legajo', backref='legajo_matricula', lazy='dynamic')
 
     def __init__(self, fechaInscripcion, añoAcademico, alumno_id, colegio_id, curso_id):
         self.fechaInscripcion=fechaInscripcion
@@ -110,7 +110,7 @@ class legajo(db.Model):
     condicionAlumno = db.Column(db.String(20), nullable=False)#regular, libre, suspencion
     fechaEgreso = db.Column(db.Date, nullable=True)#fecha que sale del establecimiento-ya sea por promocion(finalizacion de estudios) o cambio de colegio
     colegioAnterior = db.Column(db.String(200), nullable=False)#Institucion del que procede, colegio primario o secundario de donde hace el pase.
-    matricula_id = db.Column(db.Integer, db.ForeignKey('matricula.idMatricula'))
+    fk_matricula_id = db.Column(db.Integer, db.ForeignKey('matricula.idMatricula'))
 
     def __init__(self, fechaAdmision, condicionIngreso, condicionAlumno, fechaEgreso, colegioAnterior, matricula_id):
         self.fechaAdmision=fechaAdmision
