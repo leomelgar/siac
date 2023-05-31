@@ -63,6 +63,7 @@ class Alumno(db.Model):
     apellido = db.Column(db.String(45))
     cuil = db.Column(db.String(15))
     fechaNac = db.Column(db.Date)
+    lugarNac = db.Column(db.String(100))
     sexo = db.Column(db.String(10))
     direccion = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
@@ -72,11 +73,12 @@ class Alumno(db.Model):
     tutor_id = db.Column(db.Integer, db.ForeignKey('tutor.idTutor'))
     matricular = db.relationship('Matricula',backref='matricular', lazy='dynamic')
 
-    def __init__(self, nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id):
+    def __init__(self, nombre, apellido, cuil, fechaNac, lugarNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id):
         self.nombre=nombre
         self.apellido=apellido
         self.cuil=cuil
         self.fechaNac=fechaNac
+        self.lugarNac=lugarNac
         self.sexo=sexo
         self.direccion=direccion
         self.telefono=telefono
@@ -88,22 +90,35 @@ class Alumno(db.Model):
 class Matricula(db.Model):
     idMatricula = db.Column(db.Integer, primary_key=True)
     fechaInscripcion = db.Column(db.Date) #fecha de alta como alumno en un nuevo año lectivo
-    #reInscripcion = db.Column(db.Date, nullable=True) #reinscripto-fecha en la cual se volvio a inscribir, para cursar otro año
     añoAcademico = db.Column(db.String(8), nullable=False)#el año que esta cursando el alumno
-    condicionIngreso = db.Column(db.String(22), nullable=False)#ingresante a primer año o por pase de otro establecimiento
-    #fechaEgreso = db.Column(db.Date, nullable=True)#fecha que sale del establecimiento-ya sea por promocion(finalizacion de estudios) o cambio de colegio
     alumno_id = db.Column(db.Integer, db.ForeignKey('alumno.idAlumno'))
     colegio_id = db.Column(db.Integer, db.ForeignKey('colegio.idColegios'), nullable=True)
     curso_id = db.Column(db.Integer, db.ForeignKey('curso.idCurso'), nullable=True)
     #curso_matricula = db.relationship('Curso', backref='curso_matricula', lazy='dynamic')
 
-    def __init__(self, fechaInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id):
+    def __init__(self, fechaInscripcion, añoAcademico, alumno_id, colegio_id, curso_id):
         self.fechaInscripcion=fechaInscripcion
         self.añoAcademico=añoAcademico
-        self.condicionIngreso=condicionIngreso
         self.alumno_id=alumno_id
         self.colegio_id=colegio_id
         self.curso_id = curso_id
+
+class legajo(db.Model):
+    idLegajo = db.Column(db.Integer, primary_key=True)
+    fechaAdmision = db.Column(db.Date, nullable=False)#fecha de ingreso o alta en el colegio, no modificable
+    condicionIngreso = db.Column(db.String(22), nullable=False)#ingresante a primer año o por pase de otro establecimiento
+    condicionAlumno = db.Column(db.String(20), nullable=False)#regular, libre, suspencion
+    fechaEgreso = db.Column(db.Date, nullable=True)#fecha que sale del establecimiento-ya sea por promocion(finalizacion de estudios) o cambio de colegio
+    colegioAnterior = db.Column(db.String(200), nullable=False)#Institucion del que procede, colegio primario o secundario de donde hace el pase.
+    matricula_id = db.Column(db.Integer, db.ForeignKey('matricula.idMatricula'))
+
+    def __init__(self, fechaAdmision, condicionIngreso, condicionAlumno, fechaEgreso, colegioAnterior, matricula_id):
+        self.fechaAdmision=fechaAdmision
+        self.condicionIngreso=condicionIngreso
+        self.condicionAlumno=condicionAlumno
+        self.fechaEgreso=fechaEgreso
+        self.colegioAnterior=colegioAnterior
+        self.matricula_id=matricula_id
 
 class Asignatura(db.Model):
     idAsignatura = db.Column(db.Integer, primary_key=True)
@@ -124,7 +139,7 @@ class Catedra(db.Model):
     asignatura_id = db.Column(db.Integer, db.ForeignKey('asignatura.idAsignatura'))
     docente_id = db.Column(db.Integer, db.ForeignKey('docente.idDocente'))
     fk_catedra_clase = db.relationship('Clase', backref='fk_fk_catedra_clase', lazy='dynamic')
-    
+
 
     def __init__(self, nombre_cat, cargaHoraria, tipoCargo, caracter, asignatura_id, docente_id):
         self.nombre_cat=nombre_cat
@@ -167,7 +182,7 @@ class Turno(db.Model):
     def __init__(self, turno):
         self.turno = turno
 
-class Curso(db.Model):  
+class Curso(db.Model):
     idCurso = db.Column(db.Integer, primary_key=True)
     nombre_curso = db.Column(db.String(7), nullable=False)
     division = db.Column(db.String(7))
