@@ -120,6 +120,7 @@ def new_alumno():
         apellido = request.form['apellido']
         cuil = request.form['cuil']
         fechaNac = request.form['fechaNac']
+        lugarNac = request.form['lugarNac']
         sexo = request.form['sexo']
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
@@ -128,7 +129,7 @@ def new_alumno():
         inscripto = '1'
         tutor_id = request.form['tutor_id']
 
-        new_alumno = Alumno(nombre, apellido, cuil, fechaNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id)
+        new_alumno = Alumno(nombre, apellido, cuil, fechaNac, lugarNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id)
         db.session.add(new_alumno)
         db.session.commit()
         flash('Pre-Inscripcion realizada!')
