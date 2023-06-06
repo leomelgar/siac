@@ -14,7 +14,7 @@
         />
         {% endif %}
       </div>
-      
+
       <div class="col-md-6">
         <label for="nombre" class="form-label">Nombre:</label>
         <input type="text" name="nombre" class="form-control" placeholder="escriba el nombre" autofocus required/>
@@ -100,6 +100,25 @@
           class="form-control"
           placeholder="ej: colegio@dominio.com.ar"
         />
+      </div>
+      <div class="card text-bg-secondary mb-3 mb-3">
+          <div class="card-header">
+            <label>Condicion de Ingreso:</label>
+          </div>
+          <div class="card-body">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="condicionIngreso" value="Ingresante">
+              <label class="form-check-label" for="condicionIngreso">Nuevo Ingresante</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="condicionIngreso" value="PaseDeEstablecimiento">
+              <label for="condicionIngreso">Pase de Establecimiento</label>
+            </div>
+            <div class="form-check form-check-inline">
+              <label for="colegioAnterior">Nombre de Colegio o Institucion</label>
+              <input class="form-control" type="text" name="colegioAnterior">
+            </div>
+          </div>
       </div>
       <div class="col-md-4 btn-group" role="group" aria-label="Basic radio toggle button group">
         <button class="btn btn-sm btn-outline-primary" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">

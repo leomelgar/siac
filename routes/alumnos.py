@@ -48,7 +48,7 @@ def home(estado):
             else:
                 return render_template('/alumnos/home.html', estado=0, alumnos=alumnos, cantidad=cantidad, title=title)
         return render_template('/alumnos/home.html', estado=0, alumnos=alumnos, cantidad=cantidad, title=title)
-        
+
 @alumnos.route('/alumnos/view/<alumno>', methods=["POST", "GET"]) #vista de alumno luego de pre-inscripcion, deriva a la vista para matricular
 def view(alumno):
     alumno = Alumno.query.get(alumno)
@@ -105,7 +105,7 @@ def new_tutor():
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
-        
+
 
         new_tutor = Tutor(nombre, apellido, cuil, parentesco, direccion, telefono, email)
         db.session.add(new_tutor)
@@ -126,11 +126,15 @@ def new_alumno():
         telefono  = request.form['telefono']
         email = request.form['email']
         fechaPreinscripcion = date.today()
+        condicionIngreso = request.form['condicionIngreso']
+        colegioAnterior = request.form['colegioAnterior']
         inscripto = '1'
         tutor_id = request.form['tutor_id']
 
         new_alumno = Alumno(nombre, apellido, cuil, fechaNac, lugarNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id)
+        new_legajo = Legajo(fechaPreinscripcion, condicionIngreso,colegioAnterior)
         db.session.add(new_alumno)
+        db.session.add(new_legajo)
         db.session.commit()
         flash('Pre-Inscripcion realizada!')
         #return render_template('/alumnos/view.html', alumno=alumno)
@@ -157,22 +161,42 @@ def update_alumno(alumno):
 def matricular(alumno_id):
     alumno = Alumno.query.get(alumno_id)
     cursos = Curso.query.all()
-    if request.method == "POST":
-        fechaInscripcion = request.form['fechaInscripcion']
-        añoAcademico = request.form['añoAcademico']
-        condicionIngreso = request.form['condicionIngreso']
-        alumno_id = alumno_id
-        colegio_id = 8 #falta añadir logica para asignar el colegio
-        curso_id = request.form['curso_id']
+    if alumno.inscripto=="1":#pre-inscriptos, va pasar a ser alumno del colegio
+        if request.method == "POST":
+            fechaInscripcion = request.form['fechaInscripcion']#esta fecha es la de admision al colegio y se guarda en el legajo
+            añoAcademico = request.form['añoAcademico']
+            #condicionIngreso = request.form['condicionIngreso']
+            alumno_id = alumno_id
+            colegio_id = 8 #falta añadir logica para asignar el colegio
+            curso_id = request.form['curso_id']
 
-        new_matricula = Matricula(fechaInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
-        db.session.add(new_matricula)
-        alumno.inscripto = '0'
-        db.session.commit()
-        
-        flash('matricula realizada correctamente, ya es Alumno!')
-        return redirect(url_for('alumnos.home', estado=0))
-    return render_template('/alumnos/matricula.html', alumno=alumno, cursos=cursos)
+            new_matricula = Matricula(fechaInscripcion, añoAcademico, alumno_id, colegio_id, curso_id)
+            new_legajo  = Legajo(fechaInscripcion, condicionAlumno="regular")
+            db.session.add(new_matricula)
+            db.session.add(new_legajo)
+            alumno.inscripto = '0'
+            db.session.commit()
+
+            flash('matricula realizada correctamente, ya es Alumno!')
+            return redirect(url_for('alumnos.home', estado=0))
+        return render_template('/alumnos/matricula.html', alumno=alumno, cursos=cursos)
+    else:
+        if request.method == "POST":
+            fechaInscripcion = request.form['fechaInscripcion']
+            añoAcademico = request.form['añoAcademico']
+            condicionIngreso = request.form['condicionIngreso']
+            alumno_id = alumno_id
+            colegio_id = 8 #falta añadir logica para asignar el colegio
+            curso_id = request.form['curso_id']
+
+            new_matricula = Matricula(fechaInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
+            db.session.add(new_matricula)
+            db.session.commit()
+
+            flash('matricula realizada correctamente, ya es Alumno!')
+            return redirect(url_for('alumnos.home', estado=0))
+        return render_template('/alumnos/matricula.html', alumno=alumno, cursos=cursos)
+
 
 @alumnos.route('/alumnos/updateMatricula/<matricula>', methods=["POST","GET"])
 def update_matricula(matricula):
@@ -185,7 +209,7 @@ def update_matricula(matricula):
         matricula.añoAcademico = request.form['añoAcademico']
         matricula.condicionIngreso = request.form['condicionIngreso']
         matricula.curso_id = request.form['curso_id']
-       
+
         db.session.commit()
         flash('Datos Actualizados!')
         return redirect(url_for('alumnos.detailAlumno', alumno=alumno.idAlumno))
