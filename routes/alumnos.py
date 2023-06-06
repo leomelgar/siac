@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Alumno, Tutor, Matricula, Curso
+from models.colege import Alumno, Tutor, Matricula, Curso, Legajo
 from utils.db import db
 from datetime import date
 
@@ -132,7 +132,7 @@ def new_alumno():
         tutor_id = request.form['tutor_id']
 
         new_alumno = Alumno(nombre, apellido, cuil, fechaNac, lugarNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id)
-        new_legajo = Legajo(fechaPreinscripcion, condicionIngreso,colegioAnterior)
+        new_legajo = Legajo(fechaPreinscripcion,condicionIngreso, " ", None , colegioAnterior, None)
         db.session.add(new_alumno)
         db.session.add(new_legajo)
         db.session.commit()
