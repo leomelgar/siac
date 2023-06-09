@@ -63,9 +63,10 @@ def calculateAge(birthDate):#funcion para calcular la edad del alumno
 def detailAlumno(alumno):
     alumno = Alumno.query.get(alumno)
     age = calculateAge(alumno.fechaNac)
-    matricula = Matricula.query.filter_by(alumno_id=alumno.idAlumno).first()
+    legajo = Legajo.query.filter_by(fk_alumno_id=alumno.idAlumno).first()
+    matricula = Matricula.query.filter_by(fk_legajo_id=legajo.idLegajo).first()
     tutor = Tutor.query.get(alumno.tutor_id)
-    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age, matricula=matricula, tutor=tutor)
+    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age, tutor=tutor, matricula=matricula, legajo=legajo)
 
 @alumnos.route('/searchTutor', methods=['POST'])#buscar un tutor antes de tomar los datos del futuro alumno
 def search_tutor():
@@ -125,15 +126,16 @@ def new_alumno():
         direccion = request.form['direccion']
         telefono  = request.form['telefono']
         email = request.form['email']
-        fechaPreinscripcion = date.today()
-        condicionIngreso = request.form['condicionIngreso']
+        fechaPreinscripcion = date.today()#se guarda en el legajo en primera instancia, luego es reemplazado por la fecha de inscripcion definitiva
+        condicionIngreso = request.form['condicionIngreso']#se guarda en el legajo
         colegioAnterior = request.form['colegioAnterior']
         inscripto = '1'
         tutor_id = request.form['tutor_id']
 
-        new_alumno = Alumno(nombre, apellido, cuil, fechaNac, lugarNac, sexo, direccion, telefono, email, fechaPreinscripcion, inscripto, tutor_id)
-        new_legajo = Legajo(fechaPreinscripcion,condicionIngreso, " ", None , colegioAnterior, None)
+        new_alumno = Alumno(nombre, apellido, cuil, fechaNac, lugarNac, sexo, direccion, telefono, email, inscripto, tutor_id)
         db.session.add(new_alumno)
+        db.session.commit()
+        new_legajo = Legajo(fechaPreinscripcion, condicionIngreso, None, None, colegioAnterior, new_alumno.idAlumno)
         db.session.add(new_legajo)
         db.session.commit()
         flash('Pre-Inscripcion realizada!')
@@ -160,20 +162,22 @@ def update_alumno(alumno):
 @alumnos.route('/alumnos/matricula/<alumno_id>', methods=["POST", "GET"])
 def matricular(alumno_id):
     alumno = Alumno.query.get(alumno_id)
+    legajo = Legajo.query.filter_by(fk_alumno_id=alumno_id).first()
+    print(legajo)
     cursos = Curso.query.all()
     if alumno.inscripto=="1":#pre-inscriptos, va pasar a ser alumno del colegio
         if request.method == "POST":
             fechaInscripcion = request.form['fechaInscripcion']#esta fecha es la de admision al colegio y se guarda en el legajo
             añoAcademico = request.form['añoAcademico']
             #condicionIngreso = request.form['condicionIngreso']
-            alumno_id = alumno_id
+            #alumno_id = alumno_id
             colegio_id = 8 #falta añadir logica para asignar el colegio
             curso_id = request.form['curso_id']
 
-            new_matricula = Matricula(fechaInscripcion, añoAcademico, alumno_id, colegio_id, curso_id)
-            new_legajo  = Legajo(fechaInscripcion, condicionAlumno="regular")
+            new_matricula = Matricula(fechaInscripcion, añoAcademico, colegio_id, curso_id, legajo.idLegajo)
             db.session.add(new_matricula)
-            db.session.add(new_legajo)
+            legajo.fechaAdmision=fechaInscripcion
+            legajo.condicionAlumno="regular"
             alumno.inscripto = '0'
             db.session.commit()
 
@@ -185,11 +189,11 @@ def matricular(alumno_id):
             fechaInscripcion = request.form['fechaInscripcion']
             añoAcademico = request.form['añoAcademico']
             condicionIngreso = request.form['condicionIngreso']
-            alumno_id = alumno_id
+            #alumno_id = alumno_id
             colegio_id = 8 #falta añadir logica para asignar el colegio
             curso_id = request.form['curso_id']
 
-            new_matricula = Matricula(fechaInscripcion, añoAcademico, condicionIngreso, alumno_id, colegio_id, curso_id)
+            new_matricula = Matricula(fechaInscripcion, añoAcademico, condicionIngreso, colegio_id, curso_id)
             db.session.add(new_matricula)
             db.session.commit()
 
