@@ -9,9 +9,9 @@
     <div class="col-md-3">
      <!-- menu lateral -->
       {% include 'partials/_sidebar.html' %}
-    </div> 
+    </div>
     <div class="col-md-9">
-        <h3 class="text-white">Matricula</h3> 
+        <h3 class="text-white">Matricula</h3>
         <form action="{{url_for('alumnos.update_matricula', matricula=matricula.idMatricula)}}" method="POST" class="bg-black ">
             <div class="card-body p-4">
               <div class="mb-3 text-center">
@@ -39,13 +39,13 @@
                       <label class="form-check-label" for="condicionIngreso">Nuevo Ingresante</label>
                     </div>
                     {% else %}
-                    <div class="form-check form-check-inline">
+                    <!-- <div class="form-check form-check-inline">
                       <input class="form-check-input" type="radio" checked name="condicionIngreso" value="PaseDeEstablecimiento">
                       <label class="form-check-label" for="condicionIngreso">Pase de Establecimiento</label>
-                    </div>
+                    </div> -->
                     {% endif %}
                     <div class="form-check form-check-inline">
-                      <label class="form-label">Año Academico:</label> <span class="badge bg-success text-wrap"> {{ matricula.añoAcademico}}</span>
+                      <label class="form-label">Año Academico(actual):</label> <span class="badge bg-success text-wrap"> {{ matricula.añoAcademico}}</span>
                       <select name="añoAcademico" class="form-select form-check-inline">
                         <option selected value="{{matricula.añoAcademico}}">{{matricula.añoAcademico}}</option>
                         <option value="1er_Año">1er_Año</option>
@@ -60,7 +60,7 @@
               </div>
               <div class="card text-bg-secondary mb-3 mb-3">
                 <div class="card-header">
-                  <label>Aula/Curso:</label> <span class="badge bg-success text-wrap"> {{curso.nombre_curso}}, {{curso.division}} division</span>
+                  <label>Aula/Curso(actual):</label> <span class="badge bg-success text-wrap"> {{curso.nombre_curso}}, {{curso.division}} division</span>
                 </div>
                 <div class="form-check form-check-inline p-2">
                   <select name="curso_id" class="form-select form-check-inline">

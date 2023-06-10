@@ -205,13 +205,13 @@ def matricular(alumno_id):
 @alumnos.route('/alumnos/updateMatricula/<matricula>', methods=["POST","GET"])
 def update_matricula(matricula):
     matricula = Matricula.query.get(matricula)
-    alumno = Alumno.query.get(matricula.alumno_id)
+    legajo = Legajo.query.filter_by(idLegajo=matricula.fk_legajo_id).first()
+    alumno = Alumno.query.filter_by(idAlumno=legajo.fk_alumno_id).first()
     cursos = Curso.query.all()
     curso = Curso.query.get(matricula.curso_id)
     if request.method == "POST":
         matricula.fechaInscripcion = request.form['fechaInscripcion']
         matricula.añoAcademico = request.form['añoAcademico']
-        matricula.condicionIngreso = request.form['condicionIngreso']
         matricula.curso_id = request.form['curso_id']
 
         db.session.commit()
