@@ -164,7 +164,7 @@ def matricular(alumno_id):
     alumno = Alumno.query.get(alumno_id)
     legajo = Legajo.query.filter_by(fk_alumno_id=alumno_id).first()
     print(legajo)
-    cursos = Curso.query.all()
+    cursos = Curso.query.order_by(Curso.nombre_curso)#listar todos los cursos por orden ascendente
     if alumno.inscripto=="1":#pre-inscriptos, va pasar a ser alumno del colegio
         if request.method == "POST":
             fechaInscripcion = request.form['fechaInscripcion']#esta fecha es la de admision al colegio y se guarda en el legajo
