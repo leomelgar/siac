@@ -59,7 +59,7 @@
                   <select name="curso_id" class="form-select form-check-inline">
                     <option selected>elegir...</option>
                     {% for curso in cursos %}
-                    <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division</option>
+                    <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division, cupos {{curso.cupo}}</option>
                     {% endfor %}
                   </select>
                 </div>

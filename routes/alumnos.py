@@ -173,6 +173,8 @@ def matricular(alumno_id):
             #alumno_id = alumno_id
             colegio_id = 8 #falta añadir logica para asignar el colegio
             curso_id = request.form['curso_id']
+            curso = Curso.query.get(curso_id)
+            curso.cupo = curso.cupo - 1
 
             new_matricula = Matricula(fechaInscripcion, añoAcademico, colegio_id, curso_id, legajo.idLegajo)
             db.session.add(new_matricula)
@@ -192,6 +194,8 @@ def matricular(alumno_id):
             #alumno_id = alumno_id
             colegio_id = 8 #falta añadir logica para asignar el colegio
             curso_id = request.form['curso_id']
+            curso = Curso.query.get(curso_id)
+            curso.cupo -= 1
 
             new_matricula = Matricula(fechaInscripcion, añoAcademico, condicionIngreso, colegio_id, curso_id)
             db.session.add(new_matricula)

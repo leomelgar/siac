@@ -30,8 +30,10 @@ def add_curso():
         periodo = request.form['periodo']
         aula_id = request.form['aula_id']
         turno_id = request.form['turno_id']
+        aula = Aula.query.get(aula_id)
+        cupo = aula.capacidad
        
-        new_curso = Curso(nombre_curso, division, periodo, aula_id, turno_id)
+        new_curso = Curso(nombre_curso, division, cupo, periodo, aula_id, turno_id)
         db.session.add(new_curso)
         db.session.commit()
         flash('Curso añadido correctamente!')
