@@ -217,6 +217,8 @@ def update_matricula(matricula):
         matricula.fechaInscripcion = request.form['fechaInscripcion']
         matricula.añoAcademico = request.form['añoAcademico']
         matricula.curso_id = request.form['curso_id']
+        curso = Curso.query.get(curso_id)
+        curso.cupo = curso.cupo - 1
 
         db.session.commit()
         flash('Datos Actualizados!')
