@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-  Alumnos | Home
+  {{title}} | Home
 {% endblock %}
 
 {% block body %}
@@ -14,10 +14,11 @@
   <div class="col-md-9">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
-    <h2 class="text-secondary">Gestion Alumnos</h2>
+    <h2 class="text-secondary">Listado de {{title}}</h2>
+    <p class="text-secondary"> <strong>Registros </strong><span class="badge bg-light text-secondary">{{ cantidad }}</span></p>
     <!-- {% include 'partials/_searchTutor.html' %} -->
-    <form action="/alumnos/home" method="POST" class="d-flex" role="search">
-      <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search">
+    <form action="/alumnos/home/{{estado}}" method="POST" class="d-flex" role="search">
+      <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search" required>
       <button class="btn btn-outline-success" type="submit">Buscar</button>
     </form>
     <hr class="my-4">

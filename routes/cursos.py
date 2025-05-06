@@ -1,7 +1,8 @@
 from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Curso, Catedra, Aula, Docente, Turno, Matricula, Horario
+from models.colege import Curso, Alumno, Aula, Docente, Turno, Matricula, Horario, Legajo
 from utils.db import db
+import math
 
 cursos = Blueprint("cursos", __name__)
 
@@ -29,8 +30,10 @@ def add_curso():
         periodo = request.form['periodo']
         aula_id = request.form['aula_id']
         turno_id = request.form['turno_id']
+        aula = Aula.query.get(aula_id)
+        cupo = aula.capacidad
        
-        new_curso = Curso(nombre_curso, division, periodo, aula_id, turno_id)
+        new_curso = Curso(nombre_curso, division, cupo, periodo, aula_id, turno_id)
         db.session.add(new_curso)
         db.session.commit()
         flash('Curso añadido correctamente!')
@@ -43,3 +46,25 @@ def delete(idCurso):
     db.session.commit()
     flash('Curso Borrado!')
     return redirect(url_for('cursos.home'))
+
+#listado de alumnos por curso
+@cursos.route('/cursos/listadoAlumnos/<curso_id>', methods=["GET", "POST"])
+def listado_alumnos(curso_id):
+    curso = Curso.query.get(curso_id)
+    listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Legajo, Matricula.fk_legajo_id==Legajo.idLegajo).join(Alumno, Legajo.fk_alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno, Alumno.apellido, Alumno.nombre, Alumno.cuil)
+    aula = Aula.query.get(curso.aula_id)
+    # for i in listado:
+    #     print(i)
+    # print(listado.count())
+    return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, cantidad=math.trunc(listado.count()/3), capacidad = aula.capacidad)
+
+#agregar alumnos a un curso determinado
+@cursos.route('/cursos/agregarAlumno/<curso_id>', methods=["GET", "POST"])
+def addAlumno(curso_id):
+    curso = Curso.query.get(curso_id)
+    if curso.nombre_curso == "1er año":
+        listado = Alumno.query.filter_by(inscripto=1)#lista solo los alumnos que van a cursar 1er año
+    else:
+        #listado = Matricula.query.join(Curso, Matricula.curso_id == curso_id).join(Alumno, Matricula.alumno_id==Alumno.idAlumno).add_columns(Alumno.idAlumno, Alumno.apellido, Alumno.nombre, Alumno.cuil, Alumno.fechaNac, Alumno.inscripto, Matricula.idMatricula)
+        listado = Alumno.query.filter_by(inscripto=0)#lista los alumnos que van a cursar de 2do año en adelante
+    return render_template('/cursos/listAlumnos.html', listado=listado, curso=curso, opcion = "agregar")

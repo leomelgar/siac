@@ -19,9 +19,7 @@
         <td>{{tutor.nombre}}</td>
         <td>{{tutor.cuil}}</td>
         <td>{{tutor.idTutor}}</td>
-        <td><div><a href="{{url_for('alumnos.inscripcion_tutor', tutor=tutor.idTutor)}}">
-          <input class="form-check-input" type="radio" name="tutor_id" value="tutor.idTutor">
-        </a>
+        <td><div class="form-check"><a class="form-check-input" type="radio" href="{{url_for('alumnos.inscripcion_tutor', tutor=tutor.idTutor)}}"></a>
         </div></td>
         <!-- <td><a href="{{url_for('alumnos.inscripcion_tutor', tutor=tutor.idTutor)}}">siguiente</a></td> -->
       </tr>
