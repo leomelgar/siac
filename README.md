@@ -17,7 +17,7 @@ Es un sistema para usar en un colegio secundario para gestionar los docentes y a
 ##### Requirements
 
 * Python3
-* Mysql
+* Mysql - Mariadb(actualmente, usando el driver pymysql)
 
 before run the app you must create the following environnment variables:
 
