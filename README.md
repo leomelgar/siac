@@ -1,35 +1,23 @@
 ## SIAC - Sistema Integral de Administracion de un Colegio
 
-Este proyecto tiene como base un ejemplo CRUD realizado por FaztWeb con flask, mysql y SQLAlchemy en Python.
+Este proyecto tiene como base un ejemplo CRUD realizado con flask, Mariadb y SQLAlchemy en Python.
 ## Descripcion del Proyecto
-Es un sistema para usar en un colegio secundario para gestionar los docentes y alumnos. 
+Es un sistema para usar en un colegio secundario, gestiona las inscripciones de alumnos, docentes, clases, asistencias y calificaciones de un periodo lectivo. 
 ## Gestion Docente
     -   CRUD de docentes 
-    -   control de asistencia
 ## Gestion Alumnos
     -   CRUD de alumnos
-        -   pre-inscripcion, se registran los datos del potencial alumno como asi tambien de un tutor responsable.
-    -   Matricula. es la inscripcion del alumno.
-    -   Control de asistencia
+        -   pre-inscripcion, se registran los datos del potencial alumno como asi tambien de un padre o tutor legal.
 
 ### Manual Installation
 
 ##### Requirements
-
 * Python3
 * Mysql - Mariadb(actualmente, usando el driver pymysql)
+* Flask, Flask-sqlAlquemy
+### Configurar los parametros para la conexion con la base de datos, trabajar con variables de entorno del SO
 
-before run the app you must create the following environnment variables:
-
-```
-MYSQL_USER=
-MYSQL_PASSWORD=
-MYSQL_DATABASE=
-MYSQL_HOST=
-MYSQL_PORT=
-```
-
-```
+###
 git clone https://github.com/leomelgar/siac
 cd siac
 pip install -r requirements.txt
