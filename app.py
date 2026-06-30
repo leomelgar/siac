@@ -1,5 +1,5 @@
 from flask import Flask
-from routes.contacts import contacts
+from routes.dashboard import colegio
 from routes.colegios import colegios
 from routes.docentes import docentes
 from routes.alumnos import alumnos
@@ -25,7 +25,7 @@ def create_app():
     db.init_app(app)
     #db = SQLAlchemy(app)
 
-    app.register_blueprint(contacts)
+    app.register_blueprint(colegio)
     app.register_blueprint(colegios)
     app.register_blueprint(docentes)
     app.register_blueprint(alumnos)

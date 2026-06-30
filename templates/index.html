@@ -12,33 +12,27 @@
     <div class="col-md-5 p-5">
       <!-- MESSAGE -->
       {% include 'partials/_message.html' %}
-
-      <!-- FORM -->
-      {%  include 'partials/_taskForm.html' %}
     </div>
 
-    <!-- contacts list -->
-    <div class="col-md-7">
-      {% for contact in contacts %}
-        <div class="card mb-1 bg-black text-white">
-          <div class="card-body py-2 px-3">
-            <div class="d-flex justify-content-between">
-              <h5 class="card-title h6">{{ contact.fullname}}</h5>
-              <div>
-                <a href="{{ url_for('contacts.update', id=contact.id) }}" class="btn btn-dark btn-sm rounded-0">Edit</a>
-                <a href="{{ url_for('contacts.delete', id=contact.id) }}" class="btn btn-danger btn-sm rounded-0">Delete</a>
-              </div>
-            </div>
-            <p class="card-text">{{ contact.email }}</p>
-            <p class="card-text">{{ contact.phone }}</p>
-          </div>
-        </div>
+    <!-- colegio -->
+     {% for colegio in colegio %}
+    <div class="card text-center">
+      <div class="card-header">
+        <h5 class="card-title">{{ colegio.nombre_colegio}}</h5>
+      </div>
+      <div class="card-body">
+        <h5 class="card-title">Breve Descripcion del Colegio</h5>
+        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus eligendi at consequatur, obcaecati eveniet fugiat pariatur quam magnam rem unde! Ex id suscipit incidunt blanditiis pariatur aliquid dicta architecto. Expedita.</p>
+        <span class="badge bg-primary"> Correo Electronico:</span>
+        <div class="d-inline p-2">{{ colegio.email }}</div>
+        <span class="badge bg-primary">telefono:</span>
+        <div class="d-inline p-2">{{ colegio.telefono }}</div>
+      </div>
       {% endfor %}
+      <div class="card-footer text-muted">
+        Fecha de hoy
+      </div>
     </div>
   </div>
-    </div>
-
-
-
-
+</div>
 {% endblock %}
