@@ -10,7 +10,7 @@ load_dotenv()
 user = "leonux"
 password = "crysis2pc"
 host = "127.0.0.1"
-database = "colegio_db"
+database = "siac_colegio_db"
 
 DATABASE_CONNECTION_URI = f'mysql+pymysql://{user}:{password}@{host}/{database}'
 print(DATABASE_CONNECTION_URI)
