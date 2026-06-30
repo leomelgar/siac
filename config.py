@@ -12,5 +12,5 @@ password = "crysis2pc"
 host = "127.0.0.1"
 database = "contactsdb"
 
-DATABASE_CONNECTION_URI = f'mysql://{user}:{password}@{host}/{database}'
+DATABASE_CONNECTION_URI = f'mysql+pymysql://{user}:{password}@{host}/{database}'
 print(DATABASE_CONNECTION_URI)
