@@ -194,6 +194,9 @@ class Clase(db.Model):
         self.catedra_id = catedra_id
         self.horario_id = horario_id
  """
+#Relaciones: El uso de db.ForeignKey define la clave foránea en la base de datos, 
+#mientras que db.relationship permite acceder a los datos relacionados 
+#como atributos de objeto en Python (ej. alumno.tutor). 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
