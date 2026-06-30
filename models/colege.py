@@ -1,4 +1,4 @@
-from utils.db import db
+""" from utils.db import db
 class Colegio(db.Model):
     idColegios = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(45))
@@ -193,3 +193,126 @@ class Clase(db.Model):
         self.curso_id = curso_id
         self.catedra_id = catedra_id
         self.horario_id = horario_id
+ """
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+
+db = SQLAlchemy()
+
+# --- Tablas Maestras ---
+
+class Turno(db.Model):
+    __tablename__ = 'turnos'
+    id_turno = db.Column(db.Integer, primary_key=True)
+    nombre_turno = db.Column(db.String(50), nullable=False)
+    hora_inicio = db.Column(db.Time, nullable=False)
+    hora_fin = db.Column(db.Time, nullable=False)
+    
+    # Relación
+    clases = db.relationship('Clase', backref='turno', lazy=True)
+
+class Aula(db.Model):
+    __tablename__ = 'aulas'
+    id_aula = db.Column(db.Integer, primary_key=True)
+    nombre_aula = db.Column(db.String(50), nullable=False)
+    capacidad = db.Column(db.Integer)
+    ubicacion = db.Column(db.String(100))
+
+    # Relación
+    horarios = db.relationship('Horario', backref='aula', lazy=True)
+
+class Tutor(db.Model):
+    __tablename__ = 'tutores'
+    id_tutor = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    apellido = db.Column(db.String(100), nullable=False)
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(100))
+    direccion = db.Column(db.Text)
+
+    # Relación uno a muchos con Alumnos
+    alumnos = db.relationship('Alumno', backref='tutor', lazy=True)
+
+class Docente(db.Model):
+    __tablename__ = 'docentes'
+    id_docente = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    especialidad = db.Column(db.String(100))
+    email = db.Column(db.String(100))
+    telefono = db.Column(db.String(20))
+
+    # Relaciones
+    clases_tutoradas = db.relationship('Clase', backref='docente_tutor', lazy=True)
+    horarios_asignados = db.relationship('Horario', backref='docente', lazy=True)
+
+class Alumno(db.Model):
+    __tablename__ = 'alumnos'
+    id_alumno = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(100), nullable=False)
+    fecha_nacimiento = db.Column(db.Date)
+    id_tutor = db.Column(db.Integer, db.ForeignKey('tutores.id_tutor'), nullable=False)
+    direccion = db.Column(db.Text)
+
+    # Relación muchos a muchos con Clases a través de Matricula
+    matriculas = db.relationship('Matricula', backref='alumno', lazy=True)
+
+class Asignatura(db.Model):
+    __tablename__ = 'asignaturas'
+    id_asignatura = db.Column(db.Integer, primary_key=True)
+    nombre_asignatura = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.Text)
+    creditos = db.Column(db.Integer)
+
+    # Relación
+    horarios = db.relationship('Horario', backref='asignatura', lazy=True)
+
+# --- Tablas de Estructura Académica ---
+
+class Clase(db.Model):
+    __tablename__ = 'clases'
+    id_clase = db.Column(db.Integer, primary_key=True)
+    nombre_clase = db.Column(db.String(50), nullable=False) # Ej: "1º A"
+    nivel_academico = db.Column(db.String(50))
+    id_docente_tutor = db.Column(db.Integer, db.ForeignKey('docentes.id_docente'))
+    id_turno = db.Column(db.Integer, db.ForeignKey('turnos.id_turno'))
+
+    # Relaciones
+    matriculas = db.relationship('Matricula', backref='clase', lazy=True)
+    horarios = db.relationship('Horario', backref='clase', lazy=True)
+
+class Horario(db.Model):
+    __tablename__ = 'horarios'
+    id_horario = db.Column(db.Integer, primary_key=True)
+    id_clase = db.Column(db.Integer, db.ForeignKey('clases.id_clase'), nullable=False)
+    id_asignatura = db.Column(db.Integer, db.ForeignKey('asignaturas.id_asignatura'), nullable=False)
+    id_docente = db.Column(db.Integer, db.ForeignKey('docentes.id_docente'), nullable=False)
+    id_aula = db.Column(db.Integer, db.ForeignKey('aulas.id_aula'), nullable=False)
+    dia_semana = db.Column(db.String(15), nullable=False) # Ej: 'Lunes'
+    hora_inicio = db.Column(db.Time, nullable=False)
+    hora_fin = db.Column(db.Time, nullable=False)
+
+    # Relación
+    asistencias = db.relationship('Asistencia', backref='horario', lazy=True)
+
+# --- Tablas Transaccionales ---
+
+class Matricula(db.Model):
+    __tablename__ = 'matriculas'
+    id_matricula = db.Column(db.Integer, primary_key=True)
+    id_alumno = db.Column(db.Integer, db.ForeignKey('alumnos.id_alumno'), nullable=False)
+    id_clase = db.Column(db.Integer, db.ForeignKey('clases.id_clase'), nullable=False)
+    fecha_matricula = db.Column(db.Date, default=datetime.utcnow)
+    periodo_academico = db.Column(db.String(20)) # Ej: "2026-2027"
+    estado = db.Column(db.String(20), default='Activa')
+
+    # Relación
+    asistencias = db.relationship('Asistencia', backref='matricula', lazy=True)
+
+class Asistencia(db.Model):
+    __tablename__ = 'asistencias'
+    id_asistencia = db.Column(db.Integer, primary_key=True)
+    id_matricula = db.Column(db.Integer, db.ForeignKey('matriculas.id_matricula'), nullable=False)
+    id_horario = db.Column(db.Integer, db.ForeignKey('horarios.id_horario'), nullable=True)
+    fecha = db.Column(db.Date, nullable=False)
+    estado = db.Column(db.String(20), nullable=False) # Presente, Ausente, Tardanza
+    observaciones = db.Column(db.Text)   
