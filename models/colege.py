@@ -186,6 +186,11 @@ class Asignatura(db.Model):
     nombre_asignatura = db.Column(db.String(100), nullable=False)
     descripcion = db.Column(db.Text)
     creditos = db.Column(db.Integer)
+    def __init__(self, id_colegio, nombre_asignatura, descripcion, creditos):
+        self.id_colegio = id_colegio
+        self.nombre_asignatura = nombre_asignatura
+        self.descripcion = descripcion
+        self.creditos = creditos
 
 class Aula(db.Model):
     __tablename__ = 'aulas'

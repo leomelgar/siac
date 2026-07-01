@@ -14,14 +14,15 @@ def new():
     if request.method == 'POST':
         nombre = request.form['nombre']
         descripcion = request.form['descripcion']
+        creditos = request.form['creditos']
 
-        new_asignatura = Asignatura(nombre, descripcion)
+        new_asignatura = Asignatura(id_colegio=1, nombre_asignatura=nombre, descripcion=descripcion, creditos=creditos)
         db.session.add(new_asignatura)
         db.session.commit()
         flash('Asignatura agregada!')
         return redirect(url_for('asignaturas.list'))
 
-@asignaturas.route("/asignaturas/update/<idAsignatura>", methods=["POST","GET"])
+""" @asignaturas.route("/asignaturas/update/<idAsignatura>", methods=["POST","GET"])
 def update(idAsignatura):
     asignatura = Asignatura.query.get(idAsignatura)
     if request.method == "POST":
@@ -31,10 +32,10 @@ def update(idAsignatura):
         flash('Asignatura actualizada!')
         return redirect(url_for('asignaturas.list'))
     return render_template("/asignaturas/update.html", asignatura=asignatura)
-
-@asignaturas.route("/asignaturas/delete/<idAsignatura>")
-def delete(idAsignatura):
-    asignatura = Asignatura.query.get(idAsignatura)
+"""
+@asignaturas.route("/asignaturas/delete/<id_asignatura>")
+def delete(id_asignatura):
+    asignatura = Asignatura.query.get(id_asignatura)
     db.session.delete(asignatura)
     db.session.commit()
     flash('Asignatura Borrada correctamente!')
