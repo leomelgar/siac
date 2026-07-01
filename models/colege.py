@@ -169,6 +169,12 @@ class Docente(db.Model):
     especialidad = db.Column(db.String(100))
     email = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
+    def __init__(self, id_colegio, nombre, especialidad, email, telefono)
+        self.id_colegio = id_colegio
+        self.nombre = nombre
+        self.especialidad = especialidad
+        self.email = email
+        self.telefono = telefono
 
 class Alumno(db.Model):
     __tablename__ = 'alumnos'
