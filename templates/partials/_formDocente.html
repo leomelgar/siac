@@ -4,11 +4,10 @@
 
     <div class="mb-3">
       <label for="colegio">Colegio:</label>
-      <select name="colegio_id" class="form-select form-select-sm" aria-label=".form-select-sm example">
-        <option selected>--------</option>
+      <select name="id_colegio" class="form-select form-select-sm" aria-label=".form-select-sm example">
         {% for colegio in colegios %}
-          <option value="{{colegio.idColegios}}">{{colegio.nombre}}</option>
-        {% endfor %}
+          <option value="{{colegio.id_colegio}}">{{colegio.nombre_colegio}}</option>
+        {% endfor %}  
       </select>
     </div>
     <div class="mb-3">
@@ -44,12 +43,22 @@
       />
     </div>
     <div class="mb-3">
-      <label for="cuil">Cuil:</label>
+      <label for="cuil">Dni:</label>
       <input
         type="text"
-        name="cuil"
+        name="dni"
         class="form-control rounded-0 bg-dark border-0 text-white"
-        placeholder="cuil sin guiones"
+        placeholder="N° de Documento sin puntos"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="fecha_nac">Fecha de Nacimiento:</label>
+      <input
+        type="date"
+        name="fecha_nac"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="dia / mes / año"
         required
       />
     </div>
@@ -70,6 +79,33 @@
         class="form-control rounded-0 bg-dark border-0 text-white"
         placeholder="ej: colegio@dominio.com.ar"
       />
+    </div>
+    <div class="mb-3">
+      <label for="cargo">Cargo:</label> <span>Docente</span>
+      <select name="cargo" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option> Seleccionar </option>
+          <option value="Titular">Titular</option>
+          <option value="Suplente">Suplente</option>
+          <option value="Interino">Interino</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="fecha_contratacion">Fecha de Inicio en Establecimiento:</label>
+      <input
+        type="date"
+        name="fecha_contratacion"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="dia / mes / año"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="estado_contractual">Estado:</label> <span>Docente</span>
+      <select name="estado_contractual" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option>Seleccionar</option>
+          <option value="Activo">Activo</option>
+          <option value="Baja">Baja</option>
+          <option value="Jubilado">Jubilado/a</option>
+      </select>
     </div>
 
     <button class="btn btn-primary">Guardar</button>

@@ -41,10 +41,9 @@
         <tr>
           <th scope="col">Apellido</th>
           <th scope="col">Nombre</th>
-          <th scope="col">Cuil</th>
+          <th scope="col">Cargo</th>
+          <th scope="col">Dni</th>
           <th scope="col">Direccion</th>
-          <th scope="col">Telefono</th>
-          <th scope="col">Email</th>
           <th scope="col"></th>
         </tr>
       </thead>
@@ -53,14 +52,16 @@
         <tr>
           <td>{{docente.apellido}}</td>
           <td>{{docente.nombre}}</td>
-          <td>{{docente.cuil}}</td>
+          <td>{{docente.cargo}}</td>
+          <td>{{docente.dni}}</td>
           <td>{{docente.direccion}}</td>
-          <td>{{docente.telefono}}</td>
-          <td>{{docente.email}}</td>
           <td><div>
+            <a href="#" class="btn btn-outline-primary btn-sm rounded-0">Ver Detalle</a>
+          </div></td>
+          <!-- <td><div>
             <a href="{{ url_for('docentes.updateDocente', idDocente=docente.idDocente) }}" class="btn btn-outline-secondary btn-sm rounded-0">Edit</a>
             <a href="{{ url_for('docentes.deleteDocente', idDocente=docente.idDocente) }}" class="btn btn btn-outline-danger btn-sm rounded-0">Delete</a>
-          </div></td>
+          </div></td> -->
         </tr>
           {% endfor %}
       </tbody>

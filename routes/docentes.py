@@ -15,13 +15,17 @@ def new_docente():
     if request.method == 'POST':
         nombre = request.form['nombre']
         apellido = request.form['apellido']
-        cuil = request.form['cuil']
+        dni = request.form['dni']
+        fecha_nac = request.form['fecha_nac']
         direccion = request.form['direccion']
+        cargo = request.form['cargo']
         telefono  = request.form['telefono']
         email = request.form['email']
-        colegio_id = request.form['colegio_id']
+        id_colegio = request.form['id_colegio']
+        fecha_contratacion = request.form['fecha_contratacion']
+        estado_contractual = request.form['estado_contractual']
 
-        new_docente = Docente(nombre, apellido, cuil, direccion, telefono, email, colegio_id)
+        new_docente = Docente(id_colegio, nombre, apellido, dni, fecha_nac, direccion, cargo, email, telefono, fecha_contratacion, estado_contractual)
         db.session.add(new_docente)
         db.session.commit()
         flash('Docente añadido correctamente!')

@@ -52,8 +52,8 @@ class Docente(db.Model):
     cargo = db.Column(db.String(50))#Cargo de ocupacion dentro de la institucion: docente titular, suplente, interino
     email = db.Column(db.String(100))
     telefono = db.Column(db.String(20))
-    fecha_contratacion = db.Column(db.Date(), nullable=False)
-    estado_contractual = db.Column(db.String(10), nullable=False)# activo, baja, jubilado
+    fecha_contratacion = db.Column(db.Date(), nullable=True)
+    estado_contractual = db.Column(db.String(10), nullable=True)# activo, baja, jubilado
     
     def __init__(self, id_colegio, nombre, apellido, dni, fecha_nac, direccion, cargo, email, telefono, fecha_contratacion, estado_contractual):
         self.id_colegio = id_colegio
