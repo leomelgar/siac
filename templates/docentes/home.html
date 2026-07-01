@@ -39,24 +39,26 @@
     <table class="table table-dark table-hover">
       <thead>
         <tr>
+          <th></th>
           <th scope="col">Apellido</th>
           <th scope="col">Nombre</th>
           <th scope="col">Cargo</th>
-          <th scope="col">Dni</th>
-          <th scope="col">Direccion</th>
+          <th scope="col">Fecha Ingreso</th>
+          <th scope="col">Estado</th>
           <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
         {% for docente in docentes %}
         <tr>
+          <td><img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"></td>
           <td>{{docente.apellido}}</td>
           <td>{{docente.nombre}}</td>
           <td>{{docente.cargo}}</td>
-          <td>{{docente.dni}}</td>
-          <td>{{docente.direccion}}</td>
+          <td>{{docente.fecha_contratacion}}</td>
+          <td>{{docente.estado_contractual}}</td>
           <td><div>
-            <a href="#" class="btn btn-outline-primary btn-sm rounded-0">Ver Detalle</a>
+              <a href="#" class="btn btn-outline-primary btn-sm rounded-0">Ver Detalle</a>
           </div></td>
           <!-- <td><div>
             <a href="{{ url_for('docentes.updateDocente', idDocente=docente.idDocente) }}" class="btn btn-outline-secondary btn-sm rounded-0">Edit</a>
