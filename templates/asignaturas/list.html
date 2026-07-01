@@ -48,13 +48,6 @@
                     </div>
                     <div class="mb-3">
                       <label for="creditos">Créditos:</label>
-                      <!-- <input
-                        type="number"
-                        name="creditos"
-                        class="form-control rounded-0 bg-dark border-0 text-white"
-                        placeholder="escriba los créditos"
-                        required
-                      /> -->
                       <select name="creditos" class="form-select form-select-sm" aria-label=".form-select-sm example">
                         <option selected>Asignar Creditos</option>
                         <option value="25">25</option>
@@ -84,13 +77,16 @@
         </thead>
 
         <tbody >
-
+          <thead>
+            <th>Nombre</th>
+            <th>Descripcion</th>
+            <th>Creditos</th>
+          </thead>
           {% for asignatura in asignaturas %}
           <tr>
             <td>{{asignatura.nombre_asignatura}}</td>
             <td>{{ asignatura.descripcion }}</td>
             <td>{{ asignatura.creditos }}</td>
-            <td>{{ asignatura.id_colegio }}</td>
             <td><div>
               <a href="#" class="btn btn-outline-secondary btn-sm rounded-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
