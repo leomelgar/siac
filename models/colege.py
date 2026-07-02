@@ -34,11 +34,24 @@ class Tutor(db.Model):
     id_tutor = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
     apellido = db.Column(db.String(100), nullable=False)
+    dni = db.Column(db.String(10), nullable=False)
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(100))
     direccion = db.Column(db.Text)
+    parentesco = db.Column(db.String(8), nullable=False)
+    legal = db.Column(db.Boolean, nullable=False)
     
     alumnos = db.relationship('Alumno', backref='tutor', lazy=True)
+
+    def __init__(self, nombre, apellido, dni, telefono, email, direccion, parentesco, legal):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.dni = dni
+        self.telefono = telefono
+        self.email = email
+        self.direccion = direccion
+        self.parentesco = parentesco
+        self.legal = legal
 
 class Docente(db.Model):
     __tablename__ = 'docentes'
