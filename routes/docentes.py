@@ -31,6 +31,11 @@ def new_docente():
         flash('Docente añadido correctamente!')
         return redirect(url_for('docentes.home'))
 
+@docentes.route('/docentes/view/<id_docente>', methods=['GET'])
+def view(id_docente):
+    docente = Docente.query.get(id_docente)
+    return render_template('/docentes/view.html', docente=docente)
+
 @docentes.route("/updateDocente/<idDocente>", methods=['POST', 'GET'])
 def updateDocente(idDocente):
     docente = Docente.query.get(idDocente)

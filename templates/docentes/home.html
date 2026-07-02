@@ -58,7 +58,7 @@
           <td>{{docente.fecha_contratacion}}</td>
           <td>{{docente.estado_contractual}}</td>
           <td><div>
-              <a href="#" class="btn btn-outline-primary btn-sm rounded-0">Ver Detalle</a>
+              <a href="{{ url_for('docentes.view', id_docente=docente.id_docente) }}" class="btn btn-outline-primary btn-sm rounded-0">Ver Detalle</a>
           </div></td>
           <!-- <td><div>
             <a href="{{ url_for('docentes.updateDocente', idDocente=docente.idDocente) }}" class="btn btn-outline-secondary btn-sm rounded-0">Edit</a>

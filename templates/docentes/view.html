@@ -1,0 +1,192 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Docentes | Detalles
+{% endblock %}
+
+{% block body %}
+    <!-- FORM -->
+<div class="row">
+  <div class="col-md-3">
+   <!-- menu lateral -->
+   {% include 'partials/_sidebarDteCdra.html' %}
+  </div>
+  <div class="col-md-9">
+       <!-- MESSAGE -->
+       {% include 'partials/_message.html' %}
+    <h2 class="text-secondary">Legajo Docente</h2>
+    <table class="table table-dark table-hover">
+      <thead>
+        <tr>
+          <th></th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Cargo</th>
+          <th scope="col">Fecha Ingreso</th>
+          <th scope="col">Estado</th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"></td>
+          <td>{{docente.apellido}}</td>
+          <td>{{docente.nombre}}</td>
+          <td>{{docente.cargo}}</td>
+          <td>{{docente.fecha_contratacion}}</td>
+          <td>{{docente.estado_contractual}}</td>
+          <td><div>
+              <a href="#" class="btn btn-outline-danger btn-sm rounded-0">Eliminar Registro</a>
+          </div></td>
+          <!-- <td><div>
+            <a href="{{ url_for('docentes.updateDocente', idDocente=docente.idDocente) }}" class="btn btn-outline-secondary btn-sm rounded-0">Edit</a>
+            <a href="{{ url_for('docentes.deleteDocente', idDocente=docente.idDocente) }}" class="btn btn btn-outline-danger btn-sm rounded-0">Delete</a>
+          </div></td> -->
+        </tr>
+      </tbody>
+    </table>
+     <div class="container py-5">
+        <!-- Botón Volver -->
+        <div class="mb-4">
+            <a href="#" class="btn btn-outline-secondary btn-sm">
+                <i class="fas fa-arrow-left me-2"></i>Volver al Listado
+            </a>
+        </div>
+
+        <div class="row g-4">
+            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 text-center h-100">
+                    <div class="card-body pt-5">
+                        <!-- Foto de Perfil -->
+                        <img src="https://github.com/mdo.png"
+                             alt="Foto del Docente" 
+                             class="rounded-circle img-thumbnail mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover;">
+                        
+                        <!-- Nombre y Cargo -->
+                        <h4 class="card-title mb-1">Dra. Elena Rostova</h4>
+                        <p class="text-muted mb-3">Profesora Titular de Ingeniería de Software</p>
+                        
+                        <!-- Estado -->
+                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-4">Activo</span>
+
+                        <hr>
+
+                        <!-- Datos Rápidos de Contacto -->
+                        <div class="text-start px-3">
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <span class="text-muted small d-block">Correo Electrónico</span>
+                                <strong>elena.rostova@universidad.edu</strong>
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-phone text-primary me-2"></i>
+                                <span class="text-muted small d-block">Teléfono / Extensión</span>
+                                <strong>+34 912 345 678 (Ext. 402)</strong>
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-building text-primary me-2"></i>
+                                <span class="text-muted small d-block">Cubículo / Oficina</span>
+                                <strong>Edificio C, Planta 2, Despacho 204</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Redes Sociales / Enlaces -->
+                    <div class="card-footer bg-transparent border-0 pb-4">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="#" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i></a>
+                            <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Información Detallada -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 h-100">
+                    <!-- Navegación por Pestañas (Tabs) -->
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Perfil Profesional</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Docencia y Horarios</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contenido de las Pestañas -->
+                    <div class="card-body p-4">
+                        <div class="tab-content" id="myTabContent">
+                            
+                            <!-- PESTAÑA 1: PERFIL PROFESIONAL -->
+                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                                <!-- Biografía -->
+                                <h5 class="mb-3 text-secondary border-bottom pb-2">Biografía</h5>
+                                <p class="text-muted">
+                                    Doctora en Ciencias de la Computación con más de 12 años de experiencia en la docencia universitaria e investigación. Especializada en metodologías ágiles de desarrollo, arquitectura de software y sistemas distribuidos. Ha liderado múltiples proyectos de transferencia tecnológica con la industria privada.
+                                </p>
+
+                                <!-- Formación Académica -->
+                                <h5 class="mt-4 mb-3 text-secondary border-bottom pb-2">Formación Académica</h5>
+                                <ul class="list-unstyled position-relative ms-2">
+                                    <li class="mb-3 ps-3 border-start border-primary border-3">
+                                        <div class="fw-bold">Doctorado en Ingeniería de Software</div>
+                                        <div class="text-muted small">Universidad Politécnica — 2014</div>
+                                    </li>
+                                    <li class="mb-3 ps-3 border-start border-primary border-3">
+                                        <div class="fw-bold">Máster en Sistemas Inteligentes</div>
+                                        <div class="text-muted small">Universidad Estatal — 2010</div>
+                                    </li>
+                                    <li class="mb-0 ps-3 border-start border-primary border-3">
+                                        <div class="fw-bold">Grado en Ingeniería Informática</div>
+                                        <div class="text-muted small">Universidad Estatal — 2008</div>
+                                    </li>
+                                </ul>
+
+                                <!-- Áreas de Investigación -->
+                                <h5 class="mt-4 mb-3 text-secondary border-bottom pb-2">Áreas de Especialización</h5>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis px-3 py-2">Cloud Computing</span>
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis px-3 py-2">DevOps</span>
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis px-3 py-2">Clean Code</span>
+                                    <span class="badge bg-secondary-subtle text-secondary-emphasis px-3 py-2">Arquitectura de Microservicios</span>
+                                </div>
+                            </div>
+
+                            <!-- PESTAÑA 2: DOCENCIA Y HORARIOS -->
+                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                                <!-- Asignaturas del Semestre -->
+                                <h5 class="mb-3 text-secondary border-bottom pb-2">Asignaturas Impartidas (Semestre Actual)</h5>
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Asignatura</th>
+                                                <th>Grupo</th>
+                                                <th>Carrera</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>ISO-401</strong></td>
+                                                <td>Arquitectura de Software</td>
+                                                <td>A-10</td>
+                                                <td>Ing. en Sistemas</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>ISO-502</strong></td>
+                                                <td>Desarrollo Web Avanzado</td>
+                                                <td>B-02</td>
+                                                <td>Ing. en Sistemas</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>TFG-100</strong></td>
+
+  </div>
+</div>
+{% endblock %}
