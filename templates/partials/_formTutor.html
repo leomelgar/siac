@@ -1,4 +1,4 @@
-<form action="/newTutor" method="POST" class="row g-3">
+<form action="/new_tutor" method="POST" class="row g-3">
   <div class="col-md-6">
     <label for="nombre" class="form-label">Nombre</label>
     <input type="text" name="nombre" class="form-control" required >
@@ -11,11 +11,11 @@
     <label for="direccion" class="form-label">Direccion</label>
     <input type="text" class="form-control" name="direccion" placeholder="calle - nro - ciudad " required>
   </div>
-  <div class="col-md-6">
-    <label for="cuil" class="form-label">Cuil</label>
-    <input type="text" class="form-control" name="cuil" placeholder="nro de cuil sin guiones" required>
+  <div class="col-md-4">
+    <label for="dni" class="form-label">N° Documento</label>
+    <input type="text" class="form-control" name="dni" placeholder="nro de dni sin guiones" required>
   </div>
-  <div class="col-md-6">
+  <div class="col-md-4">
     <label for="inputState" class="form-label">Parentesco</label>
     <select name="parentesco" class="form-select">
       <option selected>elegir...</option>
@@ -25,6 +25,19 @@
       <option>Abuelo-a</option>
       <option>Otro</option>
     </select>
+  </div>
+  <div class="col-md-4">
+    <div class="form-check form-check-inline">
+      <label class="form-check-label" for="legal">Legal</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="legal" id="inlineRadio1" value="True">
+      <label class="form-check-label" for="legal">Si</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input" type="radio" name="legal" id="inlineRadio2" value="False">
+      <label class="form-check-label" for="legal">No</label>
+    </div>
   </div>
   <div class="col-md-6">
     <label for="telefono" class="form-label">Telefono</label>
