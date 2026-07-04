@@ -182,7 +182,14 @@ class Asistencia(db.Model):
     observaciones = db.Column(db.Text)
 
 #--------ejemplo de codigo con clases heredadas--------------
-""" class Persona(db.Model):
+""" 
+# 1. TABLA INTERMEDIA (Asociativa para Muchos a Muchos)
+alumno_tutor = db.Table('alumno_tutor',
+    db.Column('alumno_id', db.Integer, db.ForeignKey('alumno.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('tutor_id', db.Integer, db.ForeignKey('tutor.id', ondelete='CASCADE'), primary_key=True)
+)
+
+class Persona(db.Model):
     __tablename__ = 'persona'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -211,6 +218,12 @@ class Alumno(Persona):
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
     legajo = db.Column(db.String(20), unique=True, nullable=False)
     curso = db.Column(db.String(50))
+    # 2. DEFINICIÓN DE LA RELACIÓN EN EL MODELO ALUMNO
+    # Permite acceder a 'alumno.tutores' y a 'tutor.alumnos' de forma bidireccional
+    tutores = db.relationship('Tutor', 
+                              secondary=alumno_tutor, 
+                              backref=db.backref('alumnos', lazy='dynamic'),
+                              lazy='subquery')
 
     __mapper_args__ = {
         'polymorphic_identity': 'alumno',
@@ -255,5 +268,30 @@ def insertar_ejemplo():
         legajo="ALU-2026-01",
         curso="3er Año A"
     )
+
+    # 3. RUTA DE EJEMPLO PARA VINCULAR ALUMNO Y TUTOR
+@app.route('/vincular_ejemplo')
+def vincular_ejemplo():
+    # Creamos el Tutor
+    nuevo_tutor = Tutor(
+        nombre="María", apellido="López", dni="25456789",
+        fecha_nacimiento=datetime.strptime("1978-10-20", "%Y-%m-%d").date(),
+        email="maria.lopez@email.com", parentesco="Madre", ocupacion="Abogada"
+    )
+    
+    # Creamos el Alumno
+    nuevo_alumno = Alumno(
+        nombre="Lucas", apellido="Pérez", dni="52123456",
+        fecha_nacimiento=datetime.strptime("2012-03-04", "%Y-%m-%d").date(),
+        legajo="ALU-2026-05", curso="7mo Grado"
+    )
+    
+    # Vinculamos agregando el tutor a la lista del alumno
+    nuevo_alumno.tutores.append(nuevo_tutor)
+    
+    # Guardamos todo en la base de datos
+    db.session.add(nuevo_tutor)
+    db.session.add(nuevo_alumno)
+    db.session.commit()
     
     """
