@@ -87,8 +87,25 @@ class Alumno(db.Model):
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
     id_tutor = db.Column(db.Integer, db.ForeignKey('tutores.id_tutor'), nullable=False)
     nombre = db.Column(db.String(100), nullable=False)
-    fecha_nacimiento = db.Column(db.Date)
-    direccion = db.Column(db.Text)
+    apellido = db.Column(db.String(100), nullable=False)
+    cuil = db.Column(db.String(10), nullable=False)
+    fecha_nac = db.Column(db.Date(), nullable=False)
+    genero = db.Column(db.String(10), nullable=False)#Masculino, Femenino, No-Binario
+    direccion = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100))
+    telefono = db.Column(db.String(20))
+
+    def __init__(self, id_colegio, id_tutor, nombre, apellido, cuil, fecha_nac, genero, direccion, email, telefono):
+        self.id_colegio = id_colegio
+        self.id_tutor = id_tutor
+        self.nombre = nombre
+        self.apellido = apellido
+        self.cuil = cuil
+        self.fecha_nac = fecha_nac
+        self.genero = genero
+        self.direccion = direccion
+        self.email = email
+        self.telefono = telefono
 
 class Asignatura(db.Model):
     __tablename__ = 'asignaturas'
@@ -163,3 +180,80 @@ class Asistencia(db.Model):
     fecha = db.Column(db.Date, nullable=False)
     estado = db.Column(db.String(20)) # Presente, Ausente, etc.
     observaciones = db.Column(db.Text)
+
+#--------ejemplo de codigo con clases heredadas--------------
+""" class Persona(db.Model):
+    __tablename__ = 'persona'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+    apellido = db.Column(db.String(50), nullable=False)
+    dni = db.Column(db.String(15), unique=True, nullable=False)
+    fecha_nacimiento = db.Column(db.Date, nullable=False)
+    direccion = db.Column(db.String(100))
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(100), unique=True)
+    genero = db.Column(db.String(20))
+    
+    # Campo requerido por SQLAlchemy para identificar el tipo de clase hija
+    tipo_persona = db.Column(db.String(20))
+
+    __mapper_args__ = {
+        'polymorphic_on': tipo_persona,
+        'polymorphic_identity': 'persona'
+    }
+
+
+class Alumno(Persona):
+    __tablename__ = 'alumno'
+    
+    # Clave primaria que es a la vez Clave Foránea de la tabla Persona
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    legajo = db.Column(db.String(20), unique=True, nullable=False)
+    curso = db.Column(db.String(50))
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'alumno',
+    }
+
+
+class Docente(Persona):
+    __tablename__ = 'docente'
+    
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    cuil = db.Column(db.String(20), unique=True, nullable=False)
+    especialidad = db.Column(db.String(100))
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'docente',
+    }
+
+
+class Tutor(Persona):
+    __tablename__ = 'tutor'
+    
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    parentesco = db.Column(db.String(50))  # Ej: Padre, Madre, Tío
+    ocupacion = db.Column(db.String(100))
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'tutor',
+    } 
+    
+    @app.route('/insertar_ejemplo')
+def insertar_ejemplo():
+    # Ejemplo de creación de un Alumno (hereda campos de Persona)
+    nuevo_alumno = Alumno(
+        nombre="Juan",
+        apellido="Pérez",
+        dni="40123456",
+        fecha_nacimiento=datetime.strptime("2000-05-15", "%Y-%m-%d").date(),
+        direccion="Av. Siempreviva 742",
+        telefono="1123456789",
+        email="juan.perez@email.com",
+        genero="Masculino",
+        legajo="ALU-2026-01",
+        curso="3er Año A"
+    )
+    
+    """
