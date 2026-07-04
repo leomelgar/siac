@@ -29,7 +29,40 @@ class Colegio(db.Model):
     aulas = db.relationship('Aula', backref='colegio', lazy=True)
     asignaturas = db.relationship('Asignatura', backref='colegio', lazy=True)
 
-class Tutor(db.Model):
+#Tabla padre de la cual heredan los datos, Alumnos, Docentes y Tutores. Se puede usar para consultas generales de personas en el sistema.
+class Persona(db.Model):
+    __tablename__ = 'persona'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+    apellido = db.Column(db.String(50), nullable=False)
+    dni = db.Column(db.String(15), unique=True, nullable=False)
+    fecha_nacimiento = db.Column(db.Date, nullable=False)
+    direccion = db.Column(db.String(100))
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(100), unique=True)
+    genero = db.Column(db.String(20))
+    
+    # Campo requerido por SQLAlchemy para identificar el tipo de clase hija
+    tipo_persona = db.Column(db.String(20))#Docente, Tutor o Alumno
+
+    __mapper_args__ = {
+        'polymorphic_on': tipo_persona,
+        'polymorphic_identity': 'persona'
+    }
+class Tutor(Persona):
+    __tablename__ = 'tutor'
+    
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    parentesco = db.Column(db.String(50))  # Ej: Padre, Madre, Tío
+    ocupacion = db.Column(db.String(100))
+    legal = db.Column(db.Boolean, nullable=False)
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'tutor',
+    }
+
+""" class Tutor(db.Model):
     __tablename__ = 'tutores'
     id_tutor = db.Column(db.Integer, primary_key=True)
     nombre = db.Column(db.String(100), nullable=False)
@@ -51,9 +84,21 @@ class Tutor(db.Model):
         self.email = email
         self.direccion = direccion
         self.parentesco = parentesco
-        self.legal = legal
+        self.legal = legal """
+class Docente(Persona):
+    __tablename__ = 'docente'
+    
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), unique=True, nullable=False)
+    cargo = db.Column(db.String(50))#Cargo de ocupacion dentro de la institucion: docente titular, suplente, interino
+    fecha_contratacion = db.Column(db.Date(), nullable=True)
+    estado_contractual = db.Column(db.String(10), nullable=True)# activo, baja, jubilado
 
-class Docente(db.Model):
+    __mapper_args__ = {
+        'polymorphic_identity': 'docente',
+    }
+""" class Docente(db.Model):
     __tablename__ = 'docentes'
     id_docente = db.Column(db.Integer, primary_key=True)
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
@@ -79,9 +124,33 @@ class Docente(db.Model):
         self.email = email
         self.telefono = telefono
         self.fecha_contratacion = fecha_contratacion
-        self.estado_contractual = estado_contractual
+        self.estado_contractual = estado_contractual """
 
-class Alumno(db.Model):
+class Alumno(Persona):
+    __tablename__ = 'alumno'
+    
+    # Clave primaria que es a la vez Clave Foránea de la tabla Persona
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(10), nullable=False)
+    legajo = db.Column(db.String(20), unique=True, nullable=False)
+    # 2. DEFINICIÓN DE LA RELACIÓN EN EL MODELO ALUMNO
+    # Permite acceder a 'alumno.tutores' y a 'tutor.alumnos' de forma bidireccional
+    tutores = db.relationship('Tutor', 
+                              secondary=alumno_tutor, 
+                              backref=db.backref('alumnos', lazy='dynamic'),
+                              lazy='subquery')
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'alumno',
+    }
+
+# 1. TABLA INTERMEDIA (Asociativa para Muchos a Muchos)
+alumno_tutor = db.Table('alumno_tutor',
+    db.Column('alumno_id', db.Integer, db.ForeignKey('alumno.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('tutor_id', db.Integer, db.ForeignKey('tutor.id', ondelete='CASCADE'), primary_key=True)
+)
+""" class Alumno(db.Model):
     __tablename__ = 'alumnos'
     id_alumno = db.Column(db.Integer, primary_key=True)
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
@@ -105,7 +174,7 @@ class Alumno(db.Model):
         self.genero = genero
         self.direccion = direccion
         self.email = email
-        self.telefono = telefono
+        self.telefono = telefono """
 
 class Asignatura(db.Model):
     __tablename__ = 'asignaturas'
