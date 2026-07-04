@@ -26,7 +26,8 @@ def new_tutor():
         db.session.add(new_tutor)
         db.session.commit()
         flash('Tutor añadido correctamente!')
-        return redirect(url_for('tutores.home'))
+        return render_template('/alumnos/new.html')
+        #return redirect(url_for('tutores.home'))
 
 @tutores.route('/tutores/view/<id_tutor>', methods=['GET'])
 def view(id_tutor):
