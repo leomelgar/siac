@@ -1,18 +1,10 @@
-#Relaciones: El uso de db.ForeignKey define la clave foránea en la base de datos, 
-#mientras que db.relationship permite acceder a los datos relacionados 
-#como atributos de objeto en Python (ej. alumno.tutor). 
-#from flask_sqlalchemy import SQLAlchemy
 from utils.db import db
 from datetime import datetime
-
-#db = SQLAlchemy()
-#Relaciones (db.relationship y db.ForeignKey):
-#Uno a Muchos (1:N): Se define con db.ForeignKey en la tabla "hija" 
-#(ej. id_colegio en Docente) y db.relationship en la tabla "padre" (Colegio). 
-#Esto permite acceder a colegio.docentes para obtener una lista de todos los docentes.
-#Integridad: Al definir nullable=False en las claves foráneas, garantizamos que no se 
-#pueda crear un alumno sin un colegio o tutor asignado.
-
+"""# TABLA INTERMEDIA (Muchos a Muchos entre Alumno y Tutor)
+alumno_tutor = db.Table('alumno_tutor',
+    db.Column('alumno_id', db.Integer, db.ForeignKey('alumno.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('tutor_id', db.Integer, db.ForeignKey('tutor.id', ondelete='CASCADE'), primary_key=True)
+)
 
 class Colegio(db.Model):
     __tablename__ = 'colegio'
@@ -23,240 +15,21 @@ class Colegio(db.Model):
     telefono = db.Column(db.String(20))
     email = db.Column(db.String(100))
     
-    # Relaciones
-    docentes = db.relationship('Docente', backref='colegio', lazy=True)
-    alumnos = db.relationship('Alumno', backref='colegio', lazy=True)
-    aulas = db.relationship('Aula', backref='colegio', lazy=True)
-    asignaturas = db.relationship('Asignatura', backref='colegio', lazy=True)
+    docentes = db.relationship('Docente', back_populates='colegio', lazy=True)
+    alumnos = db.relationship('Alumno', back_populates='colegio', lazy=True)
+    aulas = db.relationship('Aula', back_populates='colegio', lazy=True)
+    asignaturas = db.relationship('Asignatura', back_populates='colegio', lazy=True)
 
-#Tabla padre de la cual heredan los datos, Alumnos, Docentes y Tutores. Se puede usar para consultas generales de personas en el sistema.
-class Persona(db.Model):
-    __tablename__ = 'persona'
-    
-    id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(50), nullable=False)
-    apellido = db.Column(db.String(50), nullable=False)
-    dni = db.Column(db.String(15), unique=True, nullable=False)
-    fecha_nacimiento = db.Column(db.Date, nullable=False)
-    direccion = db.Column(db.String(100))
-    telefono = db.Column(db.String(20))
-    email = db.Column(db.String(100), unique=True)
-    genero = db.Column(db.String(20))
-    
-    # Campo requerido por SQLAlchemy para identificar el tipo de clase hija
-    tipo_persona = db.Column(db.String(20))#Docente, Tutor o Alumno
-
-    __mapper_args__ = {
-        'polymorphic_on': tipo_persona,
-        'polymorphic_identity': 'persona'
-    }
-class Tutor(Persona):
-    __tablename__ = 'tutor'
-    
-    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    parentesco = db.Column(db.String(50))  # Ej: Padre, Madre, Tío
-    ocupacion = db.Column(db.String(100))
-    legal = db.Column(db.Boolean, nullable=False)
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'tutor',
-    }
-
-""" class Tutor(db.Model):
-    __tablename__ = 'tutores'
-    id_tutor = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(100), nullable=False)
-    apellido = db.Column(db.String(100), nullable=False)
-    dni = db.Column(db.String(10), nullable=False)
-    telefono = db.Column(db.String(20))
-    email = db.Column(db.String(100))
-    direccion = db.Column(db.Text)
-    parentesco = db.Column(db.String(8), nullable=False)
-    legal = db.Column(db.Boolean, nullable=False)
-    
-    alumnos = db.relationship('Alumno', backref='tutor', lazy=True)
-
-    def __init__(self, nombre, apellido, dni, telefono, email, direccion, parentesco, legal):
-        self.nombre = nombre
-        self.apellido = apellido
-        self.dni = dni
+    def __init__(self, nombre_colegio, codigo_dane=None, direccion=None, telefono=None, email=None):
+        self.nombre_colegio = nombre_colegio
+        self.codigo_dane = codigo_dane
+        self.direccion = direccion
         self.telefono = telefono
         self.email = email
-        self.direccion = direccion
-        self.parentesco = parentesco
-        self.legal = legal """
-class Docente(Persona):
-    __tablename__ = 'docente'
-    
-    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    cuil = db.Column(db.String(20), unique=True, nullable=False)
-    cargo = db.Column(db.String(50))#Cargo de ocupacion dentro de la institucion: docente titular, suplente, interino
-    fecha_contratacion = db.Column(db.Date(), nullable=True)
-    estado_contractual = db.Column(db.String(10), nullable=True)# activo, baja, jubilado
 
-    __mapper_args__ = {
-        'polymorphic_identity': 'docente',
-    }
-""" class Docente(db.Model):
-    __tablename__ = 'docentes'
-    id_docente = db.Column(db.Integer, primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    nombre = db.Column(db.String(100), nullable=False)
-    apellido = db.Column(db.String(100), nullable=False)
-    dni = db.Column(db.String(8), nullable=False)
-    fecha_nac = db.Column(db.Date(), nullable=False)
-    direccion = db.Column(db.String(100), nullable=False)
-    cargo = db.Column(db.String(50))#Cargo de ocupacion dentro de la institucion: docente titular, suplente, interino
-    email = db.Column(db.String(100))
-    telefono = db.Column(db.String(20))
-    fecha_contratacion = db.Column(db.Date(), nullable=True)
-    estado_contractual = db.Column(db.String(10), nullable=True)# activo, baja, jubilado
-    
-    def __init__(self, id_colegio, nombre, apellido, dni, fecha_nac, direccion, cargo, email, telefono, fecha_contratacion, estado_contractual):
-        self.id_colegio = id_colegio
-        self.nombre = nombre
-        self.apellido = apellido
-        self.dni = dni
-        self.fecha_nac = fecha_nac
-        self.direccion = direccion
-        self.cargo = cargo
-        self.email = email
-        self.telefono = telefono
-        self.fecha_contratacion = fecha_contratacion
-        self.estado_contractual = estado_contractual """
+    def __repr__(self):
+        return f"<Colegio '{self.nombre_colegio}' (DANE: {self.codigo_dane})>"
 
-class Alumno(Persona):
-    __tablename__ = 'alumno'
-    
-    # Clave primaria que es a la vez Clave Foránea de la tabla Persona
-    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    cuil = db.Column(db.String(10), nullable=False)
-    legajo = db.Column(db.String(20), unique=True, nullable=False)
-    # 2. DEFINICIÓN DE LA RELACIÓN EN EL MODELO ALUMNO
-    # Permite acceder a 'alumno.tutores' y a 'tutor.alumnos' de forma bidireccional
-    tutores = db.relationship('Tutor', 
-                              secondary=alumno_tutor, 
-                              backref=db.backref('alumnos', lazy='dynamic'),
-                              lazy='subquery')
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'alumno',
-    }
-
-# 1. TABLA INTERMEDIA (Asociativa para Muchos a Muchos)
-alumno_tutor = db.Table('alumno_tutor',
-    db.Column('alumno_id', db.Integer, db.ForeignKey('alumno.id', ondelete='CASCADE'), primary_key=True),
-    db.Column('tutor_id', db.Integer, db.ForeignKey('tutor.id', ondelete='CASCADE'), primary_key=True)
-)
-""" class Alumno(db.Model):
-    __tablename__ = 'alumnos'
-    id_alumno = db.Column(db.Integer, primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    id_tutor = db.Column(db.Integer, db.ForeignKey('tutores.id_tutor'), nullable=False)
-    nombre = db.Column(db.String(100), nullable=False)
-    apellido = db.Column(db.String(100), nullable=False)
-    cuil = db.Column(db.String(10), nullable=False)
-    fecha_nac = db.Column(db.Date(), nullable=False)
-    genero = db.Column(db.String(10), nullable=False)#Masculino, Femenino, No-Binario
-    direccion = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100))
-    telefono = db.Column(db.String(20))
-
-    def __init__(self, id_colegio, id_tutor, nombre, apellido, cuil, fecha_nac, genero, direccion, email, telefono):
-        self.id_colegio = id_colegio
-        self.id_tutor = id_tutor
-        self.nombre = nombre
-        self.apellido = apellido
-        self.cuil = cuil
-        self.fecha_nac = fecha_nac
-        self.genero = genero
-        self.direccion = direccion
-        self.email = email
-        self.telefono = telefono """
-
-class Asignatura(db.Model):
-    __tablename__ = 'asignaturas'
-    id_asignatura = db.Column(db.Integer, primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    nombre_asignatura = db.Column(db.String(100), nullable=False)
-    descripcion = db.Column(db.Text)
-    creditos = db.Column(db.Integer)
-    def __init__(self, id_colegio, nombre_asignatura, descripcion, creditos):
-        self.id_colegio = id_colegio
-        self.nombre_asignatura = nombre_asignatura
-        self.descripcion = descripcion
-        self.creditos = creditos
-
-class Aula(db.Model):
-    __tablename__ = 'aulas'
-    id_aula = db.Column(db.Integer, primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    nombre_aula = db.Column(db.String(50), nullable=False)
-    capacidad = db.Column(db.Integer)
-    ubicacion = db.Column(db.String(100))
-
-class Turno(db.Model):
-    __tablename__ = 'turnos'
-    id_turno = db.Column(db.Integer, primary_key=True)
-    # Opcional: id_colegio si los turnos varían por sede
-    nombre_turno = db.Column(db.String(50), nullable=False) 
-    hora_inicio = db.Column(db.Time)
-    hora_fin = db.Column(db.Time)
-
-# ==========================================
-# 2. MODELOS DE ESTRUCTURA Y TRANSACCIÓN
-# ==========================================
-
-class Clase(db.Model):
-    __tablename__ = 'clases'
-    id_clase = db.Column(db.Integer, primary_key=True)
-    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    id_docente_tutor = db.Column(db.Integer, db.ForeignKey('docentes.id_docente'), nullable=False)
-    id_turno = db.Column(db.Integer, db.ForeignKey('turnos.id_turno'))
-    nombre_clase = db.Column(db.String(50), nullable=False)
-    nivel_academico = db.Column(db.String(50))
-    
-    # Relación con el objeto docente tutor
-    docente_tutor_rel = db.relationship('Docente', foreign_keys=[id_docente_tutor])
-
-class Horario(db.Model):
-    __tablename__ = 'horarios'
-    id_horario = db.Column(db.Integer, primary_key=True)
-    id_clase = db.Column(db.Integer, db.ForeignKey('clases.id_clase'), nullable=False)
-    id_asignatura = db.Column(db.Integer, db.ForeignKey('asignaturas.id_asignatura'), nullable=False)
-    id_docente = db.Column(db.Integer, db.ForeignKey('docentes.id_docente'), nullable=False)
-    id_aula = db.Column(db.Integer, db.ForeignKey('aulas.id_aula'), nullable=False)
-    dia_semana = db.Column(db.String(15), nullable=False) # Ej: 'Lunes'
-    hora_inicio = db.Column(db.Time)
-    hora_fin = db.Column(db.Time)
-
-class Matricula(db.Model):
-    __tablename__ = 'matricula'
-    id_matricula = db.Column(db.Integer, primary_key=True)
-    id_alumno = db.Column(db.Integer, db.ForeignKey('alumnos.id_alumno'), nullable=False)
-    id_clase = db.Column(db.Integer, db.ForeignKey('clases.id_clase'), nullable=False)
-    fecha_matricula = db.Column(db.Date, default=datetime.utcnow)
-    periodo_academico = db.Column(db.String(20))
-    estado = db.Column(db.String(20), default='Activa')
-
-class Asistencia(db.Model):
-    __tablename__ = 'asistencias'
-    id_asistencia = db.Column(db.Integer, primary_key=True)
-    id_matricula = db.Column(db.Integer, db.ForeignKey('matricula.id_matricula'), nullable=False)
-    id_horario = db.Column(db.Integer, db.ForeignKey('horarios.id_horario'))
-    fecha = db.Column(db.Date, nullable=False)
-    estado = db.Column(db.String(20)) # Presente, Ausente, etc.
-    observaciones = db.Column(db.Text)
-
-#--------ejemplo de codigo con clases heredadas--------------
-""" 
-# 1. TABLA INTERMEDIA (Asociativa para Muchos a Muchos)
-alumno_tutor = db.Table('alumno_tutor',
-    db.Column('alumno_id', db.Integer, db.ForeignKey('alumno.id', ondelete='CASCADE'), primary_key=True),
-    db.Column('tutor_id', db.Integer, db.ForeignKey('tutor.id', ondelete='CASCADE'), primary_key=True)
-)
 
 class Persona(db.Model):
     __tablename__ = 'persona'
@@ -271,7 +44,6 @@ class Persona(db.Model):
     email = db.Column(db.String(100), unique=True)
     genero = db.Column(db.String(20))
     
-    # Campo requerido por SQLAlchemy para identificar el tipo de clase hija
     tipo_persona = db.Column(db.String(20))
 
     __mapper_args__ = {
@@ -279,88 +51,448 @@ class Persona(db.Model):
         'polymorphic_identity': 'persona'
     }
 
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, direccion=None, telefono=None, email=None, genero=None):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.dni = dni
+        self.fecha_nacimiento = fecha_nacimiento
+        self.direccion = direccion
+        self.telefono = telefono
+        self.email = email
+        self.genero = genero
 
-class Alumno(Persona):
-    __tablename__ = 'alumno'
-    
-    # Clave primaria que es a la vez Clave Foránea de la tabla Persona
-    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    legajo = db.Column(db.String(20), unique=True, nullable=False)
-    curso = db.Column(db.String(50))
-    # 2. DEFINICIÓN DE LA RELACIÓN EN EL MODELO ALUMNO
-    # Permite acceder a 'alumno.tutores' y a 'tutor.alumnos' de forma bidireccional
-    tutores = db.relationship('Tutor', 
-                              secondary=alumno_tutor, 
-                              backref=db.backref('alumnos', lazy='dynamic'),
-                              lazy='subquery')
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'alumno',
-    }
-
-
-class Docente(Persona):
-    __tablename__ = 'docente'
-    
-    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    cuil = db.Column(db.String(20), unique=True, nullable=False)
-    especialidad = db.Column(db.String(100))
-
-    __mapper_args__ = {
-        'polymorphic_identity': 'docente',
-    }
+    def __repr__(self):
+        return f"<Persona '{self.nombre} {self.apellido}' - DNI: {self.dni}>"
 
 
 class Tutor(Persona):
     __tablename__ = 'tutor'
     
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
-    parentesco = db.Column(db.String(50))  # Ej: Padre, Madre, Tío
+    parentesco = db.Column(db.String(50))  
     ocupacion = db.Column(db.String(100))
+    legal = db.Column(db.Boolean, nullable=False)
+
+    alumnos_asociados = db.relationship('Alumno', secondary=alumno_tutor, back_populates='tutores', lazy='dynamic')
 
     __mapper_args__ = {
         'polymorphic_identity': 'tutor',
-    } 
-    
-    @app.route('/insertar_ejemplo')
-def insertar_ejemplo():
-    # Ejemplo de creación de un Alumno (hereda campos de Persona)
-    nuevo_alumno = Alumno(
-        nombre="Juan",
-        apellido="Pérez",
-        dni="40123456",
-        fecha_nacimiento=datetime.strptime("2000-05-15", "%Y-%m-%d").date(),
-        direccion="Av. Siempreviva 742",
-        telefono="1123456789",
-        email="juan.perez@email.com",
-        genero="Masculino",
-        legajo="ALU-2026-01",
-        curso="3er Año A"
-    )
+    }
 
-    # 3. RUTA DE EJEMPLO PARA VINCULAR ALUMNO Y TUTOR
-@app.route('/vincular_ejemplo')
-def vincular_ejemplo():
-    # Creamos el Tutor
-    nuevo_tutor = Tutor(
-        nombre="María", apellido="López", dni="25456789",
-        fecha_nacimiento=datetime.strptime("1978-10-20", "%Y-%m-%d").date(),
-        email="maria.lopez@email.com", parentesco="Madre", ocupacion="Abogada"
-    )
+    # El constructor llama a super() para rellenar los datos de Persona
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, legal, parentesco=None, ocupacion=None, **kwargs):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        self.legal = legal
+        self.parentesco = parentesco
+        self.ocupacion = ocupacion
+
+    def __repr__(self):
+        return f"<Tutor '{self.nombre} {self.apellido}' - Parentesco: {self.parentesco}>"
+
+
+class Docente(Persona):
+    __tablename__ = 'docente'
     
-    # Creamos el Alumno
-    nuevo_alumno = Alumno(
-        nombre="Lucas", apellido="Pérez", dni="52123456",
-        fecha_nacimiento=datetime.strptime("2012-03-04", "%Y-%m-%d").date(),
-        legajo="ALU-2026-05", curso="7mo Grado"
-    )
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), unique=True, nullable=False)
+    cargo = db.Column(db.String(50)) 
+    fecha_contratacion = db.Column(db.Date, nullable=True)
+    estado_contractual = db.Column(db.String(20), nullable=True)
+
+    colegio = db.relationship('Colegio', back_populates='docentes')
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'docente',
+    }
+
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, cuil, cargo=None, fecha_contratacion=None, estado_contractual=None, **kwargs):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        self.id_colegio = id_colegio
+        self.cuil = cuil
+        self.cargo = cargo
+        self.fecha_contratacion = fecha_contratacion
+        self.estado_contractual = estado_contractual
+
+    def __repr__(self):
+        return f"<Docente '{self.nombre} {self.apellido}' - CUIL: {self.cuil}>"
+
+
+class Alumno(Persona):
+    __tablename__ = 'alumno'
     
-    # Vinculamos agregando el tutor a la lista del alumno
-    nuevo_alumno.tutores.append(nuevo_tutor)
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), nullable=False) 
+    legajo = db.Column(db.String(20), unique=True, nullable=False)
     
-    # Guardamos todo en la base de datos
-    db.session.add(nuevo_tutor)
-    db.session.add(nuevo_alumno)
-    db.session.commit()
+    tutores = db.relationship('Tutor', secondary=alumno_tutor, back_populates='alumnos_asociados', lazy='subquery')
+    colegio = db.relationship('Colegio', back_populates='alumnos')
+
+    __mapper_args__ = {
+        'polymorphic_identity': 'alumno',
+    }
+
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, cuil, legajo, **kwargs):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        self.id_colegio = id_colegio
+        self.cuil = cuil
+        self.legajo = legajo
+
+    def __repr__(self):
+        return f"<Alumno '{self.nombre} {self.apellido}' - Legajo: {self.legajo}>"
+
+
+class Asignatura(db.Model):
+    __tablename__ = 'asignatura'
+    id_asignatura = db.Column(db.Integer, primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    nombre_asignatura = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.Text)
+    creditos = db.Column(db.Integer)
+
+    colegio = db.relationship('Colegio', back_populates='asignaturas')
+
+    def __init__(self, id_colegio, nombre_asignatura, descripcion=None, creditos=None):
+        self.id_colegio = id_colegio
+        self.nombre_asignatura = nombre_asignatura
+        self.descripcion = descripcion
+        self.creditos = creditos
+
+    def __repr__(self):
+        return f"<Asignatura '{self.nombre_asignatura}' - Créditos: {self.creditos}>"
+
+
+class Aula(db.Model):
+    __tablename__ = 'aula'
+    id_aula = db.Column(db.Integer, primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    nombre_aula = db.Column(db.String(50), nullable=False)
+    capacidad = db.Column(db.Integer)
+    ubicacion = db.Column(db.String(100))
+
+    colegio = db.relationship('Colegio', back_populates='aulas')
+
+    def __init__(self, id_colegio, nombre_aula, capacidad=None, ubicacion=None):
+        self.id_colegio = id_colegio
+        self.nombre_aula = nombre_aula
+        self.capacidad = capacidad
+        self.ubicacion = ubicacion
+
+    def __repr__(self):
+        return f"<Aula '{self.nombre_aula}' - Capacidad: {self.capacidad}>"
+
+
+class Turno(db.Model):
+    __tablename__ = 'turno'
+    id_turno = db.Column(db.Integer, primary_key=True)
+    nombre_turno = db.Column(db.String(50), nullable=False) # Mañana, Tarde, Noche
+    hora_inicio = db.Column(db.Time, nullable=False)
+    hora_fin = db.Column(db.Time, nullable=False)
+
+    def __init__(self, nombre_turno, hora_inicio, hora_fin):
+        self.nombre_turno = nombre_turno
+        self.hora_inicio = hora_inicio
+        self.hora_fin = hora_fin
+
+    def __repr__(self):
+        return f"<Turno '{self.nombre_turno}' ({self.hora_inicio} - {self.hora_fin})>" """
+
+
+# ==========================================
+# 1. TABLAS INTERMEDIAS Y ASOCIATIVAS
+# ==========================================
+
+# Muchos a Muchos: Alumno <-> Tutor
+alumno_tutor = db.Table('alumno_tutor',
+    db.Column('alumno_id', db.Integer, db.ForeignKey('alumno.id', ondelete='CASCADE'), primary_key=True),
+    db.Column('tutor_id', db.Integer, db.ForeignKey('tutor.id', ondelete='CASCADE'), primary_key=True)
+)
+
+# ==========================================
+# 2. MODELOS BASE E INSTITUCIONALES
+# ==========================================
+
+class Colegio(db.Model):
+    __tablename__ = 'colegio'
+    id_colegio = db.Column(db.Integer, primary_key=True)
+    nombre_colegio = db.Column(db.String(150), nullable=False)
+    codigo_dane = db.Column(db.String(50), unique=True)
+    direccion = db.Column(db.Text)
+    telefono = db.Column(db.String(20))
+    email = db.Column(db.String(100))
     
-    """
+    docentes = db.relationship('Docente', back_populates='colegio', lazy=True)
+    alumnos = db.relationship('Alumno', back_populates='colegio', lazy=True)
+    aulas = db.relationship('Aula', back_populates='colegio', lazy=True)
+    asignaturas = db.relationship('Asignatura', back_populates='colegio', lazy=True)
+    matriculas = db.relationship('Matricula', back_populates='colegio', lazy=True)
+
+    def __init__(self, nombre_colegio, codigo_dane=None, direccion=None, telefono=None, email=None):
+        self.nombre_colegio = nombre_colegio
+        self.codigo_dane = codigo_dane
+        self.direccion = direccion
+        self.telefono = telefono
+        self.email = email
+
+    def __repr__(self):
+        return f"<Colegio '{self.nombre_colegio}' (DANE: {self.codigo_dane})>"
+
+
+class Aula(db.Model):
+    __tablename__ = 'aula'
+    id_aula = db.Column(db.Integer, primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    nombre_aula = db.Column(db.String(50), nullable=False)
+    capacidad = db.Column(db.Integer)
+    ubicacion = db.Column(db.String(100))
+
+    colegio = db.relationship('Colegio', back_populates='aulas')
+    clases = db.relationship('Clase', back_populates='aula', lazy=True)
+
+    def __init__(self, id_colegio, nombre_aula, capacidad=None, ubicacion=None):
+        self.id_colegio = id_colegio
+        self.nombre_aula = nombre_aula
+        self.capacidad = capacidad
+        self.ubicacion = ubicacion
+
+    def __repr__(self):
+        return f"<Aula '{self.nombre_aula}' - Capacidad: {self.capacidad}>"
+
+
+class Turno(db.Model):
+    __tablename__ = 'turno'
+    id_turno = db.Column(db.Integer, primary_key=True)
+    nombre_turno = db.Column(db.String(50), nullable=False) # Mañana, Tarde, Noche
+    hora_inicio = db.Column(db.Time, nullable=False)
+    hora_fin = db.Column(db.Time, nullable=False)
+
+    clases = db.relationship('Clase', back_populates='turno', lazy=True)
+
+    def __init__(self, nombre_turno, hora_inicio, hora_fin):
+        self.nombre_turno = nombre_turno
+        self.hora_inicio = hora_inicio
+        self.hora_fin = hora_fin
+
+    def __repr__(self):
+        return f"<Turno '{self.nombre_turno}' ({self.hora_inicio} - {self.hora_fin})>"
+
+
+class Asignatura(db.Model):
+    __tablename__ = 'asignatura'
+    id_asignatura = db.Column(db.Integer, primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    nombre_asignatura = db.Column(db.String(100), nullable=False)
+    descripcion = db.Column(db.Text)
+    creditos = db.Column(db.Integer)
+
+    colegio = db.relationship('Colegio', back_populates='asignaturas')
+    clases = db.relationship('Clase', back_populates='asignatura', lazy=True)
+
+    def __init__(self, id_colegio, nombre_asignatura, descripcion=None, creditos=None):
+        self.id_colegio = id_colegio
+        self.nombre_asignatura = nombre_asignatura
+        self.descripcion = descripcion
+        self.creditos = creditos
+
+    def __repr__(self):
+        return f"<Asignatura '{self.nombre_asignatura}' - Créditos: {self.creditos}>"
+
+# ==========================================
+# 3. POLIMORFISMO (PERSONAS)
+# ==========================================
+
+class Persona(db.Model):
+    __tablename__ = 'persona'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+    apellido = db.Column(db.String(50), nullable=False)
+    dni = db.Column(db.String(15), unique=True, nullable=False)
+    fecha_nacimiento = db.Column(db.Date, nullable=False)
+    direccion = db.Column(db.String(100), nullable=False)
+    telefono = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100), unique=True)
+    genero = db.Column(db.String(20), nullable=False)
+    tipo_persona = db.Column(db.String(20))
+
+    __mapper_args__ = {
+        'polymorphic_on': tipo_persona,
+        'polymorphic_identity': 'persona'
+    }
+
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, direccion, telefono, email, genero):
+        self.nombre = nombre
+        self.apellido = apellido
+        self.dni = dni
+        self.fecha_nacimiento = fecha_nacimiento
+        self.direccion = direccion
+        self.telefono = telefono
+        self.email = email
+        self.genero = genero
+
+    def __repr__(self):
+        return f"<Persona '{self.nombre} {self.apellido}' - DNI: {self.dni}>"
+
+
+class Tutor(Persona):
+    __tablename__ = 'tutor'
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    parentesco = db.Column(db.String(50))  
+    ocupacion = db.Column(db.String(100))
+    legal = db.Column(db.Boolean, nullable=False)
+
+    alumnos_asociados = db.relationship('Alumno', secondary=alumno_tutor, back_populates='tutores', lazy='dynamic')
+
+    __mapper_args__ = { 'polymorphic_identity': 'tutor' }
+
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, legal, parentesco=None, ocupacion=None, **kwargs):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        self.legal = legal
+        self.parentesco = parentesco
+        self.ocupacion = ocupacion
+
+    def __repr__(self):
+        return f"<Tutor '{self.nombre} {self.apellido}' - Parentesco: {self.parentesco}>"
+
+
+class Docente(Persona):
+    __tablename__ = 'docente'
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), unique=True, nullable=False)
+    cargo = db.Column(db.String(50)) 
+    fecha_contratacion = db.Column(db.Date, nullable=True)
+    estado_contractual = db.Column(db.String(20), nullable=True)
+
+    colegio = db.relationship('Colegio', back_populates='docentes')
+    clases = db.relationship('Clase', back_populates='docente', lazy=True)
+
+    __mapper_args__ = { 'polymorphic_identity': 'docente' }
+
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, cuil, cargo=None, fecha_contratacion=None, estado_contractual=None, **kwargs):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        self.id_colegio = id_colegio
+        self.cuil = cuil
+        self.cargo = cargo
+        self.fecha_contratacion = fecha_contratacion
+        self.estado_contractual = estado_contractual
+
+    def __repr__(self):
+        return f"<Docente '{self.nombre} {self.apellido}' - CUIL: {self.cuil}>"
+
+
+class Alumno(Persona):
+    __tablename__ = 'alumno'
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), nullable=False) 
+    legajo = db.Column(db.String(20), unique=True, nullable=False)
+    
+    tutores = db.relationship('Tutor', secondary=alumno_tutor, back_populates='alumnos_asociados', lazy='subquery')
+    colegio = db.relationship('Colegio', back_populates='alumnos')
+    matriculas = db.relationship('Matricula', back_populates='alumno', lazy=True)
+    asistencias = db.relationship('Asistencia', back_populates='alumno', lazy=True)
+
+    __mapper_args__ = { 'polymorphic_identity': 'alumno' }
+
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, cuil, legajo, **kwargs):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        self.id_colegio = id_colegio
+        self.cuil = cuil
+        self.legajo = legajo
+
+    def __repr__(self):
+        return f"<Alumno '{self.nombre} {self.apellido}' - Legajo: {self.legajo}>"
+
+# ==========================================
+# 4. NUEVOS MODELOS (GESTIÓN ACADÉMICA)
+# ==========================================
+
+class Clase(db.Model):
+    """Representa la sección o grupo específico (Ej: Matemática de 5to Año, Aula 3, Turno Mañana)."""
+    __tablename__ = 'clase'
+    id_clase = db.Column(db.Integer, primary_key=True)
+    id_asignatura = db.Column(db.Integer, db.ForeignKey('asignatura.id_asignatura'), nullable=False)
+    id_docente = db.Column(db.Integer, db.ForeignKey('docente.id'), nullable=False)
+    id_aula = db.Column(db.Integer, db.ForeignKey('aula.id_aula'), nullable=False)
+    id_turno = db.Column(db.Integer, db.ForeignKey('turno.id_turno'), nullable=False)
+    ciclo_lectivo = db.Column(db.Integer, nullable=False) # Ej: 2026
+
+    asignatura = db.relationship('Asignatura', back_populates='clases')
+    docente = db.relationship('Docente', back_populates='clases')
+    aula = db.relationship('Aula', back_populates='clases')
+    turno = db.relationship('Turno', back_populates='clases')
+    horarios = db.relationship('Horario', back_populates='clase', lazy=True, cascade="all, delete-orphan")
+    asistencias = db.relationship('Asistencia', back_populates='clase', lazy=True)
+
+    def __init__(self, id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo):
+        self.id_asignatura = id_asignatura
+        self.id_docente = id_docente
+        self.id_aula = id_aula
+        self.id_turno = id_turno
+        self.ciclo_lectivo = ciclo_lectivo
+    
+    def repr(self):return f"<Clase ID: {self.id_clase} - Asignatura: {self.id_asignatura} - Año: {self.ciclo_lectivo}>"
+
+class Horario(db.Model):
+    """Define los días de la semana y las horas específicas en las que se dicta una Clase."""
+    __tablename__ = 'horario'
+    id_horario = db.Column(db.Integer, primary_key=True)
+    id_clase = db.Column(db.Integer, db.ForeignKey('clase.id_clase', ondelete='CASCADE'), nullable=False)
+    dia_semana = db.Column(db.String(15), nullable=False) # Lunes, Martes, etc.
+    hora_desde = db.Column(db.Time, nullable=False)
+    hora_hasta = db.Column(db.Time, nullable=False)
+
+    clase = db.relationship('Clase', back_populates='horarios')
+
+    def init(self, id_clase, dia_semana, hora_desde, hora_hasta):
+        self.id_clase = id_clase
+        self.dia_semana = dia_semana
+        self.hora_desde = hora_desde
+        self.hora_hasta = hora_hasta
+
+    def repr(self):return f"<Horario {self.dia_semana} {self.hora_desde} - {self.hora_hasta}>"
+
+class Matricula(db.Model):
+    """Vincula a un alumno con una institución y un año escolar determinado."""
+    __tablename__ = 'matricula'
+    id_matricula = db.Column(db.Integer, primary_key=True)
+    id_alumno = db.Column(db.Integer, db.ForeignKey('alumno.id'), nullable=False)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    fecha_inscripcion = db.Column(db.Date, nullable=False)
+    grado_nivel = db.Column(db.String(50), nullable=False) # Ej: 5to Año Secundaria
+    periodo_lectivo = db.Column(db.Integer, nullable=False) # Ej: 2026
+    estado_matricula = db.Column(db.String(20), default="Activo") # Activo, Baja, Suspendido
+    alumno = db.relationship('Alumno', back_populates='matriculas')
+    colegio = db.relationship('Colegio', back_populates='matriculas')
+    def init(self, id_alumno, id_colegio, fecha_inscripcion, grado_nivel, periodo_lectivo, estado_matricula="Activo"):
+        self.id_alumno = id_alumno
+        self.id_colegio = id_colegio
+        self.fecha_inscripcion = fecha_inscripcion
+        self.grado_nivel = grado_nivel
+        self.periodo_lectivo = periodo_lectivo
+        self.estado_matricula = estado_matricula
+        
+    def repr(self):
+        return f"<Matricula Alumno ID: {self.id_alumno} - Grado: {self.grado_nivel} ({self.periodo_lectivo})>"
+
+class Asistencia(db.Model):
+    """Registra el presentismo diario de un alumno en una determinada Clase."""
+    __tablename__ = 'asistencia'
+    id_asistencia = db.Column(db.Integer, primary_key=True)
+    id_alumno = db.Column(db.Integer, db.ForeignKey('alumno.id'), nullable=False)
+    id_clase = db.Column(db.Integer, db.ForeignKey('clase.id_clase'), nullable=False)
+    fecha = db.Column(db.Date, nullable=False)
+    estado_asistencia = db.Column(db.String(20), nullable=False) # Presente, Ausente, Tarde, Justificado
+    observaciones = db.Column(db.String(255))
+    alumno = db.relationship('Alumno', back_populates='asistencias')
+
+    clase = db.relationship('Clase', back_populates='asistencias')
+    def init(self, id_alumno, id_clase, fecha, estado_asistencia, observaciones=None):
+        self.id_alumno = id_alumno
+        self.id_clase = id_clase
+        self.fecha = fecha
+        self.estado_asistencia = estado_asistencia
+        self.observaciones = observaciones
+        def repr(self):
+            return f"<Asistencia Alumno ID: {self.id_alumno} - Fecha: {self.fecha} - Estado: {self.estado_asistencia}>"

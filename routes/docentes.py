@@ -1,12 +1,15 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Docente, Colegio, Asignatura
+from models.colege import Docente, Colegio, Asignatura, Persona
 from utils.db import db
 
 docentes = Blueprint("docentes", __name__)
 
 @docentes.route('/docentes/home')
 def home():
-    docentes = Docente.query.all()
+    #docentes = db.session.query(Docente).join(Persona).filter(Persona.id==Docente.id).all()
+    #docentes = Docente.query.join(Persona).filter(Persona.id==Docente.id).all()
+    docentes = Persona.query.filter(Persona.tipo_persona=="docente").all()
+    #docentes = Docente.query.all()
     colegios = Colegio.query.all()
     return render_template('/docentes/home.html', docentes=docentes, colegios=colegios)
 
@@ -24,8 +27,9 @@ def new_docente():
         id_colegio = request.form['id_colegio']
         fecha_contratacion = request.form['fecha_contratacion']
         estado_contractual = request.form['estado_contractual']
+        cuil = request.form['dni']
 
-        new_docente = Docente(id_colegio, nombre, apellido, dni, fecha_nac, direccion, cargo, email, telefono, fecha_contratacion, estado_contractual)
+        new_docente = Docente(nombre, apellido, dni, fecha_nac, id_colegio, cuil, cargo, fecha_contratacion, estado_contractual, direccion, telefono, email)
         db.session.add(new_docente)
         db.session.commit()
         flash('Docente añadido correctamente!')
@@ -36,9 +40,9 @@ def view(id_docente):
     docente = Docente.query.get(id_docente)
     return render_template('/docentes/view.html', docente=docente)
 
-@docentes.route("/updateDocente/<idDocente>", methods=['POST', 'GET'])
-def updateDocente(idDocente):
-    docente = Docente.query.get(idDocente)
+@docentes.route("/updateDocente/<id>", methods=['POST', 'GET'])
+def updateDocente(id):
+    docente = Docente.query.get(id)
     if request.method == "POST":
       docente.nombre = request.form['nombre']
       docente.apellido = request.form['apellido']
@@ -51,9 +55,9 @@ def updateDocente(idDocente):
       return redirect(url_for('docentes.home'))
     return render_template("/docentes/updateDocente.html", docente=docente)
 
-@docentes.route("/deleteDocente/<idDocente>", methods=["GET"])
-def deleteDocente(idDocente):
-    docente = Docente.query.get(idDocente)
+@docentes.route("/deleteDocente/<id>", methods=["GET"])
+def deleteDocente(id):
+    docente = Docente.query.get(id)
     db.session.delete(docente)
     db.session.commit()
     flash('Docente Borrado!')
