@@ -320,6 +320,70 @@ class Persona(db.Model):
         'polymorphic_identity': 'persona'
     }
 
+    def __repr__(self):
+        return f"<{self.__class__.__name__} '{self.nombre} {self.apellido}' - DNI: {self.dni}>"
+
+
+class Tutor(Persona):
+    __tablename__ = 'tutor'
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    parentesco = db.Column(db.String(50))  
+    ocupacion = db.Column(db.String(100))
+    legal = db.Column(db.Boolean, nullable=False)
+
+    alumnos_asociados = db.relationship('Alumno', secondary=alumno_tutor, back_populates='tutores', lazy='dynamic')
+
+    __mapper_args__ = { 'polymorphic_identity': 'tutor' }
+
+
+class Docente(Persona):
+    __tablename__ = 'docente'
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), unique=True, nullable=False)
+    cargo = db.Column(db.String(50)) 
+    fecha_contratacion = db.Column(db.Date, nullable=True)
+    estado_contractual = db.Column(db.String(20), nullable=True)
+
+    colegio = db.relationship('Colegio', back_populates='docentes')
+    clases = db.relationship('Clase', back_populates='docente', lazy=True)
+
+    __mapper_args__ = { 'polymorphic_identity': 'docente' }
+
+
+class Alumno(Persona):
+    __tablename__ = 'alumno'
+    id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    cuil = db.Column(db.String(20), nullable=False) 
+    legajo = db.Column(db.String(20), unique=True, nullable=False)
+    
+    tutores = db.relationship('Tutor', secondary=alumno_tutor, back_populates='alumnos_asociados', lazy='subquery')
+    colegio = db.relationship('Colegio', back_populates='alumnos')
+    matriculas = db.relationship('Matricula', back_populates='alumno', lazy=True)
+    asistencias = db.relationship('Asistencia', back_populates='alumno', lazy=True)
+
+    __mapper_args__ = { 'polymorphic_identity': 'alumno' }
+
+""" class Persona(db.Model):
+
+    __tablename__ = 'persona'
+    id = db.Column(db.Integer, primary_key=True)
+    nombre = db.Column(db.String(50), nullable=False)
+    apellido = db.Column(db.String(50), nullable=False)
+    dni = db.Column(db.String(15), unique=True, nullable=False)
+    fecha_nacimiento = db.Column(db.Date, nullable=False)
+    direccion = db.Column(db.String(100), nullable=False)
+    telefono = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(100), unique=True)
+    genero = db.Column(db.String(20), nullable=False)
+    tipo_persona = db.Column(db.String(20))
+
+    __mapper_args__ = {
+        'polymorphic_on': tipo_persona,
+        'polymorphic_identity': 'persona'
+    }
+
     def __init__(self, nombre, apellido, dni, fecha_nacimiento, direccion, telefono, email, genero):
         self.nombre = nombre
         self.apellido = apellido
@@ -345,8 +409,8 @@ class Tutor(Persona):
 
     __mapper_args__ = { 'polymorphic_identity': 'tutor' }
 
-    def __init__(self, nombre, apellido, dni, fecha_nacimiento, legal, parentesco=None, ocupacion=None, **kwargs):
-        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, legal, parentesco=None, ocupacion=None, direccion=None, telefono=None, email=None, genero=None):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, direccion=direccion, telefono=telefono, email=email, genero=genero)
         self.legal = legal
         self.parentesco = parentesco
         self.ocupacion = ocupacion
@@ -369,8 +433,8 @@ class Docente(Persona):
 
     __mapper_args__ = { 'polymorphic_identity': 'docente' }
 
-    def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, cuil, cargo=None, fecha_contratacion=None, estado_contractual=None, **kwargs):
-        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+    def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, direccion, telefono, email, genero=None, cargo=None, fecha_contratacion=None, estado_contractual=None):
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, direccion=direccion, telefono=telefono, email=email, genero=genero)
         self.id_colegio = id_colegio
         self.cuil = cuil
         self.cargo = cargo
@@ -396,13 +460,13 @@ class Alumno(Persona):
     __mapper_args__ = { 'polymorphic_identity': 'alumno' }
 
     def __init__(self, nombre, apellido, dni, fecha_nacimiento, id_colegio, cuil, legajo, **kwargs):
-        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, **kwargs)
+        super().__init__(nombre=nombre, apellido=apellido, dni=dni, fecha_nacimiento=fecha_nacimiento, direccion=direccion, telefono=telefono, email=email, genero=genero)
         self.id_colegio = id_colegio
         self.cuil = cuil
         self.legajo = legajo
 
     def __repr__(self):
-        return f"<Alumno '{self.nombre} {self.apellido}' - Legajo: {self.legajo}>"
+        return f"<Alumno '{self.nombre} {self.apellido}' - Legajo: {self.legajo}>" """
 
 # ==========================================
 # 4. NUEVOS MODELOS (GESTIÓN ACADÉMICA)
