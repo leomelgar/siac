@@ -50,7 +50,7 @@
                                 <span class="text-muted small d-block">Edad</span>
                                 <script>//Calcular edad a partir de la fecha de nacimiento
                                     //<![CDATA[
-                                    var d = new Date("{{docente.fecha_nac}}");
+                                    var d = new Date("{{docente.fecha_nacimiento}}");
                                     var edad = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
                                     document.write('<strong>' + edad + '</strong>');
                                     //]]> 
