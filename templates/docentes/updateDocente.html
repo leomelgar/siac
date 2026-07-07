@@ -1,81 +1,6 @@
 {% extends "layout.html" %} {% block body %}
 
-<!-- <div class="col-md-4 offset-md-4 p-5">
-  <div class="card card-body bg-dark text-white">
-    <h1>Actualizar Datos del Docente</h1>
-
-    <form action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
-      <div class="mb-3">
-        <label for="nombre">Nombre:</label>
-        <input
-          type="text"
-          name="nombre"
-          value="{{docente.nombre}}"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="escriba el nombre"
-          autofocus
-        />
-      </div>
-      <div class="mb-3">
-        <label for="apellido">Apellido:</label>
-        <input
-          type="text"
-          name="apellido"
-          value="{{docente.apellido}}"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="escriba el apellido"
-          autofocus
-        />
-      </div>
-      <div class="mb-3">
-        <label for="cuil">Cuil:</label>
-        <input
-          type="text"
-          name="cuil"
-          value="{{docente.cuil}}"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="Cuil sin guiones"
-          autofocus
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="direccion">Direccion:</label>
-        <input
-          type="text"
-          name="direccion"
-          value="{{docente.direccion}}"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="calle n° - Ciudad"
-          required
-        />
-      </div>
-
-      <div class="mb-3">
-        <label for="telefono">telefono:</label>
-        <input
-          type="text"
-          name="telefono"
-          value="{{docente.telefono}}"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="+54 codigo area + numero"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="email">Email:</label>
-        <input
-          type="text"
-          name="email"
-          value="{{docente.email}}"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="ej: docente@dominio.com.ar"
-        />
-      </div>
-      <button class="btn btn-primary">Actualizar</button>
-    </form>
-  </div>
-</div> -->
-<div class="container">
+<!-- <div class="container">
   <div class="row gy-5 justify-content-md-center">
 <div class="col-6 border p-4 border-primary border-3 opacity-75">
   <div class=""><h3 class="text-white">Actualizar Datos del Docente</h3></div>
@@ -124,7 +49,7 @@
       <input type="text" name="email" value="{{docente.email}}" class="form-control rounded-0 bg-dark border-0 text-white">
     </div>
   </div>
-  <h1>Situacion Laboral</h1>
+  <h1>Situacion Laboral </h1>
   <div class="mb-3">
       <label for="cargo">Cargo:</label> <span>Docente</span>
       <select name="cargo" class="form-select form-select-sm" aria-label=".form-select-sm example">
@@ -156,6 +81,129 @@
 </form>
 </div>
 </div>
-</div>
+</div> -->
+<div class="text-center"><h3 class="text-white">Actualizar Datos del Docente</h3></div>
+<div class="container py-5">
+        <div class="row g-4">
+            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body pt-5">
+                        <!-- Foto de Perfil -->
+                        <img src="https://github.com/mdo.png"
+                             alt="Foto del Docente" 
+                             class="rounded-circle img-thumbnail mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover;">                        
+                        <!-- Nombre y Cargo -->
+                        <!-- <h4 class="card-title mb-1">{{docente.apellido}}, {{docente.nombre}}</h4>
+                        <p class="text-muted mb-3">Profesor {{docente.cargo}} de Ingeniería de Software</p> -->
+                        <!-- Estado -->
+                    </div>
+                    <!-- Redes Sociales / Enlaces -->
+                    <div class="card-footer bg-transparent border-0 pb-4">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="#" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i></a>
+                            <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Información Detallada -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 h-100">
+                    <!-- Navegación por Pestañas (Tabs) -->
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Datos Personales</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Datos Laborales</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contenido de las Pestañas -->
+                    <div class="card-body p-4">
+                        <div class="tab-content" id="myTabContent">  
+                            <!-- PESTAÑA 1: PERFIL DOCENTE -->
+                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                                <!-- Biografía -->
+                              <form class="row g-3" action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
+                                <div class="col-md-6">
+                                  <label for="nombre" class="form-label">Nombre</label>
+                                  <input type="text" class="form-control" id="nombre" value="{{docente.nombre}}">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="apellido" class="form-label">Apellido</label>
+                                  <input type="text" class="form-control" id="apellido" value="{{docente.apellido}}">
+                                </div>
+                                <div class="col-12">
+                                  <label for="direccion" class="form-label">Direccion</label>
+                                  <input type="text" class="form-control" id="direccion" value="{{docente.direccion}}">
+                                </div>
+                                <div class="col-6">
+                                  <label for="dni" class="form-label">DNI</label>
+                                  <input type="text" class="form-control" id="dni" value="{{docente.dni}}">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="cuil" class="form-label">Cuil</label>
+                                  <input type="text" class="form-control" id="cuil" value="{{docente.cuil}}">
+                                </div>
+                                <div class="col-6">
+                                  <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                  <input type="date" class="form-control" id="fecha_nacimiento" value="{{docente.fecha_nacimiento}}">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="genero" class="form-label">Genero</label>
+                                    <input type="text" class="form-control" id="genero" value="{{docente.genero}}">
+                                </div>
+                                <div class="col-6">
+                                  <label for="email" class="form-label">Email</label>
+                                  <input type="text" class="form-control" id="email" value="{{docente.email}}">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="telefono" class="form-label">Telefono</label>
+                                  <input type="text" class="form-control" id="telefono" value="{{docente.telefono}}">
+                                </div>
+                                <div class="col-12">
+                                  <button type="submit" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </form>
+                            </div>
+
+                            <!-- PESTAÑA 2: DOCENCIA Y HORARIOS -->
+                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                                <!-- Asignaturas del Semestre -->
+                                <h5 class="mb-3 text-secondary border-bottom pb-2">Asignaturas Impartidas (Semestre Actual)</h5>
+                                <div class="table-responsive mb-4">
+                                    <table class="table table-hover align-middle">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th>Asignatura</th>
+                                                <th>Grupo</th>
+                                                <th>Carrera</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>ISO-401</strong></td>
+                                                <td>Arquitectura de Software</td>
+                                                <td>A-10</td>
+                                                <td>Ing. en Sistemas</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>ISO-502</strong></td>
+                                                <td>Desarrollo Web Avanzado</td>
+                                                <td>B-02</td>
+                                                <td>Ing. en Sistemas</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>TFG-100</strong></td>
+                                                
+  </div>
 
 {% endblock %}

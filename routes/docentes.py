@@ -78,15 +78,18 @@ def view(id):
 def updateDocente(id):
     docente = Docente.query.get(id)
     if request.method == "POST":
-      docente.nombre = request.form['nombre']
-      docente.apellido = request.form['apellido']
-      docente.cuil = request.form['cuil']
-      docente.direccion = request.form['direccion']
-      docente.telefono  = request.form['telefono']
-      docente.email = request.form['email']
-      db.session.commit()
-      flash('Datos Actualizados!')
-      return redirect(url_for('docentes.home'))
+        docente.nombre = request.form.get('nombre')
+        docente.apellido = request.form.get('apellido')
+        docente.dni = request.form.get('dni')
+        fecha_nacimiento = request.form.get('fecha_nacimiento')
+        docente.direccion = request.form.get('direccion')
+        docente.telefono = request.form.get('telefono')
+        docente.email = request.form.get('email')
+        docente.genero = request.form.get('genero')
+        docente.cuil = request.form.get('cuil')   
+        db.session.commit()
+        flash('Datos Actualizados!')
+        return redirect(url_for('docentes.home'))
     return render_template("/docentes/updateDocente.html", docente=docente)
 
 @docentes.route("/deleteDocente/<id>", methods=["GET"])
