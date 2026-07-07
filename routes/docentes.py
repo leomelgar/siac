@@ -39,7 +39,7 @@ def new_docente():
         email = request.form.get('email')
         genero = request.form.get('genero')
         id_colegio = request.form.get('id_colegio')
-        cuil = request.form.get('cuil')
+        cuil = request.form.get('dni')
         cargo = request.form.get('cargo')
         fecha_contra_str = request.form.get('fecha_contratacion')
         estado_contractual = request.form.get('estado_contractual')
@@ -52,7 +52,7 @@ def new_docente():
                 fecha_contratacion = datetime.strptime(fecha_contra_str, '%Y-%m-%d').date()
         except ValueError:
             flash("El formato de fecha ingresado no es válido.", "danger")
-            return render_template('formulario_docente.html')
+            return render_template('/docentes/home.html')
 
         #new_docente = Docente(nombre, apellido, dni, fecha_nac, direccion, telefono, email, genero, id_colegio, cuil, cargo, fecha_contratacion, estado_contractual)
         new_docente = Docente(
@@ -75,9 +75,9 @@ def new_docente():
         flash('Docente añadido correctamente!')
         return redirect(url_for('docentes.home'))
 
-@docentes.route('/docentes/view/<id_docente>', methods=['GET'])
-def view(id_docente):
-    docente = Docente.query.get(id_docente)
+@docentes.route('/docentes/view/<id>', methods=['GET'])
+def view(id):
+    docente = Docente.query.get(id)
     return render_template('/docentes/view.html', docente=docente)
 
 @docentes.route("/updateDocente/<id>", methods=['POST', 'GET'])
