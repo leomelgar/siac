@@ -4,7 +4,7 @@
   <div class="card card-body bg-dark text-white">
     <h1>Actualizar Datos del Docente</h1>
 
-    <form action="{{url_for('docentes.updateDocente', idDocente=docente.idDocente)}}" method="POST">
+    <form action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
       <div class="mb-3">
         <label for="nombre">Nombre:</label>
         <input
@@ -79,7 +79,7 @@
   <div class="row gy-5 justify-content-md-center">
 <div class="col-6 border p-4 border-primary border-3 opacity-75">
   <div class=""><h3 class="text-white">Actualizar Datos del Docente</h3></div>
-<form action="{{url_for('docentes.updateDocente', idDocente=docente.idDocente)}}" method="POST">
+<form action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
   <div class="mb-3 row">
     <div class="col-auto">
       <label for="nombre" class="col-form-label text-white">Nombre</label>
@@ -124,6 +124,34 @@
       <input type="text" name="email" value="{{docente.email}}" class="form-control rounded-0 bg-dark border-0 text-white">
     </div>
   </div>
+  <h1>Situacion Laboral</h1>
+  <div class="mb-3">
+      <label for="cargo">Cargo:</label> <span>Docente</span>
+      <select name="cargo" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option> Seleccionar </option>
+          <option value="Titular">Titular</option>
+          <option value="Suplente">Suplente</option>
+          <option value="Interino">Interino</option>
+      </select>
+    </div>
+    <div class="mb-3">
+      <label for="fecha_contratacion">Fecha de Inicio en Establecimiento:</label>
+      <input
+        type="date"
+        name="fecha_contratacion"
+        class="form-control rounded-0 bg-dark border-0 text-white"
+        placeholder="dia / mes / año"
+      />
+    </div>
+    <div class="mb-3">
+      <label for="estado_contractual">Estado:</label> <span>Docente</span>
+      <select name="estado_contractual" class="form-select form-select-sm" aria-label=".form-select-sm example">
+          <option>Seleccionar</option>
+          <option value="Activo">Activo</option>
+          <option value="Baja">Baja</option>
+          <option value="Jubilado">Jubilado/a</option>
+      </select>
+    </div>
   <button class="btn btn-primary">Actualizar</button>
 </form>
 </div>
