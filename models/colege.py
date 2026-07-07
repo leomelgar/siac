@@ -313,7 +313,7 @@ class Persona(db.Model):
     telefono = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(100), unique=True)
     genero = db.Column(db.String(20), nullable=False)
-    tipo_persona = db.Column(db.String(20))
+    tipo_persona = db.Column(db.String(20)) # Discriminador
 
     __mapper_args__ = {
         'polymorphic_on': tipo_persona,
@@ -329,9 +329,14 @@ class Tutor(Persona):
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
     parentesco = db.Column(db.String(50))  
     ocupacion = db.Column(db.String(100))
-    legal = db.Column(db.Boolean, nullable=False)
+    legal = db.Column(db.Boolean, nullable=False, default=False)
 
-    alumnos_asociados = db.relationship('Alumno', secondary=alumno_tutor, back_populates='tutores', lazy='dynamic')
+    # Corregido: Se unificó el comportamiento lazy eliminando 'dynamic'
+    alumnos_asociados = db.relationship(
+        'Alumno', 
+        secondary=alumno_tutor, 
+        back_populates='tutores'
+    )
 
     __mapper_args__ = { 'polymorphic_identity': 'tutor' }
 
@@ -340,7 +345,7 @@ class Docente(Persona):
     __tablename__ = 'docente'
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    cuil = db.Column(db.String(20), unique=True, nullable=False)
+    cuil = db.Column(db.String(20), unique=True, nullable=False) # Consistente
     cargo = db.Column(db.String(50)) 
     fecha_contratacion = db.Column(db.Date, nullable=True)
     estado_contractual = db.Column(db.String(20), nullable=True)
@@ -355,10 +360,15 @@ class Alumno(Persona):
     __tablename__ = 'alumno'
     id = db.Column(db.Integer, db.ForeignKey('persona.id'), primary_key=True)
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
-    cuil = db.Column(db.String(20), nullable=False) 
+    cuil = db.Column(db.String(20), unique=True, nullable=False) # Agregado unique=True por consistencia
     legajo = db.Column(db.String(20), unique=True, nullable=False)
     
-    tutores = db.relationship('Tutor', secondary=alumno_tutor, back_populates='alumnos_asociados', lazy='subquery')
+    # Corregido: Mismo comportamiento de relación que Tutor
+    tutores = db.relationship(
+        'Tutor', 
+        secondary=alumno_tutor, 
+        back_populates='alumnos_asociados'
+    )
     colegio = db.relationship('Colegio', back_populates='alumnos')
     matriculas = db.relationship('Matricula', back_populates='alumno', lazy=True)
     asistencias = db.relationship('Asistencia', back_populates='alumno', lazy=True)
