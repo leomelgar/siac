@@ -128,9 +128,8 @@
                     <!-- Contenido de las Pestañas -->
                     <div class="card-body p-4">
                         <div class="tab-content" id="myTabContent">  
-                            <!-- PESTAÑA 1: PERFIL DOCENTE -->
+                            <!-- PESTAÑA 1: DATOS PERSONALES -->
                             <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
-                                <!-- Biografía -->
                               <form class="row g-3" action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
                                 <div class="col-md-6">
                                   <label for="nombre" class="form-label">Nombre</label>
@@ -170,40 +169,38 @@
                                 </div>
                                 <div class="col-12">
                                   <button type="submit" class="btn btn-primary">Guardar</button>
+                                  <a href="{{ url_for('docentes.view', id=docente.id) }}" class="btn btn-danger">Cancelar</a>
                                 </div>
-                            </form>
+                              
                             </div>
 
-                            <!-- PESTAÑA 2: DOCENCIA Y HORARIOS -->
+                            <!-- PESTAÑA 2: DATOS LABORALES -->
                             <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
                                 <!-- Asignaturas del Semestre -->
-                                <h5 class="mb-3 text-secondary border-bottom pb-2">Asignaturas Impartidas (Semestre Actual)</h5>
-                                <div class="table-responsive mb-4">
-                                    <table class="table table-hover align-middle">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Código</th>
-                                                <th>Asignatura</th>
-                                                <th>Grupo</th>
-                                                <th>Carrera</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td><strong>ISO-401</strong></td>
-                                                <td>Arquitectura de Software</td>
-                                                <td>A-10</td>
-                                                <td>Ing. en Sistemas</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>ISO-502</strong></td>
-                                                <td>Desarrollo Web Avanzado</td>
-                                                <td>B-02</td>
-                                                <td>Ing. en Sistemas</td>
-                                            </tr>
-                                            <tr>
-                                                <td><strong>TFG-100</strong></td>
-                                                
+                                <div class="form-row row g-3">
+                                  <div class="col-md-6">
+                                    <label for="fecha_ingreso" class="form-label">Fecha de Ingreso (Inicio en Actividad)</label>
+                                    <input type="text" class="form-control" id="fecha_ingreso" value="{{docente.fecha_ingreso}}">
+                                  </div>
+                                  
+                                  <div class="col-md-6">
+                                    <label for="cargo" class="form-label">Cargo</label>
+                                    <input type="text" class="form-control" id="cargo" value="{{docente.cargo}}">
+                                  </div> 
+                                  
+                                  <div class="col-md-6">
+                                    <label for="estado_contractual" class="form-label">Estado Contractual</label>
+                                    <input type="text" class="form-control" id="estado_contractual" value="{{docente.estado_contractual}}">
+                                  </div>
+                                </div>
+                            </div>
+                            </form>
+                          </div>
+                          </div>
+                          </div>
+                          
+                        </div>
+                      </div>
   </div>
 
 {% endblock %}
