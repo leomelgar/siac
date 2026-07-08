@@ -92,15 +92,15 @@
                                 <!-- Asignaturas del Semestre -->
                                 <div class="form-row row g-3">
                                   <div class="col-md-6">
-                                    <label for="fecha_ingreso" class="form-label">Inicio en Actividad: <span class="badge border border-primary text-primary">{{docente.fecha_ingreso}}</span></label>
-                                    <input type="date" class="form-control" id="fecha_ingreso" value="{{docente.fecha_ingreso}}">
+                                    <label for="fecha_contratacion" class="form-label">Inicio en Actividad: <span class="badge border border-primary text-primary">{{docente.fecha_contratacion}}</span></label>
+                                    <input type="date" class="form-control" id="fecha_contratacion" value="{{docente.fecha_contratacion}}">
                                   </div>
                                   
                                   <div class="col-md-6">
                                     <label for="cargo" class="form-label">Cargo Actual: <span class="badge border border-primary text-primary">{{docente.cargo}}</span></label>
                                     <!-- <input type="text" class="form-control" id="cargo" value="{{docente.cargo}}"> -->
                                      <select name="cargo" class="form-select form-select-sm">
-                                        <option selected>Elegir Opcion</option>
+                                        <option selected>{{docente.cargo}}</option>
                                         <option value="Titular">Titular</option>
                                         <option value="Suplente">Suplente</option>
                                         <option value="Interino">Interino</option>
@@ -111,7 +111,7 @@
                                     <label for="estado_contractual" class="form-label">Estado Contractual: <span class="badge border border-primary text-primary">{{docente.estado_contractual}}</span></label>
                                     <!-- <input type="text" class="form-control" id="estado_contractual" value="{{docente.estado_contractual}}"> -->
                                       <select name="estado_contractual" class="form-select form-select-sm">
-                                          <option selected>Elegir Opcion</option>
+                                          <option selected>{{docente.estado_contractual}}</option>
                                           <option value="Activo">Activo</option>
                                           <option value="Baja">Baja</option>
                                           <option value="Jubilado">Jubilado/a</option>

@@ -310,8 +310,8 @@ class Persona(db.Model):
     dni = db.Column(db.String(15), unique=True, nullable=False)
     fecha_nacimiento = db.Column(db.Date, nullable=False)
     direccion = db.Column(db.String(100), nullable=False)
-    telefono = db.Column(db.String(20), nullable=False)
-    email = db.Column(db.String(100), unique=True)
+    telefono = db.Column(db.String(20), nullable=True)
+    email = db.Column(db.String(100), unique=True, nullable=True)
     genero = db.Column(db.String(20), nullable=False)
     tipo_persona = db.Column(db.String(20)) # Discriminador
 
