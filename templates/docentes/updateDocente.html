@@ -1,87 +1,4 @@
 {% extends "layout.html" %} {% block body %}
-
-<!-- <div class="container">
-  <div class="row gy-5 justify-content-md-center">
-<div class="col-6 border p-4 border-primary border-3 opacity-75">
-  <div class=""><h3 class="text-white">Actualizar Datos del Docente</h3></div>
-<form action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="nombre" class="col-form-label text-white">Nombre</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="nombre" value="{{docente.nombre}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="apellido" class="col-form-label text-white">Apellido</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="apellido" value="{{docente.apellido}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label text-white">Cuil</label>
-    <div class="col-sm-6">
-      <input type="text" name="cuil" value="{{docente.cuil}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="direccion" class="col-form-label text-white">Direcion</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="direccion" value="{{docente.direccion}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="telefono" class="col-form-label text-white">Telefono</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="telefono" value="{{docente.telefono}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label text-white">Email</label>
-    <div class="col-sm-6">
-      <input type="text" name="email" value="{{docente.email}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <h1>Situacion Laboral </h1>
-  <div class="mb-3">
-      <label for="cargo">Cargo:</label> <span>Docente</span>
-      <select name="cargo" class="form-select form-select-sm" aria-label=".form-select-sm example">
-          <option> Seleccionar </option>
-          <option value="Titular">Titular</option>
-          <option value="Suplente">Suplente</option>
-          <option value="Interino">Interino</option>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="fecha_contratacion">Fecha de Inicio en Establecimiento:</label>
-      <input
-        type="date"
-        name="fecha_contratacion"
-        class="form-control rounded-0 bg-dark border-0 text-white"
-        placeholder="dia / mes / año"
-      />
-    </div>
-    <div class="mb-3">
-      <label for="estado_contractual">Estado:</label> <span>Docente</span>
-      <select name="estado_contractual" class="form-select form-select-sm" aria-label=".form-select-sm example">
-          <option>Seleccionar</option>
-          <option value="Activo">Activo</option>
-          <option value="Baja">Baja</option>
-          <option value="Jubilado">Jubilado/a</option>
-      </select>
-    </div>
-  <button class="btn btn-primary">Actualizar</button>
-</form>
-</div>
-</div>
-</div> -->
 <div class="text-center"><h3 class="text-white">Actualizar Datos del Docente</h3></div>
 <div class="container py-5">
         <div class="row g-4">
@@ -167,10 +84,6 @@
                                   <label for="telefono" class="form-label">Telefono</label>
                                   <input type="text" class="form-control" id="telefono" value="{{docente.telefono}}">
                                 </div>
-                                <div class="col-12">
-                                  <button type="submit" class="btn btn-primary">Guardar</button>
-                                  <a href="{{ url_for('docentes.view', id=docente.id) }}" class="btn btn-danger">Cancelar</a>
-                                </div>
                               
                             </div>
 
@@ -179,28 +92,43 @@
                                 <!-- Asignaturas del Semestre -->
                                 <div class="form-row row g-3">
                                   <div class="col-md-6">
-                                    <label for="fecha_ingreso" class="form-label">Fecha de Ingreso (Inicio en Actividad)</label>
-                                    <input type="text" class="form-control" id="fecha_ingreso" value="{{docente.fecha_ingreso}}">
+                                    <label for="fecha_ingreso" class="form-label">Inicio en Actividad: <span class="badge border border-primary text-primary">{{docente.fecha_ingreso}}</span></label>
+                                    <input type="date" class="form-control" id="fecha_ingreso" value="{{docente.fecha_ingreso}}">
                                   </div>
                                   
                                   <div class="col-md-6">
-                                    <label for="cargo" class="form-label">Cargo</label>
-                                    <input type="text" class="form-control" id="cargo" value="{{docente.cargo}}">
+                                    <label for="cargo" class="form-label">Cargo Actual: <span class="badge border border-primary text-primary">{{docente.cargo}}</span></label>
+                                    <!-- <input type="text" class="form-control" id="cargo" value="{{docente.cargo}}"> -->
+                                     <select name="cargo" class="form-select form-select-sm">
+                                        <option selected>Elegir Opcion</option>
+                                        <option value="Titular">Titular</option>
+                                        <option value="Suplente">Suplente</option>
+                                        <option value="Interino">Interino</option>
+                                      </select>
                                   </div> 
                                   
                                   <div class="col-md-6">
-                                    <label for="estado_contractual" class="form-label">Estado Contractual</label>
-                                    <input type="text" class="form-control" id="estado_contractual" value="{{docente.estado_contractual}}">
+                                    <label for="estado_contractual" class="form-label">Estado Contractual: <span class="badge border border-primary text-primary">{{docente.estado_contractual}}</span></label>
+                                    <!-- <input type="text" class="form-control" id="estado_contractual" value="{{docente.estado_contractual}}"> -->
+                                      <select name="estado_contractual" class="form-select form-select-sm">
+                                          <option selected>Elegir Opcion</option>
+                                          <option value="Activo">Activo</option>
+                                          <option value="Baja">Baja</option>
+                                          <option value="Jubilado">Jubilado/a</option>
+                                        </select>
                                   </div>
                                 </div>
                             </div>
+                            <div class="col-12 p-4">
+                                  <button type="submit" class="btn btn-primary">Guardar</button>
+                                  <a href="{{ url_for('docentes.view', id=docente.id) }}" class="btn btn-danger">Cancelar</a>
+                            </div>
                             </form>
                           </div>
-                          </div>
-                          </div>
-                          
                         </div>
-                      </div>
+                      </div> 
+                    </div>
+                  </div>
   </div>
 
 {% endblock %}
