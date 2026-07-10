@@ -119,10 +119,26 @@ def updateDocente(id):
     # Solo pasamos 'docente', no 'docente.id'
     return render_template("/docentes/updateDocente.html", docente=docente)
 
-@docentes.route("/deleteDocente/<id>", methods=["GET"])
+@docentes.route("/deleteDocente/<id>", methods=["POST"])
 def deleteDocente(id):
-    docente = Docente.query.get(id)
-    db.session.delete(docente)
-    db.session.commit()
-    flash('Docente Borrado!')
+    # 2. Uso de la sintaxis moderna
+    docente = db.session.get(Docente, id)
+    
+    # 3. Validación de existencia
+    if not docente:
+            flash('El docente que intenta eliminar no existe o ya fue borrado.', 'danger')
+            return redirect(url_for('docentes.home'))
+            
+    try:
+            # 4. Intento de eliminación segura
+            db.session.delete(docente)
+            db.session.commit()
+            flash(f'¡Docente "{docente.nombre} {docente.apellido}" borrado con éxito!', 'success')
+            
+    except Exception as e:
+            # 5. Si hay registros hijos vinculados o falla la DB, evitamos el colapso
+            db.session.rollback()
+            flash('No se pudo eliminar el docente. Asegúrese de que no tenga materias o cargos asociados.', 'danger')
+            print(f"Error en la eliminación: {str(e)}") # Útil para ti en la consola
+        
     return redirect(url_for('docentes.home'))

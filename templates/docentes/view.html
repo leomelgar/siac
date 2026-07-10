@@ -21,7 +21,11 @@
                 <i class="fas fa-arrow-left me-2"></i>Volver al Listado</a>
             <a href="{{ url_for('docentes.updateDocente', id=docente.id) }}" class="btn btn-outline-primary btn-sm">
                 <i class="fas fa-arrow-left me-2"></i>Actualizar</a>
-            <a href="#" class="btn btn-outline-danger btn-sm rounded-0">Eliminar Registro</a>
+            <form action="{{url_for('docentes.deleteDocente', id=docente.id)}}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este docente?');">
+                <button type="submit" class="btn btn-outline-danger btn-sm rounded-0">
+                <i class="bi bi-trash"></i> Eliminar Registro</button>
+            </form>
+            <!-- <a href="{{ url_for('docentes.deleteDocente', id=docente.id) }}" class="btn btn-outline-danger btn-sm rounded-0">Eliminar Registro</a> -->
         </div>
      <div class="container py-5">
         <div class="row g-4">
