@@ -50,39 +50,39 @@
                               <form class="row g-3" action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
                                 <div class="col-md-6">
                                   <label for="nombre" class="form-label">Nombre</label>
-                                  <input type="text" class="form-control" id="nombre" value="{{docente.nombre}}">
+                                  <input type="text" class="form-control" name="nombre" id="nombre" value="{{docente.nombre}}">
                                 </div>
                                 <div class="col-md-6">
                                   <label for="apellido" class="form-label">Apellido</label>
-                                  <input type="text" class="form-control" id="apellido" value="{{docente.apellido}}">
+                                  <input type="text" class="form-control" name="apellido" id="apellido" value="{{docente.apellido}}">
                                 </div>
                                 <div class="col-12">
                                   <label for="direccion" class="form-label">Direccion</label>
-                                  <input type="text" class="form-control" id="direccion" value="{{docente.direccion}}">
+                                  <input type="text" class="form-control" name="direccion" id="direccion" value="{{docente.direccion}}">
                                 </div>
                                 <div class="col-6">
                                   <label for="dni" class="form-label">DNI</label>
-                                  <input type="text" class="form-control" id="dni" value="{{docente.dni}}">
+                                  <input type="text" class="form-control" name="dni" id="dni" value="{{docente.dni}}">
                                 </div>
                                 <div class="col-md-6">
                                   <label for="cuil" class="form-label">Cuil</label>
-                                  <input type="text" class="form-control" id="cuil" value="{{docente.cuil}}">
+                                  <input type="text" class="form-control" name="cuil" id="cuil" value="{{docente.cuil}}">
                                 </div>
                                 <div class="col-6">
                                   <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                                  <input type="date" class="form-control" id="fecha_nacimiento" value="{{docente.fecha_nacimiento}}">
+                                  <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento" value="{{docente.fecha_nacimiento}}">
                                 </div>
                                 <div class="col-md-6">
                                     <label for="genero" class="form-label">Genero</label>
-                                    <input type="text" class="form-control" id="genero" value="{{docente.genero}}">
+                                    <input type="text" class="form-control" name="genero" id="genero" value="{{docente.genero}}">
                                 </div>
                                 <div class="col-6">
                                   <label for="email" class="form-label">Email</label>
-                                  <input type="text" class="form-control" id="email" value="{{docente.email}}">
+                                  <input type="text" class="form-control" name="email" id="email" value="{{docente.email}}">
                                 </div>
                                 <div class="col-md-6">
                                   <label for="telefono" class="form-label">Telefono</label>
-                                  <input type="text" class="form-control" id="telefono" value="{{docente.telefono}}">
+                                  <input type="text" class="form-control" name="telefono" id="telefono" value="{{docente.telefono}}">
                                 </div>
                               
                             </div>
@@ -93,7 +93,7 @@
                                 <div class="form-row row g-3">
                                   <div class="col-md-6">
                                     <label for="fecha_contratacion" class="form-label">Inicio en Actividad: <span class="badge border border-primary text-primary">{{docente.fecha_contratacion}}</span></label>
-                                    <input type="date" class="form-control" id="fecha_contratacion" value="{{docente.fecha_contratacion}}">
+                                    <input type="date" class="form-control" name="fecha_contratacion" id="fecha_contratacion" value="{{docente.fecha_contratacion}}">
                                   </div>
                                   
                                   <div class="col-md-6">

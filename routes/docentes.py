@@ -76,56 +76,47 @@ def view(id):
 
 @docentes.route("/docentes/updateDocente/<id>", methods=['POST', 'GET'])
 def updateDocente(id):
-    docente = Docente.query.get(id)
+    docente = db.session.get(Docente, id)
+    
     if not docente:
         flash('El docente solicitado no existe.', 'error')
-        return render_template('/docentes/home.html')
-    if request.method == 'POST':
-        # docente.nombre = request.form.get('nombre', docente.nombre)
-        # docente.apellido = request.form.get('apellido', docente.apellido)
-        # docente.dni = request.form.get('dni', docente.dni)
-        # docente.fecha_nacimiento = request.form.get('fecha_nacimiento', docente.fecha_nacimiento)
-        # docente.direccion = request.form.get('direccion', docente.direccion)
-        # docente.telefono = request.form.get('telefono')
-        # docente.email = request.form.get('email')
-        # docente.genero = request.form.get('genero', docente.genero)
-        # docente.cuil = request.form.get('cuil', docente.cuil)  # Si no se proporciona cuil, se mantiene el valor actual
-        new_nombre = request.form.get('nombre', docente.nombre)
-        new_apellido = request.form.get('apellido', docente.apellido)
-        new_dni = request.form.get('dni', docente.dni)
-        new_fecha_nacimiento = request.form.get('fecha_nacimiento', docente.fecha_nacimiento)
-        new_direccion = request.form.get('direccion', docente.direccion)
-        new_telefono = request.form.get('telefono', docente.telefono)
-        new_email = request.form.get('email', docente.email)
-        new_genero = request.form.get('genero', docente.genero)
-        new_cuil = request.form.get('cuil', docente.cuil)  # Si no se proporciona cuil, se mantiene el valor actual
-        new_cargo = request.form.get('cargo')
-        alta_docente_str = request.form.get('fecha_contratacion', datetime.today().strftime('%Y-%m-%d'))  # Si no se proporciona fecha, se usa la fecha actual
-        estado = request.form.get('estado_contractual')
-        try:
-            fecha_contratacion = datetime.strptime(alta_docente_str, '%Y-%m-%d').date()
-        except ValueError:
-            flash("El formato de fecha ingresado no es válido.", "danger")
-            return render_template('/docentes/home.html')
-        print(f"Datos recibidos: nombre={new_nombre}, apellido={new_apellido}, dni={new_dni}, fecha_nacimiento={new_fecha_nacimiento}, direccion={new_direccion}, telefono={new_telefono}, email={new_email}, genero={new_genero}, cuil={new_cuil}, cargo={new_cargo}, id={docente.id}  ")
+        return redirect(url_for('docentes.home')) # Mejor usar redirect aquí
 
-        docente.nombre = new_nombre
-        docente.apellido = new_apellido
-        docente.dni = new_dni
-        docente.fecha_nacimiento = new_fecha_nacimiento
-        docente.direccion = new_direccion
-        docente.telefono = new_telefono
-        docente.email = new_email
-        docente.genero = new_genero
-        docente.cuil = new_cuil
-        docente.cargo = new_cargo
-        docente.fecha_contratacion = fecha_contratacion
-        docente.estado_contractual = estado
-        print(f"Datos actualizados: nombre={docente.nombre}, apellido={docente.apellido}, dni={docente.dni}, fecha_nacimiento={docente.fecha_nacimiento}, direccion={docente.direccion}, telefono={docente.telefono}, email={docente.email}, genero={docente.genero}, cuil={docente.cuil}, cargo={docente.cargo}, id={docente.id}")
-        db.session.commit()
-        flash('Datos Actualizados!')
-        return redirect(url_for('docentes.home'))
-    print(f"Datos Actuales: nombre={docente.nombre}, apellido={docente.apellido}, dni={docente.dni}, fecha_nacimiento={docente.fecha_nacimiento}, direccion={docente.direccion}, telefono={docente.telefono}, email={docente.email}, genero={docente.genero}, cuil={docente.cuil}, cargo={docente.cargo}, id={docente.id}")
+    if request.method == 'POST':
+        try:
+            # Usamos .get() y mantenemos el valor actual si el form viene vacío/None
+            docente.nombre = request.form.get('nombre') or docente.nombre
+            docente.apellido = request.form.get('apellido') or docente.apellido
+            docente.dni = request.form.get('dni') or docente.dni
+            docente.direccion = request.form.get('direccion') or docente.direccion
+            docente.telefono = request.form.get('telefono') or docente.telefono
+            docente.email = request.form.get('email') or docente.email
+            docente.genero = request.form.get('genero') or docente.genero
+            docente.cuil = request.form.get('cuil') or docente.cuil
+            docente.cargo = request.form.get('cargo') or docente.cargo
+            docente.estado_contractual = request.form.get('estado_contractual') or docente.estado_contractual
+
+            # Manejo seguro de fechas (solo se actualizan si el string no está vacío)
+            fecha_nacimiento_str = request.form.get('fecha_nacimiento')
+            if fecha_nacimiento_str:
+                docente.fecha_nacimiento = datetime.strptime(fecha_nacimiento_str, '%Y-%m-%d').date()
+
+            fecha_contratacion_str = request.form.get('fecha_contratacion')
+            if fecha_contratacion_str:
+                docente.fecha_contratacion = datetime.strptime(fecha_contratacion_str, '%Y-%m-%d').date()
+
+            db.session.commit()
+            flash('¡Datos Actualizados con éxito!', 'success')
+            
+            # Patrón PRG: Redirigir en lugar de renderizar directamente tras un POST
+            return redirect(url_for('docentes.view', id=docente.id))
+
+        except ValueError:
+            db.session.rollback()
+            flash("El formato de fecha ingresado no es válido.", "danger")
+            return redirect(url_for('docentes.updateDocente', id=docente.id))
+    # Método GET: Mostrar el formulario con los datos actuales
+    # Solo pasamos 'docente', no 'docente.id'
     return render_template("/docentes/updateDocente.html", docente=docente)
 
 @docentes.route("/deleteDocente/<id>", methods=["GET"])
