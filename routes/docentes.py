@@ -69,6 +69,26 @@ def new_docente():
         flash('Docente añadido correctamente!')
         return redirect(url_for('docentes.home'))
 
+@docentes.route('/searchDocente', methods=['POST'])
+def searchDocente():
+    if request.method == 'POST':
+        tag = request.form.get('tag')
+        if not tag:
+            flash('Por favor, ingrese un apellido para buscar.', 'warning')
+            return redirect(url_for('docentes.home'))
+        
+        # Realizamos la búsqueda usando LIKE para permitir coincidencias parciales
+        docentes = Persona.query.filter(Persona.tipo_persona=="docente", Persona.apellido.ilike(f'%{tag}%')).all()
+        
+        if not docentes:
+            flash(f'No se encontraron docentes con el apellido "{tag}".', 'info')
+        
+        colegios = Colegio.query.all()
+        return render_template('/docentes/home.html', docentes=docentes, colegios=colegios)
+    else:
+        flash('Método de solicitud no permitido.', 'danger')
+        return redirect(url_for('docentes.home'))
+
 @docentes.route('/docentes/view/<id>', methods=['GET'])
 def view(id):
     docente = Docente.query.get(id)
