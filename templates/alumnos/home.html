@@ -16,10 +16,20 @@
        {% include 'partials/_message.html' %}
     <h2 class="text-secondary">Gestion Alumnos</h2>
     <!-- {% include 'partials/_searchTutor.html' %} -->
-    <form action="/alumnos/home" method="POST" class="d-flex" role="search">
-      <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Buscar</button>
-    </form>
+     <span class="text-secondary">Cantidad de Registros</span>
+    <div>
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <form action="/alumnos/home" method="POST" class="d-flex" role="search">
+          <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search">
+          <button class="btn btn-outline-success" type="submit">Buscar</button>
+        </form>
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-3">  
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#agregarAlumno">
+            Agregar Alumno
+        </button>
+      </div>
+    </div>
     <hr class="my-4">
     <table class="table table-dark table-hover">
       <thead>
