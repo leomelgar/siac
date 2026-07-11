@@ -17,18 +17,6 @@ def home():
 @docentes.route('/newDocente', methods=['POST'])
 def new_docente():
     if request.method == 'POST':
-        """ nombre = request.form['nombre']
-        apellido = request.form['apellido']
-        dni = request.form['dni']
-        fecha_nac = request.form['fecha_nac']
-        direccion = request.form['direccion']
-        cargo = request.form['cargo']
-        telefono  = request.form['telefono']
-        email = request.form['email']
-        id_colegio = request.form['id_colegio']
-        fecha_contratacion = request.form['fecha_contratacion']
-        estado_contractual = request.form['estado_contractual']
-        cuil = request.form['dni'] """
         # 1. Capturar los datos enviados desde las etiquetas <input name="..."> de HTML
         nombre = request.form.get('nombre')
         apellido = request.form.get('apellido')

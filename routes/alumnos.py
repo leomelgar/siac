@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Alumno, Tutor, Persona, Colegio
+from models.colege import Alumno, Tutor, Persona, Colegio, alumno_tutor
 from utils.db import db
 from datetime import datetime
+from sqlalchemy.exc import IntegrityError
 
 alumnos = Blueprint("alumnos", __name__)
 
@@ -19,7 +20,6 @@ def home():
     return render_template('/alumnos/home.html', alumnos=alumnos)
 
 @alumnos.route('/inscripcion')
-#@alumnos.route('/inscripcion/<tutor>', methods=["POST","GET"])
 def inscripcion():
     return render_template('/alumnos/new.html')
 
@@ -77,8 +77,29 @@ def new_tutor():
 
     # Si es GET (acaba de entrar a la URL), mostramos el formulario vacío
     return render_template('alumnos.home.html') """
+# --- FUNCIÓN GENERADORA DE LEGAJO ---
+def generar_nuevo_legajo():
+    """Genera un legajo con el formato AAAA-NNNN (Ej: 2026-0001)"""
+    año_actual = datetime.datetime.now().year
+    prefijo = f"{año_actual}-"
+    
+    # Buscamos el último legajo creado en este año
+    ultimo_alumno = Alumno.query.filter(
+        Alumno.legajo.like(f"{prefijo}%")
+    ).order_by(Alumno.legajo.desc()).first()
+    
+    if ultimo_alumno:
+        # Si existe "2026-0045", separamos por el guion y tomamos el "0045"
+        ultimo_numero = int(ultimo_alumno.legajo.split('-')[1])
+        nuevo_numero = ultimo_numero + 1
+    else:
+        # Es el primer alumno del año
+        nuevo_numero = 1
+        
+    # Formateamos el número para que siempre tenga 4 dígitos (rellena con ceros a la izquierda)
+    return f"{prefijo}{nuevo_numero:04d}"
 
-@alumnos.route('/newAlumno', methods=['POST'])
+""" @alumnos.route('/newAlumno', methods=['POST'])
 def new_alumno():
     # if request.method == 'POST':
     #     #------------datos de alumno ------------
@@ -98,12 +119,15 @@ def new_alumno():
     #     db.session.commit()
     #     flash('Datos guardados correctamente!')
     #     #return render_template('/alumnos/view.html', alumno=alumno)
-    #     return redirect(url_for('alumnos.view', alumno=new_alumno.idAlumno))
-    colegios = Colegio.query.all()
+    #     return redirect(url_for('alumnos.view', alumno=new_alumno.idAlumno)
+    colegio = Colegio.query.first()
     if request.method == 'POST':
         try:
-            # Capturar datos del formulario HTML - TUTOR
+        # ------ Capturar datos del formulario HTML - TUTOR-----
             fecha_nac_tutor = datetime.strptime(request.form['fecha_nacimiento_t'], '%Y-%m-%d').date()
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al crear el tutor: {str(e)}', 'danger')
             
             # Los checkboxes en HTML envían "on" si están marcados, o nada si no lo están
             es_legal = request.form.get('legal') == 'on'
@@ -121,8 +145,24 @@ def new_alumno():
                 ocupacion=request.form.get('ocupacion'),
                 legal=es_legal
             )
-            
-            #captura datos del formulario HTML - ALUMNO
+            db.session.add(nuevo_tutor)
+            #db.session.add(alumno_tutor.tutor_id==nuevo_tutor.id)  # Agregamos la relación entre Alumno y Tutor
+         #---------------Asignar nro de legajo unico--------------
+            # Manejo de concurrencia con un bucle de reintentos
+            max_reintentos = 3
+            for intento in range(max_reintentos):
+                try:
+                    nuevo_legajo = generar_nuevo_legajo()
+                    
+                except IntegrityError:
+                    # Si dos secretarias guardan exactamente al mismo milisegundo,
+                    # una fallará por el constraint UNIQUE del legajo.
+                    # Hacemos rollback y el bucle for volverá a intentar generar uno nuevo.
+                    db.session.rollback()
+                    if intento == max_reintentos - 1:
+                        flash({"error": "Error de concurrencia. Por favor, intente de nuevo."}, 'danger')
+            #-----------------------------
+        #-------captura datos del formulario HTML - ALUMNO-----
             fecha_nac_alumno = datetime.strptime(request.form['fecha_nacimiento_alumno'], '%Y-%m-%d').date()
             nuevo_alumno = Alumno(
             # Campos heredados de Persona
@@ -137,24 +177,95 @@ def new_alumno():
             
             # Campos propios de Alumno
             cuil=request.form['cuil'],
-            legajo=request.form['legajo'],
-            id_colegio=request.form['id_colegio']
+            legajo=nuevo_legajo,
+            id_colegio=colegio.id_colegio
         )
-
-            db.session.add(nuevo_tutor)
             db.session.add(nuevo_alumno)
+            # CORRECCIÓN: Flush envía los datos a la BD y genera los IDs (nuevo_alumno.id), 
+            # pero no hace un commit definitivo. Si algo falla después, el rollback aún funciona.
+            db.session.flush()
+            # 5. Agregar la relación en la tabla intermedia
+            # Nota: Usamos db.session.execute() para insertar en la tabla Core de SQLAlchemy
+            db.session.execute(
+                alumno_tutor.insert().values(alumno_id=nuevo_alumno.id, tutor_id=nuevo_tutor.id)
+            )
+            
+            # 6. Confirmar todos los cambios
             db.session.commit()
             
             flash('Tutor y Alumno creados exitosamente.', 'success')
-            return redirect(url_for('inscripcion'))  # Redirige a la página de inscripción después de crear el tutor
+            return redirect(url_for('alumnos.view', alumno=nuevo_alumno.id))  # Redirige a la página de inscripción después de crear el tutor
+    return redirect(url_for('alumnos.home')) """
 
-        except ValueError:
-            db.session.rollback()
-            flash('Error: El DNI o Email ya se encuentra registrado.', 'danger')
+@alumnos.route('/newAlumno', methods=['POST'])
+def new_alumno():
+    # CORRECCIÓN: Usar .first() para obtener un solo objeto, no una lista
+    colegio = Colegio.query.first() 
+    
+    if request.method == 'POST':
+        try:
+            # 1. Capturar fechas primero
+            fecha_nac_tutor = datetime.strptime(request.form['fecha_nacimiento_t'], '%Y-%m-%d').date()
+            fecha_nac_alumno = datetime.strptime(request.form['fecha_nacimiento_alumno'], '%Y-%m-%d').date()
+            
+            # 2. Crear el Tutor
+            es_legal = request.form.get('legal') == 'on'
+            nuevo_tutor = Tutor(
+                nombre=request.form['nombre_t'],
+                apellido=request.form['apellido_t'],
+                dni=request.form['dni_t'],
+                fecha_nacimiento=fecha_nac_tutor,
+                direccion=request.form['direccion_t'],
+                telefono=request.form.get('telefono_t'),
+                email=request.form.get('email_t'),
+                genero=request.form['genero_t'],
+                parentesco=request.form.get('parentesco'),
+                ocupacion=request.form.get('ocupacion'),
+                legal=es_legal
+            )
+            db.session.add(nuevo_tutor)
+            
+            # 3. Generar Legajo
+            # Idealmente generar_nuevo_legajo() debería ser una función segura que 
+            # consulte el último legajo de la BD y le sume 1
+            nuevo_legajo = generar_nuevo_legajo()
+            
+            # 4. Crear el Alumno
+            nuevo_alumno = Alumno(
+                nombre=request.form['nombre'],
+                apellido=request.form['apellido'],
+                dni=request.form['dni'],
+                fecha_nacimiento=fecha_nac_alumno,
+                direccion=request.form['direccion'],
+                telefono=request.form['telefono'],
+                email=request.form['email'],
+                genero=request.form['genero'],
+                cuil=request.form['cuil'],
+                legajo=nuevo_legajo,
+                id_colegio=colegio.id_colegio if colegio else None # Previene errores si no hay colegios
+            )
+            db.session.add(nuevo_alumno)
+            
+            # CORRECCIÓN: Flush envía los datos a la BD y genera los IDs (nuevo_alumno.id), 
+            # pero no hace un commit definitivo. Si algo falla después, el rollback aún funciona.
+            db.session.flush()
+            
+            # 5. Agregar la relación en la tabla intermedia
+            # Nota: Usamos db.session.execute() para insertar en la tabla Core de SQLAlchemy
+            db.session.execute(
+                alumno_tutor.insert().values(alumno_id=nuevo_alumno.id, tutor_id=nuevo_tutor.id)
+            )
+            
+            # 6. Confirmar todos los cambios
+            db.session.commit()
+            
+            flash('Tutor y Alumno creados exitosamente.', 'success')
+            return redirect(url_for('alumnos.view', alumno=nuevo_alumno.id))
+            
         except Exception as e:
+            # CORRECCIÓN: Si falla CUALQUIER cosa (fechas, BD, etc), entra aquí
             db.session.rollback()
-            flash(f'Error al crear el tutor: {str(e)}', 'danger')
-        
-        return redirect(url_for('alumnos.home'))
-        
-    return render_template('newAlumno.html', colegios=colegios, alumno=None)
+            flash(f'Error al registrar los datos: {str(e)}', 'danger')
+            return redirect(url_for('alumnos.home'))
+
+    return redirect(url_for('alumnos.home'))
