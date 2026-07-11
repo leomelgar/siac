@@ -1,9 +1,8 @@
-<form action="/newAlumno" method="POST" class="card bg-black text-light">
+<!-- <form action="/newAlumno" method="POST" class="card bg-black text-light">
     <div class="card-body p-4">
       {% if tutor %}
       <div class="mb-3">
         <label for="tutor">Tutor:</label><h3>{{tutor.apellido}}, {{tutor.nombre}}</h3>
-        <!-- <label for="tutor_id" name="tutor_id" value="{{tutor.idTutor}}"></label> -->
         <input type="text"
           name="tutor_id"
           class="form-control-plaintext invisible"
@@ -101,4 +100,180 @@
       </div>  
       <button class="btn btn-primary">Guardar</button>
     </div>
-  </form>
+  </form> -->
+<div class="container py-5">
+        <div class="row g-4">
+            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body pt-5">
+                        <!-- Foto de Perfil -->
+                        <img src="https://github.com/mdo.png"
+                             alt="Foto del Alumno" 
+                             class="rounded-circle img-thumbnail mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover;">                        
+                    </div>
+                    <div class="col-12 p-4">
+                      <a href="#" class="btn btn-success">Cargar Archivos</a>          
+                                  
+                    </div>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Información Detallada -->
+            <div class="col-lg-8">
+                <div class="card shadow-sm border-0 h-100">
+                    <!-- Navegación por Pestañas (Tabs) -->
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <ul class="nav nav-tabs card-header-tabs" id="alumnoTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Datos del Tutor</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Datos del Alumno</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contenido de las Pestañas -->
+                    <div class="card-body p-4">
+                        <div class="tab-content" id="myTabContent">  
+                            <!-- PESTAÑA 1: DATOS PERSONALES DEL TUTOR-->
+                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                              <form class="row g-3" action="{{url_for('alumnos.new_alumno')}}" method="POST">
+                                <div class="col-md-6">
+                                  <label for="nombre_t" class="form-label">Nombre</label>
+                                  <input type="text" class="form-control" name="nombre_t" id="nombre_t">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="apellido_t" class="form-label">Apellido</label>
+                                  <input type="text" class="form-control" name="apellido_t" id="apellido_t">
+                                </div>
+                                <div class="col-12">
+                                  <label for="direccion_t" class="form-label">Direccion</label>
+                                  <input type="text" class="form-control" name="direccion_t" id="direccion_t">
+                                </div>
+                                <div class="col-6">
+                                  <label for="dni_t" class="form-label">DNI</label>
+                                  <input type="text" class="form-control" name="dni_t" id="dni_t">
+                                </div>
+                                <div class="col-6">
+                                  <label for="ocupacion" class="form-label">Ocupacion</label>
+                                  <input type="text" class="form-control" name="ocupacion" id="ocupacion">
+                                </div>
+                                <div class="col-md-4">
+                                  <label for="parentesco" class="form-label">Parentesco</label>
+                                  <select name="parentesco" class="form-select">
+                                    <option selected>elegir...</option>
+                                    <option>Padre</option>
+                                    <option>Madre</option>
+                                    <option>Hermano-a</option>
+                                    <option>Abuelo-a</option>
+                                    <option>Otro</option>
+                                  </select>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="form-check form-check-inline">
+                                    <label class="form-check-label" for="legal">Legal</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="legal" id="inlineRadio1" value="True">
+                                    <label class="form-check-label" for="legal">Si</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="legal" id="inlineRadio2" value="False">
+                                    <label class="form-check-label" for="legal">No</label>
+                                  </div>
+                                </div>
+                                <div class="mb-3">
+                                  <label for="genero_t">Genero:</label>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="genero_t" value="masculino">
+                                    <label class="form-check-label" for="genero_t">Masculino</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="genero_t" value="femenino">
+                                    <label class="form-check-label" for="genero_t">Femenino</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="genero_t" id="inlineRadio3" value="no binario">
+                                    <label class="form-check-label" for="genero_t">No Binario</label>
+                                  </div>
+                                </div>
+                                <div class="col-6">
+                                  <label for="fecha_nacimiento_t" class="form-label">Fecha de Nacimiento</label>
+                                  <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t">
+                                </div>
+                                <div class="col-6">
+                                  <label for="email_t" class="form-label">Email</label>
+                                  <input type="text" class="form-control" name="email_t" id="email_t">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="telefono_t" class="form-label">Telefono</label>
+                                  <input type="text" class="form-control" name="telefono_t" id="telefono_t">
+                                </div>
+                            </div>
+
+                            <!-- PESTAÑA 2: AGREGAR DATOS DEL ALUMNO -->
+                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                              <div class="form-row row g-3">
+                                  <div class="col-md-6">
+                                  <label for="nombre" class="form-label">Nombre</label>
+                                  <input type="text" class="form-control" name="nombre" id="nombre"">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="apellido" class="form-label">Apellido</label>
+                                  <input type="text" class="form-control" name="apellido" id="apellido">
+                                </div>
+                                <div class="col-12">
+                                  <label for="direccion" class="form-label">Direccion</label>
+                                  <input type="text" class="form-control" name="direccion" id="direccion">
+                                </div>
+                                <div class="col-6">
+                                  <label for="dni" class="form-label">DNI</label>
+                                  <input type="text" class="form-control" name="dni" id="dni">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="cuil" class="form-label">Cuil</label>
+                                  <input type="text" class="form-control" name="cuil" id="cuil">
+                                </div>
+                                <div class="col-6">
+                                  <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                  <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento">
+                                </div>
+                                <div class="mb-3">
+                                  <label for="generoo">Genero:</label>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="genero" value="masculino">
+                                    <label class="form-check-label" for="genero">Masculino</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="genero" value="femenino">
+                                    <label class="form-check-label" for="genero">Femenino</label>
+                                  </div>
+                                  <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="genero" id="inlineRadio3" value="no binario">
+                                    <label class="form-check-label" for="genero">No Binario</label>
+                                  </div>
+                                </div>
+                                <div class="col-6">
+                                  <label for="email" class="form-label">Email</label>
+                                  <input type="text" class="form-control" name="email" id="email">
+                                </div>
+                                <div class="col-md-6">
+                                  <label for="telefono" class="form-label">Telefono</label>
+                                  <input type="text" class="form-control" name="telefono" id="telefono">
+                                </div>
+                              </div>
+                            <div class="col-12 p-4">
+                                  <button type="submit" class="btn btn-primary">Guardar</button>
+                                  <a href="{{url_for('alumnos.home')}}" class="btn btn-danger">Cancelar</a>
+                            </div>
+                            </form>
+                          </div>
+                          </div>
+                        </div>
+                      </div> 
+                    </div>
+                  </div>
+  </div>

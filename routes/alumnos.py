@@ -23,7 +23,7 @@ def home():
 def inscripcion():
     return render_template('/alumnos/new.html')
 
-@alumnos.route('/newTutor', methods=['POST'])
+""" @alumnos.route('/newTutor', methods=['POST'])
 def new_tutor():
     # if request.method == 'POST':
     #     nombre = request.form['nombre']
@@ -67,7 +67,7 @@ def new_tutor():
             db.session.commit()
             
             flash('Tutor creado exitosamente.', 'success')
-            return redirect(url_for('listar_tutores'))
+            return redirect(url_for('inscripcion'))  # Redirige a la página de inscripción después de crear el tutor
 
         except IntegrityError:
             db.session.rollback()
@@ -76,7 +76,7 @@ def new_tutor():
             flash(f'Error al crear el tutor: {str(e)}', 'danger')
 
     # Si es GET (acaba de entrar a la URL), mostramos el formulario vacío
-    return render_template('alumnos.home.html')
+    return render_template('alumnos.home.html') """
 
 @alumnos.route('/newAlumno', methods=['POST'])
 def new_alumno():
@@ -101,15 +101,35 @@ def new_alumno():
     #     return redirect(url_for('alumnos.view', alumno=new_alumno.idAlumno))
     colegios = Colegio.query.all()
     if request.method == 'POST':
-        # Procesamos la fecha de nacimiento que viene como string 'YYYY-MM-DD'
-        fecha_nac_str = request.form['fecha_nacimiento']
-        
-        nuevo_alumno = Alumno(
+        try:
+            # Capturar datos del formulario HTML - TUTOR
+            fecha_nac_tutor = datetime.strptime(request.form['fecha_nacimiento_t'], '%Y-%m-%d').date()
+            
+            # Los checkboxes en HTML envían "on" si están marcados, o nada si no lo están
+            es_legal = request.form.get('legal') == 'on'
+            
+            nuevo_tutor = Tutor(
+                nombre=request.form['nombre_t'],
+                apellido=request.form['apellido_t'],
+                dni=request.form['dni_t'],
+                fecha_nacimiento=fecha_nac_tutor,
+                direccion=request.form['direccion_t'],
+                telefono=request.form.get('telefono_t'),
+                email=request.form.get('email_t'),
+                genero=request.form['genero_t'],
+                parentesco=request.form.get('parentesco'),
+                ocupacion=request.form.get('ocupacion'),
+                legal=es_legal
+            )
+            
+            #captura datos del formulario HTML - ALUMNO
+            fecha_nac_alumno = datetime.strptime(request.form['fecha_nacimiento_alumno'], '%Y-%m-%d').date()
+            nuevo_alumno = Alumno(
             # Campos heredados de Persona
             nombre=request.form['nombre'],
             apellido=request.form['apellido'],
             dni=request.form['dni'],
-            fecha_nacimiento=datetime.strptime(fecha_nac_str, '%Y-%m-%d').date(),
+            fecha_nacimiento=fecha_nac_alumno,
             direccion=request.form['direccion'],
             telefono=request.form['telefono'],
             email=request.form['email'],
@@ -120,8 +140,21 @@ def new_alumno():
             legajo=request.form['legajo'],
             id_colegio=request.form['id_colegio']
         )
-        db.session.add(nuevo_alumno)
-        db.session.commit()
+
+            db.session.add(nuevo_tutor)
+            db.session.add(nuevo_alumno)
+            db.session.commit()
+            
+            flash('Tutor y Alumno creados exitosamente.', 'success')
+            return redirect(url_for('inscripcion'))  # Redirige a la página de inscripción después de crear el tutor
+
+        except ValueError:
+            db.session.rollback()
+            flash('Error: El DNI o Email ya se encuentra registrado.', 'danger')
+        except Exception as e:
+            db.session.rollback()
+            flash(f'Error al crear el tutor: {str(e)}', 'danger')
+        
         return redirect(url_for('alumnos.home'))
         
     return render_template('newAlumno.html', colegios=colegios, alumno=None)

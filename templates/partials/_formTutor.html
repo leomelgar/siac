@@ -1,22 +1,31 @@
 <form action="/new_tutor" method="POST" class="row g-3">
   <div class="col-md-6">
-    <label for="nombre" class="form-label">Nombre</label>
-    <input type="text" name="nombre" class="form-control" required >
+    <label for="nombre_t" class="form-label">Nombre</label>
+    <input type="text" name="nombre_t" class="form-control" required >
   </div>
   <div class="col-md-6">
-    <label for="apellido" class="form-label">Apellido</label>
-    <input type="text" name="apellido" class="form-control" required>
+    <label for="apellido_t" class="form-label">Apellido</label>
+    <input type="text" name="apellido_t" class="form-control" required>
   </div>
   <div class="col-12">
-    <label for="direccion" class="form-label">Direccion</label>
-    <input type="text" class="form-control" name="direccion" placeholder="calle - nro - ciudad " required>
+    <label for="direccion_t" class="form-label">Direccion</label>
+    <input type="text" class="form-control" name="direccion_t" placeholder="calle - nro - ciudad " required>
   </div>
   <div class="col-md-4">
-    <label for="dni" class="form-label">N° Documento</label>
-    <input type="text" class="form-control" name="dni" placeholder="nro de dni sin guiones" required>
+    <label for="dni_t" class="form-label">N° Documento</label>
+    <input type="text" class="form-control" name="dni_t" placeholder="nro de dni sin guiones" required>
   </div>
+  <div class="mb-3">
+        <label for="fecha_nacimiento_t">Fecha de Nacimiento:</label>
+        <input
+          type="date"
+          name="fecha_nacimiento_t"
+          class="form-control rounded-0 bg-dark border-0 text-white"
+          required
+        />
+      </div>
   <div class="col-md-4">
-    <label for="inputState" class="form-label">Parentesco</label>
+    <label for="parentesco" class="form-label">Parentesco</label>
     <select name="parentesco" class="form-select">
       <option selected>elegir...</option>
       <option>Padre</option>
@@ -40,12 +49,12 @@
     </div>
   </div>
   <div class="col-md-6">
-    <label for="telefono" class="form-label">Telefono</label>
-    <input type="text" class="form-control" name="telefono" placeholder="cod area + nro celular o fijo" required>
+    <label for="telefono_t" class="form-label">Telefono</label>
+    <input type="text" class="form-control" name="telefono_t" placeholder="cod area + nro celular o fijo" required>
   </div>
   <div class="col-6">
-    <label for="email" class="form-label">Email</label>
-    <input type="email" class="form-control" name="email" placeholder="usuario@dominio">
+    <label for="email_t" class="form-label">Email</label>
+    <input type="email" class="form-control" name="email_t" placeholder="usuario@dominio">
   </div>
   <div class="col-12">
     <button type="submit" class="btn btn-primary">Guardar</button>

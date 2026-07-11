@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+  Pre-Inscripcion
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-3">
+     <!-- menu lateral -->
+      {% include 'partials/_sidebar.html' %}
+    </div> 
+    <div class="col-md-9">
+      <div class="accordion" id="accordionExample">
+          <li class="border-top my-3"></li>
+          <h3 class="text-white">Agregar datos del Tutor</h3>
+          {% include 'partials/_searchTutor.html' %}
+          <!-- acordion alta tutor -->
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                  Agregar datos del Tutor o Responsable Legal
+                </button>
+              </h2>
+              <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  {% include 'partials/_formTutor.html' %}
+                </div>
+              </div>
+            </div>
+            <!-- MESSAGE -->
+       {% include 'partials/_message.html' %}
+       <li class="border-top my-3"></li>
+        <h3 class="text-white">Agregar datos del Alumno</h3>
+        <!--formulario alta Alumno-->
+        {% include 'partials/_formAlumno.html' %}
+      </div>
+</div>
+{% endblock %}
