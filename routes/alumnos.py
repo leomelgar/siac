@@ -117,7 +117,7 @@ def new_alumno():
             db.session.commit()
             
             flash('Tutor y Alumno creados exitosamente.', 'success')
-            return redirect(url_for('alumnos.view', alumno=nuevo_alumno.id))
+            return redirect(url_for('alumnos.view', id=nuevo_alumno.id))
             
         except ValueError:
             # Captura específica por si el formato de fecha no es 'YYYY-MM-DD'
@@ -138,13 +138,11 @@ def calculateAge(birthDate):#funcion para calcular la edad del alumno
     age = today.year-birthDate.year-((today.month, today.day)<(birthDate.month, birthDate.day))
     return age
 
-@alumnos.route('/alumnos/view/<id>', methods=["POST","GET"]) #detalle de alumno
+@alumnos.route('/alumnos/view/<id>', methods=["GET"]) #detalle de alumno
 def view(id):
     #alumnos = Alumno.query.options(joinedload(Alumno.tutores)).all()#para traer todos los alumnos con sus tutores
     #alumno = Alumno.query.options(joinedload(Alumno.tutores)).get(id)
-    alumno = db.session.query(Alumno)\
-        .options(joinedload(Alumno.tutores))\
-        .get(id)
+    alumno = db.session.query(Alumno).options(joinedload(Alumno.tutores)).get(id)
     #alumno = Alumno.query.get(id)
     #tutor = alumno_tutor.query.get(tutor_id==alumno.id)
     age = calculateAge(alumno.fecha_nacimiento)
