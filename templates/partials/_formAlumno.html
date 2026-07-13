@@ -164,12 +164,13 @@
                                 <div class="col-md-4">
                                   <label for="parentesco" class="form-label">Parentesco</label>
                                   <select name="parentesco" class="form-select">
-                                    <option selected>elegir...</option>
-                                    <option>Padre</option>
-                                    <option>Madre</option>
-                                    <option>Hermano-a</option>
-                                    <option>Abuelo-a</option>
-                                    <option>Otro</option>
+                                    <!-- CORRECCIÓN: Agregamos value="" y disabled -->
+                                    <option value="" selected disabled>elegir...</option>
+                                    <option value="Padre">Padre</option>
+                                    <option value="Madre">Madre</option>
+                                    <option value="Hermano-a">Hermano-a</option>
+                                    <option value="Abuelo-a">Abuelo-a</option>
+                                    <option value="Otro">Otro</option>
                                   </select>
                                 </div>
                                 <div class="col-md-6">
@@ -177,11 +178,11 @@
                                     <label class="form-check-label" for="legal">Legal</label>
                                   </div>
                                   <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="legal" id="inlineRadio1" value="True">
+                                    <input class="form-check-input" type="radio" name="legal" id="legal" value='True'>
                                     <label class="form-check-label" for="legal">Si</label>
                                   </div>
                                   <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="legal" id="inlineRadio2" value="False">
+                                    <input class="form-check-input" type="radio" name="legal" id="legal" value='False'>
                                     <label class="form-check-label" for="legal">No</label>
                                   </div>
                                 </div>
@@ -219,7 +220,7 @@
                               <div class="form-row row g-3">
                                   <div class="col-md-6">
                                   <label for="nombre" class="form-label">Nombre</label>
-                                  <input type="text" class="form-control" name="nombre" id="nombre"">
+                                  <input type="text" class="form-control" name="nombre" id="nombre">
                                 </div>
                                 <div class="col-md-6">
                                   <label for="apellido" class="form-label">Apellido</label>
@@ -252,7 +253,7 @@
                                     <label class="form-check-label" for="genero">Femenino</label>
                                   </div>
                                   <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero" id="inlineRadio3" value="no binario">
+                                    <input class="form-check-input" type="radio" name="genero" value="no binario">
                                     <label class="form-check-label" for="genero">No Binario</label>
                                   </div>
                                 </div>
