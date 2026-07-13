@@ -3,6 +3,7 @@ from models.colege import Alumno, Tutor, Persona, Colegio, alumno_tutor
 from utils.db import db
 from datetime import datetime as dt
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload
 
 alumnos = Blueprint("alumnos", __name__)
 
@@ -130,3 +131,21 @@ def new_alumno():
             return redirect(url_for('alumnos.inscripcion'))
 
     return redirect(url_for('alumnos.home'))
+
+#funcion para calcular la edad del alumno
+def calculateAge(birthDate):#funcion para calcular la edad del alumno
+    today = dt.today()
+    age = today.year-birthDate.year-((today.month, today.day)<(birthDate.month, birthDate.day))
+    return age
+
+@alumnos.route('/alumnos/view/<id>', methods=["POST","GET"]) #detalle de alumno
+def view(id):
+    #alumnos = Alumno.query.options(joinedload(Alumno.tutores)).all()#para traer todos los alumnos con sus tutores
+    #alumno = Alumno.query.options(joinedload(Alumno.tutores)).get(id)
+    alumno = db.session.query(Alumno)\
+        .options(joinedload(Alumno.tutores))\
+        .get(id)
+    #alumno = Alumno.query.get(id)
+    #tutor = alumno_tutor.query.get(tutor_id==alumno.id)
+    age = calculateAge(alumno.fecha_nacimiento)
+    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age)
