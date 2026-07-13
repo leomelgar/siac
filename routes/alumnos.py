@@ -10,11 +10,12 @@ alumnos = Blueprint("alumnos", __name__)
 @alumnos.route('/alumnos/home', methods=["POST","GET"]) #listado de alumnos
 def home():
     alumnos = Alumno.query.all()
+
     # alumnos = Persona.query.filter(Persona.tipo_persona=='alumno')
     if request.method == "POST" and 'tag' in request.form:
         tag = request.form['tag']
         search = "%{}%".format(tag)
-        alumnos = Alumno.query.filter(Alumno.apellido.like(search))
+        alumnos = Alumno.query.filter(Alumno.apellido.like(search) | Alumno.legajo.like(search)).all()
         if not alumnos:
             flash('No existe registro...')
         else:
