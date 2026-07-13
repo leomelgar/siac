@@ -44,91 +44,97 @@
 
                     <!-- Contenido de las Pestañas -->
                     <div class="card-body p-4">
-                        <div class="tab-content" id="myTabContent">  
-                            <!-- PESTAÑA 1: DATOS PERSONALES -->
-                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
-                              <form class="row g-3" action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
-                                <div class="col-md-6">
-                                  <label for="nombre" class="form-label">Nombre</label>
-                                  <input type="text" class="form-control" name="nombre" id="nombre" value="{{docente.nombre}}">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="apellido" class="form-label">Apellido</label>
-                                  <input type="text" class="form-control" name="apellido" id="apellido" value="{{docente.apellido}}">
-                                </div>
-                                <div class="col-12">
-                                  <label for="direccion" class="form-label">Direccion</label>
-                                  <input type="text" class="form-control" name="direccion" id="direccion" value="{{docente.direccion}}">
-                                </div>
-                                <div class="col-6">
-                                  <label for="dni" class="form-label">DNI</label>
-                                  <input type="text" class="form-control" name="dni" id="dni" value="{{docente.dni}}">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="cuil" class="form-label">Cuil</label>
-                                  <input type="text" class="form-control" name="cuil" id="cuil" value="{{docente.cuil}}">
-                                </div>
-                                <div class="col-6">
-                                  <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                                  <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento" value="{{docente.fecha_nacimiento}}">
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="genero" class="form-label">Genero</label>
-                                    <input type="text" class="form-control" name="genero" id="genero" value="{{docente.genero}}">
-                                </div>
-                                <div class="col-6">
-                                  <label for="email" class="form-label">Email</label>
-                                  <input type="text" class="form-control" name="email" id="email" value="{{docente.email}}">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="telefono" class="form-label">Telefono</label>
-                                  <input type="text" class="form-control" name="telefono" id="telefono" value="{{docente.telefono}}">
-                                </div>
-                              
+                        <!-- 1. EL FORMULARIO ENVUELVE TODO EL CONTENIDO DE LAS PESTAÑAS -->
+                        <form action="{{url_for('docentes.updateDocente', id=docente.id)}}" method="POST">
+                            
+                            <div class="tab-content" id="myTabContent">  
+                                <!-- PESTAÑA 1: DATOS PERSONALES -->
+                                <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                                    <!-- 2. TRASLADAMOS LAS CLASES ROW AL DIV INTERNO -->
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" name="nombre" id="nombre" value="{{docente.nombre}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="apellido" class="form-label">Apellido</label>
+                                            <input type="text" class="form-control" name="apellido" id="apellido" value="{{docente.apellido}}">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="direccion" class="form-label">Direccion</label>
+                                            <input type="text" class="form-control" name="direccion" id="direccion" value="{{docente.direccion}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="dni" class="form-label">DNI</label>
+                                            <input type="text" class="form-control" name="dni" id="dni" value="{{docente.dni}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cuil" class="form-label">Cuil</label>
+                                            <input type="text" class="form-control" name="cuil" id="cuil" value="{{docente.cuil}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                            <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento" value="{{docente.fecha_nacimiento}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="genero" class="form-label">Genero</label>
+                                            <input type="text" class="form-control" name="genero" id="genero" value="{{docente.genero}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="text" class="form-control" name="email" id="email" value="{{docente.email}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="telefono" class="form-label">Telefono</label>
+                                            <input type="text" class="form-control" name="telefono" id="telefono" value="{{docente.telefono}}">
+                                        </div>
+                                    </div>
+                                </div> <!-- CIERRE CORRECTO PESTAÑA 1 -->
+
+                                <!-- PESTAÑA 2: DATOS LABORALES -->
+                                <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="fecha_contratacion" class="form-label">Inicio en Actividad: <span class="badge border border-primary text-primary">{{docente.fecha_contratacion}}</span></label>
+                                            <input type="date" class="form-control" name="fecha_contratacion" id="fecha_contratacion" value="{{docente.fecha_contratacion}}">
+                                        </div>
+                                        
+                                        <div class="col-md-6">
+                                            <label for="cargo" class="form-label">Cargo Actual: <span class="badge border border-primary text-primary">{{docente.cargo}}</span></label>
+                                            <select name="cargo" class="form-select form-select-sm">
+                                                <option selected>{{docente.cargo}}</option>
+                                                <option value="Titular">Titular</option>
+                                                <option value="Suplente">Suplente</option>
+                                                <option value="Interino">Interino</option>
+                                            </select>
+                                        </div> 
+                                        
+                                        <div class="col-md-6">
+                                            <label for="estado_contractual" class="form-label">Estado Contractual: <span class="badge border border-primary text-primary">{{docente.estado_contractual}}</span></label>
+                                            <select name="estado_contractual" class="form-select form-select-sm">
+                                                <option selected>{{docente.estado_contractual}}</option>
+                                                <option value="Activo">Activo</option>
+                                                <option value="Baja">Baja</option>
+                                                <option value="Jubilado">Jubilado/a</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div> <!-- CIERRE CORRECTO PESTAÑA 2 -->
+                            </div> <!-- CIERRE DEL TAB-CONTENT -->
+
+                            <!-- BOTONES DEL FORMULARIO -->
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a href="{{ url_for('docentes.view', id=docente.id) }}" class="btn btn-danger">Cancelar</a>
                             </div>
 
-                            <!-- PESTAÑA 2: DATOS LABORALES -->
-                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
-                                <!-- Asignaturas del Semestre -->
-                                <div class="form-row row g-3">
-                                  <div class="col-md-6">
-                                    <label for="fecha_contratacion" class="form-label">Inicio en Actividad: <span class="badge border border-primary text-primary">{{docente.fecha_contratacion}}</span></label>
-                                    <input type="date" class="form-control" name="fecha_contratacion" id="fecha_contratacion" value="{{docente.fecha_contratacion}}">
-                                  </div>
-                                  
-                                  <div class="col-md-6">
-                                    <label for="cargo" class="form-label">Cargo Actual: <span class="badge border border-primary text-primary">{{docente.cargo}}</span></label>
-                                    <!-- <input type="text" class="form-control" id="cargo" value="{{docente.cargo}}"> -->
-                                     <select name="cargo" class="form-select form-select-sm">
-                                        <option selected>{{docente.cargo}}</option>
-                                        <option value="Titular">Titular</option>
-                                        <option value="Suplente">Suplente</option>
-                                        <option value="Interino">Interino</option>
-                                      </select>
-                                  </div> 
-                                  
-                                  <div class="col-md-6">
-                                    <label for="estado_contractual" class="form-label">Estado Contractual: <span class="badge border border-primary text-primary">{{docente.estado_contractual}}</span></label>
-                                    <!-- <input type="text" class="form-control" id="estado_contractual" value="{{docente.estado_contractual}}"> -->
-                                      <select name="estado_contractual" class="form-select form-select-sm">
-                                          <option selected>{{docente.estado_contractual}}</option>
-                                          <option value="Activo">Activo</option>
-                                          <option value="Baja">Baja</option>
-                                          <option value="Jubilado">Jubilado/a</option>
-                                        </select>
-                                  </div>
-                                </div>
-                            </div>
-                            <div class="col-12 p-4">
-                                  <button type="submit" class="btn btn-primary">Guardar</button>
-                                  <a href="{{ url_for('docentes.view', id=docente.id) }}" class="btn btn-danger">Cancelar</a>
-                            </div>
-                            </form>
-                          </div>
-                        </div>
-                      </div> 
-                    </div>
-                  </div>
+                        </form> <!-- CIERRE DEL FORMULARIO AQUÍ (Correctamente encapsulado) -->
+                        
+                    </div> <!-- Cierre de card-body -->
+                </div> <!-- Cierre de card -->
+            </div> <!-- Cierre de col-lg-8 -->
+        </div> <!-- Cierre de row -->
+    </div> <!-- Cierre de container -->
   </div>
 
 {% endblock %}

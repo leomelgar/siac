@@ -8,157 +8,179 @@
 <!-- MESSAGE -->
 {% include 'partials/_message.html' %}
 <div class="row mb-3 text-center">
-    <div class="col-md-8 themed-grid-col">
-      <div class="pb-3">
-        <h2 class="text-secondary">Datos del Alumno</h2>
-        <hr class="my-4">
-        <h3 class="text-secondary">Legajo n° : <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h3>
-        <div class="table-responsive">
-        <table class="table table-dark align-middle table-sm table-hover">
-            <thead>
-              <tr>
-                <th></th>
-                <th scope="col">Apellido</th>
-                <th scope="col">Nombre</th>
-                <th scope="col">Cuil</th>
-                <th scope="col">F. Nacimiento</th>
-                <th scope="col">Edad</th>
-                <th scope="col">Genero</th>
-                <th scope="col">Direccion</th>
-                <th scope="col">Telefono</th>
-                <th scope="col">Email</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% if alumno %}
-              <tr>
-                <td><img src="https://github.com/mdo.png" alt="" width="42" height="42" class="rounded-circle"></td>
-                <td>{{alumno.apellido}}</td>
-                <td>{{alumno.nombre}}</td>
-                <td>{{alumno.cuil}}</td>
-                <td>{{alumno.fecha_nacimiento}}</td>
-                <td>{{age}}</td>
-                <td>{{alumno.genero}}</td>
-                <td>{{alumno.direccion}}</td>
-                <td>{{alumno.telefono}}</td>
-                <td>{{alumno.email}}</td>
-                <td><div>
-                  <a href="#" class="btn btn btn-outline-success btn-sm rounded-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                  </svg> Editar</a>
-                </div></td>
-              </tr>
-                {% endif %}
-            </tbody>
-          </table>
-          </div>
-      </div>
-      <div class="row">
-        <div class="col-md-6 themed-grid-col">
-          <h2 class="text-secondary">Matricula</h2>
-          <hr class="my-4">
-          <div class="card text-center mb-1 bg-black text-white">
-            {% if not matricula %}
-                <h4>Sin Matricula</h4>
-                <a href="#" class="btn btn-sm btn-outline-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
-  <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-  <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-  <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-</svg> Matricular</a>
-            {% else %}
-            <div class="card-body py-2 px-3">
-              <div class="">
-                <ul class="list-group">
-                  <li class="list-group-item">
-                    <label class="form-check-label">n° Matricula:</label>
-                    {{matricula.idMatricula}}
-                  </li>
-                  <li class="list-group-item">
-                    <label class="form-check-label">Fecha Alta:</label>
-                    {{matricula.fechaInscripcion}}
-                  </li>
-                  <li class="list-group-item">
-                    <label class="form-check-label">Condicion:</label>{{matricula.condicionIngreso}}
-                  </li>
-                  <li class="list-group-item">
-                    <label class="form-check-label">Cursa:</label>{{matricula.añoAcademico}}
-                  </li>
-                </ul>
-              </div>
-            </div>
-            {% endif %}
-          </div>
+  <div class="col-md-2">
+    <!-- menu lateral -->
+    {% include 'partials/_sidebarDteCdra.html' %}
+  </div>
+  <div class="col-md-10">
+       <!-- MESSAGE -->
+       {% include 'partials/_message.html' %}
+    <h2 class="text-secondary">Legajo Alumno</h2>
+     <!-- Botón Volver -->
+        <div class="mb-4">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alumnos.home') }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+          </svg> Volver</a>
         </div>
-        <div class="col-md-6 themed-grid-col">
-          <h2 class="text-secondary">Estado Academico</h2>
-          <hr class="my-4">
-          <div class="vstack gap-3">
-            <div class="bg-light border">First item</div>
-            <div class="bg-light border">Second item</div>
-            <div class="bg-light border">Third item</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4 themed-grid-col">
-        <h2 class="text-secondary">Datos del Tutor</h2>
-        <hr class="my-4">
-        <div class="card mb-1 bg-black text-white">
-          <div class="card-body py-2 px-3">
-            <div class="justify-content-between">
-            <form>
-              {% for tutor in alumno.tutores%}
-                <div class="row mb-6 p-2">
-                  <label class="col-sm-5 col-form-label">Apellido</label>
-                  <div class="col-sm-7">
-                    <span type="email" class="form-control">{{tutor.apellido}}</span>
-                  </div>
-                </div>
-                <div class="row mb-6 p-2">
-                  <label class="col-sm-5 col-form-label">Nombre</label>
-                  <div class="col-sm-7">
-                    <span type="email" class="form-control">{{tutor.nombre}}</span>
-                  </div>
-                </div>
-                <div class="row mb-6 p-2">
-                    <label class="col-sm-5 col-form-label">Parentesco</label>
-                    <div class="col-sm-7">
-                      <span type="email" class="form-control">{{tutor.parentesco}}</span>
+     <div class="container py-3">
+        <div class="row g-4">
+            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
+            <div class="col-lg-5">
+                <div class="card shadow-sm border-0 text-center h-100">
+                    <div class="card-body pt-5">
+                        <!-- Foto de Perfil -->
+                        <img src="https://github.com/mdo.png"
+                             alt="Foto del Docente" 
+                             class="rounded-circle img-thumbnail mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover;">                        
+                        <!-- Nombre y Cargo -->
+                        <h4 class="card-title mb-1">{{alumno.apellido}}, {{alumno.nombre}}</h4>
+                        <h5 class="text-secondary">Legajo n° : <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h5>
+                        <hr>
+                        <!-- Datos Legales -->
+                        <div class="text-start px-3">
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <span class="text-muted small d-block">N° de Documento</span>
+                                <strong>{{alumno.dni}}</strong>
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <span class="text-muted small d-block">N° Cuil</span>
+                                <strong>{{alumno.cuil}}</strong>
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <span class="text-muted small d-block">Fecha de Nacimiento</span>
+                                <strong>{{alumno.fecha_nacimiento}}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-building text-primary me-2"></i>
+                                <span class="text-muted small d-block">Edad</span>
+                                <script>//Calcular edad a partir de la fecha de nacimiento
+                                    //<![CDATA[
+                                    var d = new Date("{{alumno.fecha_nacimiento}}");
+                                    var edad = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+                                    document.write('<strong>' + edad + '</strong>');
+                                    //]]> 
+                                </script>
+                            </p>
+                        </div>
+                        <!-- Datos Rápidos de Contacto -->
+                        <div class="text-start px-3">
+                            <p class="mb-2">
+                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <span class="text-muted small d-block">Correo Electrónico</span>
+                                <strong>{{alumno.email}}</strong>
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-phone text-primary me-2"></i>
+                                <span class="text-muted small d-block">Teléfono </span>
+                                <strong>{{alumno.telefono}}</strong>
+                            </p>
+                            <p class="mb-0">
+                                <i class="fas fa-building text-primary me-2"></i>
+                                <span class="text-muted small d-block">Domicilio</span>
+                                <strong>{{alumno.direccion}}</strong>
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Opciones para gestionar alumno -->
+                    <div class="card-footer bg-transparent border-0 pb-4">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="#" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i>Editar</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i>Promover</a>
+                            <form action="#" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle">
+                                <i class="bi bi-trash"></i> Eliminar Registro</button>
+                            </form>
+                            <!-- <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i>Eliminar</a> -->
+                        </div>
                     </div>
                 </div>
-                <div class="row mb-6 p-2">
-                  <label class="col-sm-5 col-form-label">Direccion</label>
-                  <div class="col-sm-7">
-                    <span type="email" class="form-control">{{tutor.direccion}}</span>
-                  </div>
-                </div>
-                <div class="row mb-6 p-2">
-                  <label class="col-sm-5 col-form-label">Telefono</label>
-                  <div class="col-sm-7">
-                    <span type="email" class="form-control">{{tutor.telefono}}</span>
-                  </div>
-                </div>
-                <div class="row mb-6 p-2">
-                  <label class="col-sm-5 col-form-label">Email</label>
-                  <div class="col-sm-7">
-                    <span type="email" class="form-control">{{tutor.email}}</span>
-                  </div>
-                </div>
-                {% endfor %}
-              </form>
-              </div>
-          </div>
-          </div>
-    </div>
-    <div class=" col-md-4 btn-group" role="group" aria-label="Basic radio toggle button group">
-      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('alumnos.home') }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-      </svg> Volver</a>
-      <a class="btn btn-outline-secondary btn-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
-        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1z"/>
-        <path d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2H5zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4V3zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2H5zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1z"/>
-      </svg> Imprimir</a>
-    </div>
-  </div>
+            </div>
+
+            <!-- Columna Derecha: Información Detallada -->
+            <div class="col-lg-7">
+                <div class="card shadow-sm border-0 h-100">
+                    <!-- Navegación por Pestañas (Tabs) -->
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Perfil de Alumno</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Datos de Tutor</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contenido de las Pestañas -->
+                    <div class="card-body p-4">
+                        <div class="tab-content" id="myTabContent">
+                            
+                            <!-- PESTAÑA 1: PERFIL ALUMNO -->
+                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                                <!-- Biografía -->
+                                <h5 class="mb-3 text-secondary border-bottom pb-2">Biografía</h5>
+                                <p class="text-muted">
+                                    Profesorado en Matematicas con más de 12 años de experiencia en la docencia,
+                                     trabajando en el establecimiento especializada en metodologías de aprendizaje.
+                                </p>
+
+                                <!-- Formación Académica -->
+                                <h5 class="mt-4 mb-3 text-secondary border-bottom pb-2">Historia Académica</h5>
+                                <ul class="list-unstyled position-relative ms-2">
+                                    <li class="mb-3 ps-3 border-start border-primary border-3">
+                                        <div class="fw-bold">Ingreso al Establecimiento</div>
+                                        <div class="text-muted small">
+                                            <i class="fas fa-calendar-alt me-2"></i> 15 de Marzo de 2010
+                                        </div>
+                                    </li>
+                                    <li class="mb-0 ps-3 border-start border-primary border-3">
+                                        <div class="fw-bold">Cursos y puntajes</div>
+                                        <div class="text-muted small">Universidad Estatal — 200</div>
+                                    </li>
+                                </ul>
+
+                                <!-- Áreas de Investigación -->
+                                <h5 class="mt-4 mb-3 text-secondary border-bottom pb-2">Áreas de Especialización</h5>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <span class="px-3 py-2">Cloud Computing</span>
+                                    <span class=" px-3 py-2">DevOps</span>
+                                    <span class=" px-3 py-2">Clean Code</span>
+                                    <span class="  px-3 py-2">Arquitectura de Microservicios</span>
+                                </div>
+                            </div>
+
+                            <!-- PESTAÑA 2: DATOS DEL TUTOR -->
+                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                              <div class="table-responsive mb-4">
+                                  {% for tutor in alumno.tutores%}                           
+                              <div class="card" style="width: 18rem;">
+                                <img src="https://github.com/mdo.png" class="card-img-top" alt="...">
+                                <div class="card-body">
+                                  <h5 class="card-title">{{tutor.nombre}}, {{tutor.apellido}}</h5>
+                                  <p class="card-text">{{tutor.parentesco}}</p>
+                                </div>
+                                <ul class="list-group">
+                                  <li class="list-group-item"><p><u>Direccion:</u></p>{{tutor.direccion}}</li>
+                                  <li class="list-group-item"><p><u>Telefono:</u></p>{{tutor.telefono}}</li>
+                                  <li class="list-group-item"><p><u>Email:</u></p>{{tutor.email}}</li>
+                                </ul>
+                                <div class="card-body">
+                                  <a href="#" class="btn btn-outline-primary card-link">Editar</a>
+                                </div>
+                              </div>
+                              {% endfor %}
+                                      </div>
+                            </div> <!-- Cierre de tab-pane docencia-pane -->
+                          </div> <!-- Cierre de tab-content -->
+                    </div> <!-- Cierre de card-body -->
+              </div> <!-- Cierre de card -->
+            </div> <!-- Cierre de tab-content -->
+
+
+  </div> <!-- Cierre de row -->
+</div> <!-- Cierre de container -->
 {% endblock %}

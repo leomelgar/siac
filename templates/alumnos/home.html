@@ -15,20 +15,20 @@
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
     <h2 class="text-secondary">Gestion Alumnos</h2>
-    <!-- {% include 'partials/_searchTutor.html' %} -->
-     <span class="text-secondary">Cantidad de Registros</span>
-    <div>
-      <div class="d-flex justify-content-between align-items-center mb-3">
+    <!-- {% include 'partials/_searchTutor.html' %} -->    
+    <div class="row">
+      <div class="d-flex justify-content-between align-items-center mb-3 col-md-9 btn-group">
         <form action="/alumnos/home" method="POST" class="d-flex" role="search">
           <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido o Legajo" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Buscar</button>
         </form>
       </div>
-      <div class="d-flex justify-content-between align-items-center mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-3 col-md-3 btn-group">
           <a class="btn btn-outline-primary" data-bs-toggle="modal" href="{{ url_for('alumnos.inscripcion') }}">Agregar Alumno</a>
       </div>
     </div>
     <hr class="my-4">
+    <span class="badge border border-primary">Cantidad de Registros: {{ cantidad }}</span>
     <table class="table table-dark table-hover">
       <thead>
         <tr>
