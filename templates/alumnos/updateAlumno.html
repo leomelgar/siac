@@ -1,78 +1,176 @@
-{% extends "layout.html" %} {% block body %}
+{% extends "layout.html" %} 
+{% block body %}
+  {% block title %}
+    Actualizar Informacion
+  {% endblock %}
 <div class="container">
-  <div class="row gy-5 justify-content-md-center">
-<div class="col-6 border p-4 border-primary border-3 opacity-75">
-  <div class=""><h3 class="text-white">Actualizar Datos del Alumno</h3></div>
-<form action="{{url_for('alumnos.update_alumno', alumno=alumno.idAlumno)}}" method="POST">
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="nombre" class="col-form-label text-white">Nombre</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="nombre" value="{{alumno.nombre}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="apellido" class="col-form-label text-white">Apellido</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="apellido" value="{{alumno.apellido}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label text-white">Cuil</label>
-    <div class="col-sm-6">
-      <input type="text" name="cuil" value="{{alumno.cuil}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="fechaNac" class="col-sm-2 col-form-label text-white">Fecha Nacimiento</label>
-    <div class="col-sm-6">
-      <input type="date" name="fechaNac" value="{{alumno.fechaNac}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="input-group mb-3">
-  <label class="col-sm-2 col-form-label text-white">Genero</label>
-  <select name="sexo" class="form-select col-sm-2 bg-dark border-0 text-white">
-    <option selected>{{alumno.sexo}}</option>
-    <option value="Masculino">Masculino</option>
-    <option value="Femenino">Femenino</option>
-    <option value="No Binario">No Binario</option>
-  </select>
-</div>
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="direccion" class="col-form-label text-white">Direcion</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="direccion" value="{{alumno.direccion}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <div class="col-auto">
-      <label for="telefono" class="col-form-label text-white">Telefono</label>
-    </div>
-    <div class="col-auto">
-      <input type="text" name="telefono" value="{{alumno.telefono}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <div class="mb-3 row">
-    <label for="staticEmail" class="col-sm-2 col-form-label text-white">Email</label>
-    <div class="col-sm-6">
-      <input type="text" name="email" value="{{alumno.email}}" class="form-control rounded-0 bg-dark border-0 text-white">
-    </div>
-  </div>
-  <button class="btn btn-outline-primary btn-sm"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save" viewBox="0 0 16 16">
-  <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v7.293l2.646-2.647a.5.5 0 0 1 .708.708l-3.5 3.5a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L7.5 9.293V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
-</svg> Actualizar</button>
-  <button class="btn btn-outline-danger btn-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-  <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-</svg> Cancelar</button>
-</form>
-</div>
-</div>
-</div>
+  <h2 class="text-secondary">Alumno Legajo n° <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h2>
+     <!-- Botón Volver -->
+        <div class="mb-4">
+            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alumnos.view', id=alumno.id) }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+          </svg> Volver</a>
+        </div>
+     <div class="container py-3">
+        <div class="row g-4">
+            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
+            <div class="col-lg-5">
+                <div class="card shadow-sm border-0 text-center h-100">
+                    <div class="card-body pt-5">
+                        <!-- Foto de Perfil -->
+                        <img src="https://github.com/mdo.png"
+                             alt="Foto del Docente" 
+                             class="rounded-circle img-thumbnail mb-3" 
+                             style="width: 150px; height: 150px; object-fit: cover;">                        
+                        <!-- Nombre y Cargo -->
+                        <h4 class="card-title mb-1">{{alumno.apellido}}, {{alumno.nombre}}</h4>
+                        <hr>
+                        <!-- Datos Legales -->
+                        <div class="text-start px-3">
+                          
+                        </div>
+                        <!-- Datos Rápidos de Contacto -->
+                        <div class="text-start px-3">
+                            
+                        </div>
+                    </div>
+                    <!-- Opciones para gestionar alumno -->
+                    <div class="card-footer bg-transparent border-0 pb-4">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i>Editar</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i>Promover</a>
+                            <form action="#" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
+                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle">
+                                <i class="bi bi-trash"></i> Eliminar Registro</button>
+                            </form>
+                            <!-- <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i>Eliminar</a> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Columna Derecha: Información Detallada -->
+            <div class="col-lg-7">
+                <div class="card shadow-sm border-0 h-100">
+                    <!-- Navegación por Pestañas (Tabs) -->
+                    <div class="card-header bg-transparent border-0 pt-3">
+                        <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Datos personales</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Datos de Tutor</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Contenido de las Pestañas -->
+                    <div class="card-body p-4">
+                      <!-- 1. EL FORMULARIO ENVUELVE TODO EL CONTENIDO DE LAS PESTAÑAS -->
+                        <form action="{{url_for('alumnos.update_alumno', alumno=alumno.id)}}" method="POST">
+                        <div class="tab-content" id="myTabContent"> 
+                            <!-- PESTAÑA 1: PERFIL ALUMNO -->
+                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                                <!-- Datos personales -->
+                                <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" name="nombre" id="nombre" value="{{alumno.nombre}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="apellido" class="form-label">Apellido</label>
+                                            <input type="text" class="form-control" name="apellido" id="apellido" value="{{alumno.apellido}}">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="direccion" class="form-label">Direccion</label>
+                                            <input type="text" class="form-control" name="direccion" id="direccion" value="{{alumno.direccion}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="dni" class="form-label">DNI</label>
+                                            <input type="text" class="form-control" name="dni" id="dni" value="{{alumno.dni}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="cuil" class="form-label">Cuil</label>
+                                            <input type="text" class="form-control" name="cuil" id="cuil" value="{{alumno.cuil}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                            <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento" value="{{alumno.fecha_nacimiento}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="genero" class="form-label">Genero</label>
+                                            <select name="genero" id="genero" class="form-control">
+                                                <option value="Masculino" {% if alumno.genero == "Masculino" %}selected{% endif %}>Masculino</option>
+                                                <option value="Femenino" {% if alumno.genero == "Femenino" %}selected{% endif %}>Femenino</option>
+                                                <option value="No Binario" {% if alumno.genero == "No Binario" %}selected{% endif %}>No Binario</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="text" class="form-control" name="email" id="email" value="{{alumno.email}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="telefono" class="form-label">Telefono</label>
+                                            <input type="text" class="form-control" name="telefono" id="telefono" value="{{alumno.telefono}}">
+                                        </div>
+                                  </div>
+                            </div>
+
+                            <!-- PESTAÑA 2: DATOS DEL TUTOR -->
+                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                              <div class="table-responsive mb-4">
+                                  {% for tutor in alumno.tutores%}                           
+                                <img src="https://github.com/mdo.png" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;" alt="...">
+                                <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label for="nombre_t" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" name="nombre_t" id="nombre_t" value="{{tutor.nombre}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="apellido_t" class="form-label">Apellido</label>
+                                            <input type="text" class="form-control" name="apellido_t" id="apellido_t" value="{{tutor.apellido}}">
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="direccion_t" class="form-label">Direccion</label>
+                                            <input type="text" class="form-control" name="direccion_t" id="direccion_t" value="{{tutor.direccion}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="dni_t" class="form-label">DNI</label>
+                                            <input type="text" class="form-control" name="dni_t" id="dni_t" value="{{tutor.dni}}">
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="fecha_nacimiento_t" class="form-label">Fecha de Nacimiento</label>
+                                            <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t" value="{{tutor.fecha_nacimiento}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="genero_t" class="form-label">Genero</label>
+                                            <select name="genero_t" id="genero_t" class="form-control">
+                                                <option value="Masculino" {% if tutor.genero == "Masculino" %}selected{% endif %}>Masculino</option>
+                                                <option value="Femenino" {% if tutor.genero == "Femenino" %}selected{% endif %}>Femenino</option>
+                                                <option value="No Binario" {% if tutor.genero == "No Binario" %}selected{% endif %}>No Binario</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-6">
+                                            <label for="email_t" class="form-label">Email</label>
+                                            <input type="text" class="form-control" name="email_t" id="email_t" value="{{tutor.email}}">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label for="telefono_t" class="form-label">Telefono</label>
+                                            <input type="text" class="form-control" name="telefono_t" id="telefono_t" value="{{tutor.telefono}}">
+                                        </div>
+                                  </div>
+                              {% endfor %}
+                                </div>
+                            </div> <!-- Cierre de tab-pane docencia-pane -->
+                          </div> <!-- Cierre de tab-content -->
+                          <!-- BOTONES DEL FORMULARIO -->
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <a href="{{ url_for('alumnos.view', id=alumno.id) }}" class="btn btn-danger">Cancelar</a>
+                            </div>
+                        </form> <!-- CIERRE DEL FORMULARIO AQUÍ (Correctamente encapsulado) -->
+                    </div> <!-- Cierre de card-body -->
+              </div> <!-- Cierre de card -->
+            </div> <!-- Cierre de tab-content -->
+</div>
 {% endblock %}

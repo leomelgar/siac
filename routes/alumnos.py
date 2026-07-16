@@ -148,3 +148,29 @@ def view(id):
     #tutor = alumno_tutor.query.get(tutor_id==alumno.id)
     age = calculateAge(alumno.fecha_nacimiento)
     return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age)
+
+@alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
+def update_alumno(alumno):
+    alumno = Alumno.query.get(alumno)
+    if request.method == "POST":
+        alumno.nombre = request.form['nombre']
+        alumno.apellido = request.form['apellido']
+        alumno.cuil = request.form['cuil']
+        alumno.fecha_nacimiento = request.form['fecha_nacimiento']
+        alumno.genero = request.form['genero']
+        alumno.direccion = request.form['direccion']
+        alumno.telefono = request.form['telefono']
+        alumno.email = request.form['email']
+        #----------actualizar datos tutor ----------
+        for i, tutor in enumerate(alumno.tutores):
+            tutor.nombre = request.form[f'nombre_t']
+            tutor.apellido = request.form[f'apellido_t']
+            tutor.fecha_nacimiento = request.form[f'fecha_nacimiento_t']
+            tutor.genero = request.form[f'genero_t']
+            tutor.direccion = request.form[f'direccion_t']
+            tutor.telefono = request.form[f'telefono_t']
+            tutor.email = request.form[f'email_t']
+        db.session.commit()
+        flash('Datos Actualizados!')
+        return redirect(url_for('alumnos.view', id=alumno.id))
+    return render_template("/alumnos/updateAlumno.html", alumno=alumno)

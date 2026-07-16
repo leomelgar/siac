@@ -88,7 +88,7 @@
                     <!-- Opciones para gestionar alumno -->
                     <div class="card-footer bg-transparent border-0 pb-4">
                         <div class="d-flex justify-content-center gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i>Editar</a>
+                            <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i>Editar</a>
                             <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i>Promover</a>
                             <form action="#" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
                                 <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle">
