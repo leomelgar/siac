@@ -162,14 +162,14 @@ def update_alumno(alumno):
         alumno.telefono = request.form['telefono']
         alumno.email = request.form['email']
         #----------actualizar datos tutor ----------
-        for i, tutor in enumerate(alumno.tutores):
-            tutor.nombre = request.form[f'nombre_t']
-            tutor.apellido = request.form[f'apellido_t']
-            tutor.fecha_nacimiento = request.form[f'fecha_nacimiento_t']
-            tutor.genero = request.form[f'genero_t']
-            tutor.direccion = request.form[f'direccion_t']
-            tutor.telefono = request.form[f'telefono_t']
-            tutor.email = request.form[f'email_t']
+        # for i, tutor in enumerate(alumno.tutores):
+        #     tutor.nombre = request.form[f'nombre_t']
+        #     tutor.apellido = request.form[f'apellido_t']
+        #     tutor.fecha_nacimiento = request.form[f'fecha_nacimiento_t']
+        #     tutor.genero = request.form[f'genero_t']
+        #     tutor.direccion = request.form[f'direccion_t']
+        #     tutor.telefono = request.form[f'telefono_t']
+        #     tutor.email = request.form[f'email_t']
         db.session.commit()
         flash('Datos Actualizados!')
         return redirect(url_for('alumnos.view', id=alumno.id))
