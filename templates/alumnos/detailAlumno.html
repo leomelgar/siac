@@ -6,7 +6,6 @@
 
 {% block body %}
 <!-- MESSAGE -->
-{% include 'partials/_message.html' %}
 <div class="row mb-3 text-center">
   <div class="col-md-2">
     <!-- menu lateral -->
@@ -34,28 +33,29 @@
                              class="rounded-circle img-thumbnail mb-3" 
                              style="width: 150px; height: 150px; object-fit: cover;">                        
                         <!-- Nombre y Cargo -->
+                        <h5 class="text-secondary">Legajo n°: <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h5>
+                        <hr>
                         <h4 class="card-title mb-1">{{alumno.apellido}}, {{alumno.nombre}}</h4>
-                        <h5 class="text-secondary">Legajo n° : <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h5>
                         <hr>
                         <!-- Datos Legales -->
                         <div class="text-start px-3">
                             <p class="mb-2">
-                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <i class="fas fa-envelope text-dark me-2">
                                 <span class="text-muted small d-block">N° de Documento</span>
-                                <strong>{{alumno.dni}}</strong>
+                                <strong>{{alumno.dni}}</strong></i>
                             </p>
                             <p class="mb-2">
-                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <i class="fas fa-envelope text-dark me-2">
                                 <span class="text-muted small d-block">N° Cuil</span>
-                                <strong>{{alumno.cuil}}</strong>
+                                <strong>{{alumno.cuil}}</strong></i>
                             </p>
                             <p class="mb-2">
-                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <i class="fas fa-envelope text-dark me-2">
                                 <span class="text-muted small d-block">Fecha de Nacimiento</span>
-                                <strong>{{alumno.fecha_nacimiento}}</strong>
+                                <strong>{{alumno.fecha_nacimiento}}</strong></i>
                             </p>
                             <p class="mb-0">
-                                <i class="fas fa-building text-primary me-2"></i>
+                                <i class="fas fa-building text-dark me-2">
                                 <span class="text-muted small d-block">Edad</span>
                                 <script>//Calcular edad a partir de la fecha de nacimiento
                                     //<![CDATA[
@@ -63,36 +63,36 @@
                                     var edad = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
                                     document.write('<strong>' + edad + '</strong>');
                                     //]]> 
-                                </script>
+                                </script></i>
                             </p>
                         </div>
                         <!-- Datos Rápidos de Contacto -->
-                        <div class="text-start px-3">
+                        <div class=" form-group text-start px-3">
                             <p class="mb-2">
-                                <i class="fas fa-envelope text-primary me-2"></i>
+                                <i class="fas fa-envelope text-dark me-2">
                                 <span class="text-muted small d-block">Correo Electrónico</span>
-                                <strong>{{alumno.email}}</strong>
+                                <strong>{{alumno.email}}</strong></i>
                             </p>
                             <p class="mb-2">
-                                <i class="fas fa-phone text-primary me-2"></i>
+                                <i class="fas fa-phone text-dark me-2">
                                 <span class="text-muted small d-block">Teléfono </span>
-                                <strong>{{alumno.telefono}}</strong>
+                                <strong>{{alumno.telefono}}</strong></i>
                             </p>
                             <p class="mb-0">
-                                <i class="fas fa-building text-primary me-2"></i>
+                                <i class="fas fa-building text-dark me-2">
                                 <span class="text-muted small d-block">Domicilio</span>
-                                <strong>{{alumno.direccion}}</strong>
+                                <strong>{{alumno.direccion}}</strong></i>
                             </p>
                         </div>
                     </div>
                     <!-- Opciones para gestionar alumno -->
                     <div class="card-footer bg-transparent border-0 pb-4">
                         <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i>Editar</a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i>Promover</a>
+                            <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary"><i class="fab fa-linkedin-in"></i>Editar</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary"><i class="fab fa-github"></i>Promover</a>
                             <form action="#" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle">
-                                <i class="bi bi-trash"></i> Eliminar Registro</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                <i class="bi bi-trash"></i>Borrar Registro</button>
                             </form>
                             <!-- <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i>Eliminar</a> -->
                         </div>
@@ -169,7 +169,7 @@
                                   <li class="list-group-item"><p><u>Email:</u></p>{{tutor.email}}</li>
                                 </ul>
                                 <div class="card-body">
-                                  <a href="#" class="btn btn-outline-primary card-link">Editar</a>
+                                  <a href="{{ url_for('alumnos.update_tutor', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary card-link">Editar</a>
                                 </div>
                               </div>
                               {% endfor %}

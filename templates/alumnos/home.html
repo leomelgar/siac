@@ -43,7 +43,7 @@
       <tbody>
         {% for alumno in alumnos %}
         <tr>
-          <td><a href="#" class="">
+          <td><a href="{{url_for('alumnos.view', id=alumno.id)}}" class="">
         <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle"></a></td>
           
           <td><strong>{{alumno.legajo}}</strong></td>

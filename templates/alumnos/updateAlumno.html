@@ -37,10 +37,9 @@
                     <!-- Opciones para gestionar alumno -->
                     <div class="card-footer bg-transparent border-0 pb-4">
                         <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i>Editar</a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i>Promover</a>
+                            <a href="#" class="btn btn-sm btn-outline-secondary "><i class="fab fa-github"></i>Promover</a>
                             <form action="#" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
-                                <button type="submit" class="btn btn-outline-danger btn-sm rounded-circle">
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
                                 <i class="bi bi-trash"></i> Eliminar Registro</button>
                             </form>
                             <!-- <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i>Eliminar</a> -->
@@ -124,27 +123,27 @@
                                 <div class="row g-3">
                                         <div class="col-md-6">
                                             <label for="nombre_t" class="form-label">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_t" id="nombre_t" value="{{tutor.nombre}}">
+                                            <input type="text" disabled class="form-control" name="nombre_t" id="nombre_t" value="{{tutor.nombre}}">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="apellido_t" class="form-label">Apellido</label>
-                                            <input type="text" class="form-control" name="apellido_t" id="apellido_t" value="{{tutor.apellido}}">
+                                            <input type="text" disabled class="form-control" name="apellido_t" id="apellido_t" value="{{tutor.apellido}}">
                                         </div>
                                         <div class="col-12">
                                             <label for="direccion_t" class="form-label">Direccion</label>
-                                            <input type="text" class="form-control" name="direccion_t" id="direccion_t" value="{{tutor.direccion}}">
+                                            <input type="text" disabled class="form-control" name="direccion_t" id="direccion_t" value="{{tutor.direccion}}">
                                         </div>
                                         <div class="col-6">
                                             <label for="dni_t" class="form-label">DNI</label>
-                                            <input type="text" class="form-control" name="dni_t" id="dni_t" value="{{tutor.dni}}">
+                                            <input type="text" disabled class="form-control" name="dni_t" id="dni_t" value="{{tutor.dni}}">
                                         </div>
                                         <div class="col-6">
                                             <label for="fecha_nacimiento_t" class="form-label">Fecha de Nacimiento</label>
-                                            <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t" value="{{tutor.fecha_nacimiento}}">
+                                            <input type="date" disabled class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t" value="{{tutor.fecha_nacimiento}}">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="genero_t" class="form-label">Genero</label>
-                                            <select name="genero_t" id="genero_t" class="form-control">
+                                            <select name="genero_t" id="genero_t" class="form-control" disabled>
                                                 <option value="Masculino" {% if tutor.genero == "Masculino" %}selected{% endif %}>Masculino</option>
                                                 <option value="Femenino" {% if tutor.genero == "Femenino" %}selected{% endif %}>Femenino</option>
                                                 <option value="No Binario" {% if tutor.genero == "No Binario" %}selected{% endif %}>No Binario</option>
@@ -152,11 +151,11 @@
                                         </div>
                                         <div class="col-6">
                                             <label for="email_t" class="form-label">Email</label>
-                                            <input type="text" class="form-control" name="email_t" id="email_t" value="{{tutor.email}}">
+                                            <input type="text" disabled class="form-control" name="email_t" id="email_t" value="{{tutor.email}}">
                                         </div>
                                         <div class="col-md-6">
                                             <label for="telefono_t" class="form-label">Telefono</label>
-                                            <input type="text" class="form-control" name="telefono_t" id="telefono_t" value="{{tutor.telefono}}">
+                                            <input type="text" disabled class="form-control" name="telefono_t" id="telefono_t" value="{{tutor.telefono}}">
                                         </div>
                                   </div>
                               {% endfor %}
@@ -165,8 +164,8 @@
                           </div> <!-- Cierre de tab-content -->
                           <!-- BOTONES DEL FORMULARIO -->
                             <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-primary">Guardar</button>
-                                <a href="{{ url_for('alumnos.view', id=alumno.id) }}" class="btn btn-danger">Cancelar</a>
+                                <button type="submit" class="btn btn-outline-success">Guardar</button>
+                                <a href="{{ url_for('alumnos.view', id=alumno.id) }}" class="btn btn-outline-danger">Cancelar</a>
                             </div>
                         </form> <!-- CIERRE DEL FORMULARIO AQUÍ (Correctamente encapsulado) -->
                     </div> <!-- Cierre de card-body -->
