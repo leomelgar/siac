@@ -22,17 +22,18 @@ def new():
         flash('Asignatura agregada!')
         return redirect(url_for('asignaturas.list'))
 
-""" @asignaturas.route("/asignaturas/update/<idAsignatura>", methods=["POST","GET"])
-def update(idAsignatura):
-    asignatura = Asignatura.query.get(idAsignatura)
+@asignaturas.route("/asignaturas/update/<id_asignatura>", methods=["POST","GET"])
+def update(id_asignatura):
+    asignatura = Asignatura.query.get(id_asignatura)
     if request.method == "POST":
-        asignatura.nombre = request.form['nombre']
+        asignatura.nombre_asignatura = request.form['nombre_asignatura']
         asignatura.descripcion = request.form['descripcion']
+        asignatura.creditos = request.form['creditos']
         db.session.commit()
         flash('Asignatura actualizada!')
         return redirect(url_for('asignaturas.list'))
     return render_template("/asignaturas/update.html", asignatura=asignatura)
-"""
+
 @asignaturas.route("/asignaturas/delete/<id_asignatura>")
 def delete(id_asignatura):
     asignatura = Asignatura.query.get(id_asignatura)
