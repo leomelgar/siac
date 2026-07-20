@@ -1,18 +1,21 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from models.colege import Asignatura
 from utils.db import db
+
 
 asignaturas = Blueprint("asignaturas", __name__)
 
 @asignaturas.route("/asignaturas/list")
 def list():
     asignaturas = Asignatura.query.all()
-    return render_template("/asignaturas/list.html", asignaturas=asignaturas)
+    # 2. Convertimos la lista de objetos a una lista de diccionarios
+    lista_asignaturas = [asignatura.to_dict() for asignatura in asignaturas]
+    return render_template("/asignaturas/list.html", asignaturas=lista_asignaturas)
 
 @asignaturas.route("/asignaturas/new", methods=["POST"])
 def new():
     if request.method == 'POST':
-        nombre = request.form['nombre']
+        nombre = request.form['nombre_asignatura']
         descripcion = request.form['descripcion']
         creditos = request.form['creditos']
 

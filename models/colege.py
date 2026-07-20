@@ -297,6 +297,15 @@ class Asignatura(db.Model):
 
     def __repr__(self):
         return f"<Asignatura '{self.nombre_asignatura}' - Créditos: {self.creditos}>"
+    # NUEVO MÉTODO: Convierte la instancia en un diccionario
+    def to_dict(self):
+        return {
+            "id_asignatura": self.id_asignatura,
+            "id_colegio": self.id_colegio,
+            "nombre_asignatura": self.nombre_asignatura,
+            "descripcion": self.descripcion,
+            "creditos": self.creditos
+        }
 
 # ==========================================
 # 3. POLIMORFISMO (PERSONAS)
