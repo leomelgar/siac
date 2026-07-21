@@ -12,7 +12,8 @@ def home():
     docentes = Persona.query.filter(Persona.tipo_persona=="docente").all()
     #docentes = Docente.query.all()
     colegios = Colegio.query.all()
-    return render_template('/docentes/home.html', docentes=docentes, colegios=colegios)
+    list_docentes = [docente.to_dict() for docente in docentes]
+    return render_template('/docentes/home.html', docentes=list_docentes, colegios=colegios)
 
 @docentes.route('/newDocente', methods=['POST'])
 def new_docente():
@@ -67,12 +68,12 @@ def searchDocente():
         
         # Realizamos la búsqueda usando LIKE para permitir coincidencias parciales
         docentes = Persona.query.filter(Persona.tipo_persona=="docente", Persona.apellido.ilike(f'%{tag}%')).all()
-        
+        list_docentes = [docente.to_dict() for docente in docentes]
         if not docentes:
             flash(f'No se encontraron docentes con el apellido "{tag}".', 'info')
         
         colegios = Colegio.query.all()
-        return render_template('/docentes/home.html', docentes=docentes, colegios=colegios)
+        return render_template('/docentes/home.html', docentes=list_docentes, colegios=colegios)
     else:
         flash('Método de solicitud no permitido.', 'danger')
         return redirect(url_for('docentes.home'))

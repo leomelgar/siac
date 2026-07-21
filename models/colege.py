@@ -331,6 +331,21 @@ class Persona(db.Model):
 
     def __repr__(self):
         return f"<{self.__class__.__name__} '{self.nombre} {self.apellido}' - DNI: {self.dni}>"
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "nombre": self.nombre,
+            "apellido": self.apellido,
+            "dni": self.dni,
+            # Las fechas no son serializables nativamente en JSON, usamos isoformat()
+            "fecha_nacimiento": self.fecha_nacimiento.isoformat() if self.fecha_nacimiento else None,
+            "direccion": self.direccion,
+            "telefono": self.telefono,
+            "email": self.email,
+            "genero": self.genero,
+            "tipo_persona": self.tipo_persona
+        }
 
 
 class Tutor(Persona):
@@ -349,6 +364,15 @@ class Tutor(Persona):
 
     __mapper_args__ = { 'polymorphic_identity': 'tutor' }
 
+    def to_dict(self):
+        # Heredamos los datos base y agregamos los específicos
+        data = super().to_dict()
+        data.update({
+            "parentesco": self.parentesco,
+            "ocupacion": self.ocupacion,
+            "legal": self.legal
+        })
+        return data
 
 class Docente(Persona):
     __tablename__ = 'docente'
@@ -364,6 +388,16 @@ class Docente(Persona):
 
     __mapper_args__ = { 'polymorphic_identity': 'docente' }
 
+    def to_dict(self):
+        data = super().to_dict()
+        data.update({
+            "id_colegio": self.id_colegio,
+            "cuil": self.cuil,
+            "cargo": self.cargo,
+            "fecha_contratacion": self.fecha_contratacion.isoformat() if self.fecha_contratacion else None,
+            "estado_contractual": self.estado_contractual
+        })
+        return data
 
 class Alumno(Persona):
     __tablename__ = 'alumno'
@@ -383,6 +417,15 @@ class Alumno(Persona):
     asistencias = db.relationship('Asistencia', back_populates='alumno', lazy=True)
 
     __mapper_args__ = { 'polymorphic_identity': 'alumno' }
+
+    def to_dict(self):
+        data = super().to_dict()
+        data.update({
+            "id_colegio": self.id_colegio,
+            "cuil": self.cuil,
+            "legajo": self.legajo
+        })
+        return data
 
 """ class Persona(db.Model):
 

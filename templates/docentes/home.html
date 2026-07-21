@@ -14,8 +14,11 @@
   <div class="col-md-9">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
-       <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agregarDocente">
-         Agregar Docente
+       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#agregarDocente">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+          <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+        </svg> Agregar Docente
        </button>
        <!-- Modal -->
            <div class="modal fade" id="agregarDocente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -35,16 +38,26 @@
                </div>
              </div>
            </div>
-    <h2 class="text-secondary">Gestion de Docentes</h2>
-    <form action="/searchDocente" method="POST" class="d-flex" role="search">
-      <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search">
-      <button class="btn btn-success" type="submit">Buscar</button>
+  <hr class="my-4">
+  <div class="container bg-light p-1 rounded-3"> 
+    <div class="container mt-5">
+    <h2 class="mb-4 text-center">Gestion de Docentes</h2>
+    <form action="/searchDocente" method="POST" class="row g-3 position-relative" role="search">
+      <div class="col-auto position-absolute top-0 start-50 translate-middle">
+        <input class="border rounded-pill text-center" type="search" name="tag" placeholder="Buscar por Nombre" aria-label="Search">
+        <button class="btn btn-outline-success btn-sm" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+          </svg> Buscar
+        </button>
+      </div>
     </form>
     <br>
-    <table class="table table-dark table-hover">
-      <thead>
+    <hr class="my-4">
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered">
+      <thead class="table-dark">
         <tr>
-          <th></th>
           <th scope="col">Apellido</th>
           <th scope="col">Nombre</th>
           <th scope="col">Cargo</th>
@@ -54,27 +67,120 @@
           <th scope="col"></th>
         </tr>
       </thead>
-      <tbody>
-        {% for docente in docentes %}
-        <tr>
-          <td><img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle me-2"></td>
-          <td>{{docente.apellido}}</td>
-          <td>{{docente.nombre}}</td>
-          <td>{{docente.cargo}}</td>
-          <td>{{docente.fecha_contratacion}}</td>
-          <td>{{docente.estado_contractual}}</td>
-          <td>{{docente.tipo_persona}}</td>
-          <td><div>
-              <a href="{{ url_for('docentes.view', id=docente.id) }}" class="btn btn-outline-primary btn-sm rounded-0">Ver Detalle</a>
-          </div></td>
-          <!-- <td><div>
-            <a href="{{ url_for('docentes.updateDocente', id=docente.id) }}" class="btn btn-outline-secondary btn-sm rounded-0">Edit</a>
-            <a href="{{ url_for('docentes.deleteDocente', id=docente.id) }}" class="btn btn btn-outline-danger btn-sm rounded-0">Delete</a>
-          </div></td> -->
-        </tr>
-          {% endfor %}
+      <tbody id="table-body">
+        <!-- Aqui se renderiza las filas de la tabla -->
       </tbody>
     </table>
+  </div> 
+   <!-- Controles de Paginación -->
+    <nav aria-label="Navegación de páginas">
+      <ul class="pagination pagination-sm justify-content-center" id="pagination-wrapper">
+      <!-- Los botones de paginación se insertarán aquí dinámicamente -->
+      </ul>
+    </nav>
   </div>
 </div>
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Jinja2 inserta los datos de Python directamente como JSON en JavaScript
+    let docentes = {{ docentes | tojson | safe }};
+    // 2. Configuración de la paginación
+    const rowsPerPage = 5;
+    let currentPage = 1;
+    // 3. Función para renderizar la tabla según la página actual
+    function displayTable(data, wrapper, rowsPerPage, page) {
+        wrapper.innerHTML = ""; // Limpiamos la tabla
+        page--; // Restamos 1 porque los arrays empiezan en índice 0
+
+        let start = rowsPerPage * page;
+        let end = start + rowsPerPage;
+        let paginatedItems = data.slice(start, end);
+
+       // Acumulamos el HTML en una variable para no saturar el DOM en cada iteración
+        let rowsHTML = ""; 
+
+        paginatedItems.forEach(item => {
+            rowsHTML += `
+                <tr>
+                    <td>${item.apellido}</td>
+                    <td>${item.nombre}</td>
+                    <td>${item.cargo}</td>
+                    <td>${item.fecha_contratacion}</td>
+                    <td>${item.estado_contractual}</td>
+                    <td>${item.tipo_persona}</td>
+                    <td>
+                        <div>
+                            <!-- Construcción de URL en el cliente usando item.id -->
+                            <a href="/docentes/view/${item.id}" class="btn btn-outline-primary btn-sm rounded-0">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
+                              <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
+                              <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
+                            </svg></a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        wrapper.innerHTML = rowsHTML; // Una sola actualización al DOM
+    }
+
+   // 4. Función para crear los botones de paginación
+    function setupPagination(data, wrapper, rowsPerPage) {
+        let pageCount = Math.ceil(data.length / rowsPerPage);
+        let paginationHTML = ""; // Acumulador
+
+        // Botón "Anterior" (usamos javascript:void(0) para evitar que la página salte hacia arriba)
+        let prevDisabled = currentPage === 1 ? 'disabled' : '';
+        paginationHTML += `<li class="page-item ${prevDisabled}">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage - 1})">Anterior</a>
+        </li>`;
+
+        // Botones numéricos de páginas
+        for (let i = 1; i <= pageCount; i++) {
+            let activeClass = currentPage === i ? 'active' : '';
+            paginationHTML += `<li class="page-item ${activeClass}">
+                <a class="page-link" href="javascript:void(0)" onclick="changePage(${i})">${i}</a>
+            </li>`;
+        }
+
+        // Botón "Siguiente"
+        let nextDisabled = currentPage === pageCount ? 'disabled' : '';
+        paginationHTML += `<li class="page-item ${nextDisabled}">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage + 1})">Siguiente</a>
+        </li>`;
+
+        wrapper.innerHTML = paginationHTML; // Una sola actualización al DOM
+    }
+
+    // 5. Función para cambiar de página
+    function changePage(page) {
+        let pageCount = Math.ceil(docentes.length / rowsPerPage);
+        
+        // Evitar ir a páginas que no existen
+        if (page < 1 || page > pageCount) return;
+
+        currentPage = page;
+        
+        const tableBody = document.getElementById('table-body');
+        const paginationWrapper = document.getElementById('pagination-wrapper');
+
+        displayTable(docentes, tableBody, rowsPerPage, currentPage);
+        setupPagination(docentes, paginationWrapper, rowsPerPage);
+    }
+
+    // 6. Inicialización única al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+        const tableBody = document.getElementById('table-body');
+        const paginationWrapper = document.getElementById('pagination-wrapper');
+
+        // Solo inicializamos si los elementos existen para evitar errores en otras vistas
+        if (tableBody && paginationWrapper) {
+            displayTable(docentes, tableBody, rowsPerPage, currentPage);
+            setupPagination(docentes, paginationWrapper, rowsPerPage);
+        }
+    });
+</script>
 {% endblock %}
