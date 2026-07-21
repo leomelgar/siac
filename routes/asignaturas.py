@@ -44,3 +44,23 @@ def delete(id_asignatura):
     db.session.commit()
     flash('Asignatura Borrada correctamente!')
     return redirect(url_for('asignaturas.list'))
+
+@asignaturas.route('/searchAsignatura', methods=['POST'])
+def searchAsignatura():
+    if request.method == 'POST':
+        tag = request.form.get('tag')
+        if not tag:
+            flash('Por favor, ingrese un posible nombre para asignatura', 'warning')
+            return redirect(url_for('asignaturas.list'))
+        
+        # Realizamos la búsqueda usando LIKE para permitir coincidencias parciales
+        asignaturas = Asignatura.query.filter(Asignatura.nombre_asignatura.ilike(f'%{tag}%')).all()
+        lista_asignaturas = [asignatura.to_dict() for asignatura in asignaturas]
+        if not asignaturas:
+            flash(f'No se encontraron asignaturas con el nombre "{tag}".', 'info')
+        
+        #colegios = Colegio.query.all()
+        return render_template('/asignaturas/list.html', asignaturas=lista_asignaturas)
+    else:
+        flash('Método de solicitud no permitido.', 'danger')
+        return redirect(url_for('asignaturas.list'))
