@@ -12,11 +12,10 @@
     </div>
     <div class="col-md-9">
         <h3 class="text-white">Matricula</h3>
-        <form action="{{url_for('alumnos.matricular', alumno_id=alumno.idAlumno)}}" method="POST" class="bg-black ">
+        <form action="{{url_for('alumnos.update_matricula', matricula=matricula.idMatricula)}}" method="POST" class="bg-black ">
             <div class="card-body p-4">
               <div class="mb-3 text-center">
                 <h3 class="text-light" for="Alumno">{{alumno.apellido}}, {{alumno.nombre}}</h3>
-                <!-- <label for="idAlumno" name="alumno_id" value="{{alumno.idAlumno}}">{{alumno.idAlumno}}</label> -->
               </div>
               <div class="mb-3">
                 <label class="text-light" for="tutor">Fecha Inscripcion:</label>
@@ -26,40 +25,48 @@
               class="form-control rounded-0 bg-dark border-0 text-white"
               autofocus
               required
+              value="{{matricula.fechaInscripcion}}"
               />
               </div>
-              <!-- <div class="mb-3">
-                <label for="nombre">Fecha Re-Inscripcion:</label>
-                <input
-                  type="date"
-                  name="reInscripcion"
-                  class="form-control rounded-0 bg-dark border-0 text-white"
-                  value=""
-                />
-              </div> -->
-             <div class="card text-bg-secondary mb-3 mb-3">
-                <div class="card-header">
-                  <label>Año Academico:</label>
-                </div>
-                    <div class="form-check form-check-inline p-2">
+              <div class="card text-bg-secondary mb-3 mb-3">
+                  <div class="card-header">
+                    <label>Condicion de Ingreso:</label>
+                  </div>
+                  <div class="card-body">
+                    {% if matricula.condicionIngreso == "Ingresante" %}
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" checked name="condicionIngreso" value="Ingresante">
+                      <label class="form-check-label" for="condicionIngreso">Nuevo Ingresante</label>
+                    </div>
+                    {% else %}
+                    <!-- <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" checked name="condicionIngreso" value="PaseDeEstablecimiento">
+                      <label class="form-check-label" for="condicionIngreso">Pase de Establecimiento</label>
+                    </div> -->
+                    {% endif %}
+                    <div class="form-check form-check-inline">
+                      <label class="form-label">Año Academico(actual):</label> <span class="badge bg-success text-wrap"> {{ matricula.añoAcademico}}</span>
                       <select name="añoAcademico" class="form-select form-check-inline">
-                        <option selected>elegir...</option>
-                        <option>1er_Año</option>
-                        <option>2do_Año</option>
-                        <option>3er_Año</option>
-                        <option>4to_Año</option>
-                        <option>5to_Año</option>
-                        <option>6to_Año</option>
+                        <option selected value="{{matricula.añoAcademico}}">{{matricula.añoAcademico}}</option>
+                        <option value="1er_Año">1er_Año</option>
+                        <option value="2do_Año">2do_Año</option>
+                        <option value="3er_Año">3er_Año</option>
+                        <option value="4to_Año">4to_Año</option>
+                        <option value="5to_Año">5to_Año</option>
+                        <option value="6to_Año">6to_Año</option>
                       </select>
                     </div>
+                  </div>
+              </div>
+              <div class="card text-bg-secondary mb-3 mb-3">
                 <div class="card-header">
-                  <label>Aula/Curso:</label>
+                  <label>Aula/Curso(actual):</label> <span class="badge bg-success text-wrap"> {{curso.nombre_curso}}, {{curso.division}} division</span>
                 </div>
                 <div class="form-check form-check-inline p-2">
                   <select name="curso_id" class="form-select form-check-inline">
-                    <option selected>elegir...</option>
+                    <option selected value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division</option>
                     {% for curso in cursos %}
-                    <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division, cupos {{curso.cupo}}</option>
+                    <option value="{{curso.idCurso}}">{{curso.nombre_curso}}, {{curso.division}} division</option>
                     {% endfor %}
                   </select>
                 </div>

@@ -8,7 +8,8 @@ docentes = Blueprint("docentes", __name__)
 def home():
     docentes = Docente.query.all()
     colegios = Colegio.query.all()
-    return render_template('/docentes/home.html', docentes=docentes, colegios=colegios)
+    cantidad = Docente.query.count()
+    return render_template('/docentes/home.html', docentes=docentes, colegios=colegios, cantidad=cantidad)
 
 @docentes.route('/newDocente', methods=['POST'])
 def new_docente():

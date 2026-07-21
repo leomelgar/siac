@@ -10,7 +10,7 @@
 <div class="row mb-3 text-center">
     <div class="col-md-8 themed-grid-col">
       <div class="pb-3">
-        <h2 class="text-secondary">Datos del Alumno</h2>
+        <h2 class="text-secondary">Legajo del Alumno</h2>
         <hr class="my-4">
         <div class="table-responsive">
         <table class="table table-dark align-middle table-sm table-hover">
@@ -61,10 +61,10 @@
             {% if not matricula %}
                 <h4>Sin Matricula</h4>
                 <a href="{{url_for('alumnos.matricular', alumno_id=alumno.idAlumno)}}" class="btn btn-sm btn-outline-info"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
-  <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
-  <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
-  <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
-</svg> Matricular</a>
+                <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2z"/>
+                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1H1z"/>
+                </svg> Matricular</a>
             {% else %}
             <div class="card-body py-2 px-3">
               <div class="">
@@ -74,17 +74,23 @@
                     {{matricula.idMatricula}}
                   </li>
                   <li class="list-group-item">
-                    <label class="form-check-label">Fecha Alta:</label>
+                    <label class="form-check-label">Fecha Inscripcion:</label>
                     {{matricula.fechaInscripcion}}
                   </li>
                   <li class="list-group-item">
-                    <label class="form-check-label">Condicion:</label>{{matricula.condicionIngreso}}
+                    <label class="form-check-label">Condicion:</label> {{legajo.condicionAlumno}}
                   </li>
                   <li class="list-group-item">
-                    <label class="form-check-label">Cursa:</label>{{matricula.añoAcademico}}
+                    <label class="form-check-label">Cursa:</label> {{matricula.añoAcademico}}
                   </li>
                 </ul>
               </div>
+            </div>
+            <div class=" mx-auto col-md-4 btn-group p-2" role="group" aria-label="Basic radio toggle button group">
+              <a class="btn btn-sm btn-outline-success" href="{{url_for('alumnos.update_matricula', matricula=matricula.idMatricula)}}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg> Actualizar</a>
             </div>
             {% endif %}
           </div>
@@ -93,9 +99,9 @@
           <h2 class="text-secondary">Estado Academico</h2>
           <hr class="my-4">
           <div class="vstack gap-3">
-            <div class="bg-light border">First item</div>
-            <div class="bg-light border">Second item</div>
-            <div class="bg-light border">Third item</div>
+            <div class="bg-light border">Ingreso al Colegio: {{legajo.fechaAdmision}}</div>
+            <div class="bg-light border">condicion: {{legajo.condicionIngreso}}</div>
+            <div class="bg-light border">proviene de: {{legajo.colegioAnterior}}</div>
           </div>
         </div>
       </div>
@@ -148,8 +154,8 @@
           </div>
           </div>
     </div>
-    <div class=" col-md-4 btn-group" role="group" aria-label="Basic radio toggle button group">
-      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('alumnos.home') }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+    <div class="mx-auto col-md-4 btn-group" role="group" aria-label="Basic radio toggle button group">
+      <a class="btn btn-sm btn-outline-primary" href="{{ url_for('alumnos.home', estado=0) }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
       </svg> Volver</a>
       <a class="btn btn-outline-secondary btn-sm" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-printer" viewBox="0 0 16 16">
