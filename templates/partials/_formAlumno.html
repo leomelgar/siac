@@ -1,111 +1,8 @@
-<!-- <form action="/newAlumno" method="POST" class="card bg-black text-light">
-    <div class="card-body p-4">
-      {% if tutor %}
-      <div class="mb-3">
-        <label for="tutor">Tutor:</label><h3>{{tutor.apellido}}, {{tutor.nombre}}</h3>
-        <input type="text"
-          name="tutor_id"
-          class="form-control-plaintext invisible"
-          value="{{tutor.idTutor}}"
-          autofocus
-          readonly
-          required
-        />
-        {% endif %}
-      </div>
-      
-      <div class="mb-3">
-        <label for="nombre">Nombre:</label>
-        <input
-          type="text"
-          name="nombre"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="escriba el nombre"
-          autofocus
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="apellido">Apellido:</label>
-        <input
-          type="text"
-          name="apellido"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="escriba el apellido"
-          autofocus
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="cuil">Cuil:</label>
-        <input
-          type="text"
-          name="cuil"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="cuil sin guiones"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="fecha_nacimiento">Fecha de Nacimiento:</label>
-        <input
-          type="date"
-          name="fecha_nacimiento"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="genero">Género:</label>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="genero" value="masculino">
-          <label class="form-check-label" for="genero">Masculino</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="genero" value="femenino">
-          <label class="form-check-label" for="genero">Femenino</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="genero" id="inlineRadio3" value="no binario">
-          <label class="form-check-label" for="genero">No Binario</label>
-        </div>
-      </div>
-      <div class="mb-3">
-        <label for="direccion">Direccion:</label>
-        <input
-          type="text"
-          name="direccion"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="calle n° - Ciudad"
-          required
-        />
-      </div>
-      <div class="mb-3">
-        <label for="telefono">telefono:</label>
-        <input
-          type="text"
-          name="telefono"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="+54 codigo area + numero"
-        />
-      </div>
-      <div class="mb-3">
-        <label for="email">Email:</label>
-        <input
-          type="text"
-          name="email"
-          class="form-control rounded-0 bg-dark border-0 text-white"
-          placeholder="ej: colegio@dominio.com.ar"
-        />
-      </div>  
-      <button class="btn btn-primary">Guardar</button>
-    </div>
-  </form> -->
 <div class="container py-5">
         <div class="row g-4">
             <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
             <div class="col-lg-4">
-                <div class="card shadow-sm border-0">
+                <div class="card border-2 shadow p-3 mb-5 bg-body rounded">
                     <div class="card-body pt-5">
                         <!-- Foto de Perfil -->
                         <img src="https://github.com/mdo.png"
@@ -114,15 +11,17 @@
                              style="width: 150px; height: 150px; object-fit: cover;">                        
                     </div>
                     <div class="col-12 p-4">
-                      <a href="#" class="btn btn-success">Cargar Archivos</a>          
-                                  
+                      <a href="#" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
+                      </svg> Cargar Archivos</a>                        
                     </div>
                 </div>
             </div>
-
             <!-- Columna Derecha: Información Detallada -->
             <div class="col-lg-8">
-                <div class="card shadow-sm border-0 h-100">
+                <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
                     <!-- Navegación por Pestañas (Tabs) -->
                     <div class="card-header bg-transparent border-0 pt-3">
                         <ul class="nav nav-tabs card-header-tabs" id="alumnoTab" role="tablist">
@@ -266,9 +165,14 @@
                                   <input type="text" class="form-control" name="telefono" id="telefono">
                                 </div>
                               </div>
-                            <div class="col-12 p-4">
-                                  <button type="submit" class="btn btn-primary">Guardar</button>
-                                  <a href="{{url_for('alumnos.home')}}" class="btn btn-danger">Cancelar</a>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
+                                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                                </svg> Guardar</button>
+                                <a href="{{ url_for('alumnos.home') }}" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                </svg> Cancelar</a>
                             </div>
                             </form>
                           </div>

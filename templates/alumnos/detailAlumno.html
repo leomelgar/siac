@@ -6,26 +6,35 @@
 
 {% block body %}
 <!-- MESSAGE -->
-<div class="row mb-3 text-center">
-  <div class="col-md-2">
-    <!-- menu lateral -->
-    {% include 'partials/_sidebarDteCdra.html' %}
-  </div>
-  <div class="col-md-10">
+<div class="row">
+  <div class="justify-content-center"> 
+        <!-- INICIO DE LA MEJORA: Fila interna para centrar el contenido -->
+        <!-- justify-content-center centra la columna interna horizontalmente -->
+    <div class="row justify-content-center">
+    <!-- col-12 (100% en celulares), col-lg-10 (más angosto en PC para que no quede estirado) -->
+        <div class="col-12 col-lg-10">
+          <div class="bg-white">
+          <hr class="my-3 text-secondary">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
-    <h2 class="text-secondary">Legajo Alumno</h2>
-     <!-- Botón Volver -->
-        <div class="mb-4">
-            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alumnos.home') }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-          </svg> Volver</a>
-        </div>
+        <!-- Encabezado con Botón y Título -->
+                    <div class="row mb-4 align-items-center">
+                        <div class="col-auto mx-3">
+                            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alumnos.home') }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                                </svg> Volver al Listado
+                            </a>
+                        </div>
+                        <div class="col text-center">
+                            <h3 class="text-dark mb-0">Informacion del Alumno</h3>
+                        </div>
+                    </div>
      <div class="container py-3">
         <div class="row g-4">
             <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
             <div class="col-lg-5">
-                <div class="card shadow-sm border-0 text-center h-100">
+                <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
                     <div class="card-body pt-5">
                         <!-- Foto de Perfil -->
                         <img src="https://github.com/mdo.png"
@@ -55,15 +64,8 @@
                                 <strong>{{alumno.fecha_nacimiento}}</strong></i>
                             </p>
                             <p class="mb-0">
-                                <i class="fas fa-building text-dark me-2">
                                 <span class="text-muted small d-block">Edad</span>
-                                <script>//Calcular edad a partir de la fecha de nacimiento
-                                    //<![CDATA[
-                                    var d = new Date("{{alumno.fecha_nacimiento}}");
-                                    var edad = Math.floor((Date.now() - d.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
-                                    document.write('<strong>' + edad + '</strong>');
-                                    //]]> 
-                                </script></i>
+                                
                             </p>
                         </div>
                         <!-- Datos Rápidos de Contacto -->
@@ -87,38 +89,55 @@
                     </div>
                     <!-- Opciones para gestionar alumno -->
                     <div class="card-footer bg-transparent border-0 pb-4">
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary"><i class="fab fa-linkedin-in"></i>Editar</a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary"><i class="fab fa-github"></i>Promover</a>
-                            <form action="#" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                <i class="bi bi-trash"></i>Borrar Registro</button>
-                            </form>
-                            <!-- <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i>Eliminar</a> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Columna Derecha: Información Detallada -->
-            <div class="col-lg-7">
-                <div class="card shadow-sm border-0 h-100">
-                    <!-- Navegación por Pestañas (Tabs) -->
-                    <div class="card-header bg-transparent border-0 pt-3">
-                        <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Perfil de Alumno</button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Datos de Tutor</button>
-                            </li>
-                        </ul>
-                    </div>
-
-                    <!-- Contenido de las Pestañas -->
-                    <div class="card-body p-4">
-                        <div class="tab-content" id="myTabContent">
-                            
+    <!-- align-items-stretch asegura que todos tengan la misma altura -->
+    <div class="d-flex justify-content-center align-items-stretch gap-2">
+        <!-- Botón 1: Editar -->
+        <a href="{{ url_for('alumnos.update_alumno', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary w-100 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+            </svg>
+            Editar
+        </a>
+        <!-- Botón 2: Promover -->
+        <a href="#" class="btn btn-sm btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise me-1" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+            </svg>
+            Promover
+        </a>
+        <!-- Botón 3: Borrar Registro (Dentro de un form flexificado) -->
+        <form action="#" method="POST" class="m-0 p-0 w-100 d-flex" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                 </svg> Eliminar
+            </button>
+        </form>
+    </div>
+    </div>
+        </div>
+    </div>
+    <!-- Columna Derecha: Información Detallada -->
+    <div class="col-lg-7">
+        <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
+            <!-- Navegación por Pestañas (Tabs) -->
+        <div class="card-header bg-transparent border-0 pt-3">
+            <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Perfil de Alumno</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link fw-semibold" id="docencia-tab" data-bs-toggle="tab" data-bs-target="#docencia-pane" type="button" role="tab">Datos de Tutor</button>
+                </li>
+            </ul>
+        </div>
+        <!-- Contenido de las Pestañas -->
+        <div class="card-body p-4">
+            <div class="tab-content" id="myTabContent">
+                        
                             <!-- PESTAÑA 1: PERFIL ALUMNO -->
                             <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
                                 <!-- Biografía -->
@@ -169,7 +188,11 @@
                                   <li class="list-group-item"><p><u>Email:</u></p>{{tutor.email}}</li>
                                 </ul>
                                 <div class="card-body">
-                                  <a href="{{ url_for('alumnos.update_tutor', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary card-link">Editar</a>
+                                  <a href="{{ url_for('alumnos.update_tutor', alumno=alumno.id) }}" class="btn btn-sm btn-outline-primary card-link">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                  </svg>Editar</a>
                                 </div>
                               </div>
                               {% endfor %}
@@ -179,8 +202,7 @@
                     </div> <!-- Cierre de card-body -->
               </div> <!-- Cierre de card -->
             </div> <!-- Cierre de tab-content -->
-
-
-  </div> <!-- Cierre de row -->
+    </div> <!-- Cierre de row -->
 </div> <!-- Cierre de container -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

@@ -1,111 +1,186 @@
 {% extends "layout.html" %} 
-{% block body %}
   {% block title %}
-    Actualizar Informacion Tutor
+    Actualizar informacion del tutor
   {% endblock %}
-<div class="container">
-  <h2 class="text-secondary">Alumno Legajo n° <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h2>
-     <!-- Botón Volver -->
-        <div class="mb-4">
-            <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alumnos.view', id=alumno.id) }}"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-          </svg> Volver</a>
-        </div>
-     <div class="container py-3">
-        <div class="row g-4">
-            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm border-0 text-center h-50">
-                    <div class="card-body pt-5">
-                        <!-- Foto de Perfil -->
-                        <img src="https://github.com/mdo.png"
-                             alt="Foto del Docente" 
-                             class="rounded-circle img-thumbnail mb-3" 
-                             style="width: 150px; height: 150px; object-fit: cover;">                        
-                        <!-- Nombre y Cargo -->
-                        <h4 class="card-title mb-1">{{alumno.apellido}}, {{alumno.nombre}}</h4>
-                        <hr>
-                    </div>
+{% block body %}
+<!-- Se eliminaron los contenedores redundantes. Un solo row centrado es suficiente -->
+<div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+        <div class="bg-white rounded p-4 shadow-sm mb-5">
+            <hr class="my-3 text-secondary">
+            
+            <!-- MESSAGE -->
+            {% include 'partials/_message.html' %}
+            
+            <!-- Encabezado con Botón y Título -->
+            <div class="row mb-4 align-items-center">
+                <div class="col-auto mx-3">
+                    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('alumnos.view', id=alumno.id) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                        </svg> Volver
+                    </a>
+                </div>
+                <div class="col text-center">
+                    <h3 class="text-dark mb-0">Actualizar datos del tutor</h3>
                 </div>
             </div>
-
-            <!-- Columna Derecha: Información Detallada -->
-            <div class="col-lg-7">
-                <div class="card shadow-sm border-0 h-100">
-                    <!-- Navegación por Pestañas (Tabs) -->
-                    <div class="card-header bg-transparent border-0 pt-3">
-                        <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
-                            <li class="nav-item" role="presentation">
-                                <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Datos personales del Tutor</button>
-                            </li>
-                        </ul>
+            
+            <!-- Contenedor Principal de Columnas -->
+            <div class="row g-4">
+                
+                <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
+                <div class="col-lg-5">
+                    <div class="card shadow p-3 mb-0 bg-body rounded border-2 h-100">
+                        <div class="card-body pt-4 text-center">
+                            <h5 class="text-secondary">Alumno</h5>
+                            <!-- Foto de Perfil -->
+                            <img src="https://github.com/mdo.png"
+                                 alt="Foto del Docente" 
+                                 class="rounded-circle img-thumbnail mb-3" 
+                                 style="width: 150px; height: 150px; object-fit: cover;">                        
+                            
+                            <!-- Nombre y Cargo -->
+                            <h5 class="text-secondary">Legajo n°: <span class="badge border border-secondary text-primary">{{alumno.legajo}}</span></h5>
+                            <hr>
+                            <h4 class="card-title mb-1">{{alumno.apellido}}, {{alumno.nombre}}</h4>
+                            <hr>
+                            
+                            <!-- Datos Legales (Corregida la etiqueta <i> e íconos actualizados) -->
+                            <div class="text-start px-2">
+                                <p class="mb-3">
+                                    <span class="text-muted small d-block"><i class="fas fa-id-card text-dark me-2"></i>N° de Documento</span>
+                                    <strong class="ms-4">{{alumno.dni}}</strong>
+                                </p>
+                                <p class="mb-3">
+                                    <span class="text-muted small d-block"><i class="fas fa-file-invoice text-dark me-2"></i>N° Cuil</span>
+                                    <strong class="ms-4">{{alumno.cuil}}</strong>
+                                </p>
+                                <p class="mb-3">
+                                    <span class="text-muted small d-block"><i class="fas fa-calendar-alt text-dark me-2"></i>Fecha de Nacimiento</span>
+                                    <strong class="ms-4">{{alumno.fecha_nacimiento}}</strong>
+                                </p>
+                                <p class="mb-4">
+                                    <span class="text-muted small d-block"><i class="fas fa-user-clock text-dark me-2"></i>Edad</span>
+                                    <!-- Agregada la variable de edad que faltaba -->
+                                    <strong class="ms-4">{{alumno.edad | default('No registrada')}}</strong> 
+                                </p>
+                            </div>
+                            
+                            <!-- Datos Rápidos de Contacto -->
+                            <div class="text-start px-2">
+                                <p class="mb-3">
+                                    <span class="text-muted small d-block"><i class="fas fa-envelope text-dark me-2"></i>Correo Electrónico</span>
+                                    <strong class="ms-4">{{alumno.email}}</strong>
+                                </p>
+                                <p class="mb-3">
+                                    <span class="text-muted small d-block"><i class="fas fa-phone text-dark me-2"></i>Teléfono</span>
+                                    <strong class="ms-4">{{alumno.telefono}}</strong>
+                                </p>
+                                <p class="mb-0">
+                                    <span class="text-muted small d-block"><i class="fas fa-map-marker-alt text-dark me-2"></i>Domicilio</span>
+                                    <strong class="ms-4">{{alumno.direccion}}</strong>
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <!-- Contenido de las Pestañas -->
-                    <div class="card-body p-4">
-                      <!-- 1. EL FORMULARIO ENVUELVE TODO EL CONTENIDO DE LAS PESTAÑAS -->
-                        <form action="{{url_for('alumnos.update_tutor', alumno=alumno.id)}}" method="POST">
-                        <div class="tab-content" id="myTabContent"> 
-                            <!-- PESTAÑA 1: PERFIL ALUMNO -->
-                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
-                                <!-- Datos personales -->
-                                <div class="table-responsive mb-4">
-                                  {% for tutor in alumno.tutores%}                           
-                                <img src="https://github.com/mdo.png" class="rounded-circle img-thumbnail mb-3" style="width: 150px; height: 150px; object-fit: cover;" alt="...">
-                                <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <label for="nombre_t" class="form-label">Nombre</label>
-                                            <input type="text" class="form-control" name="nombre_t" id="nombre_t" value="{{tutor.nombre}}">
+                </div> <!-- /Columna Izquierda -->
+
+                <!-- Columna Derecha: Información Detallada -->
+                <div class="col-lg-7">
+                    <div class="card shadow p-3 mb-0 bg-body rounded border-2 h-100">
+                        <!-- Navegación por Pestañas -->
+                        <div class="card-header bg-transparent border-0 pt-3">
+                            <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active fw-semibold" id="perfil-tab" data-bs-toggle="tab" data-bs-target="#perfil-pane" type="button" role="tab">Datos personales del Tutor</button>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Contenido de las Pestañas -->
+                        <div class="card-body p-4">
+                            <form action="{{ url_for('alumnos.update_tutor', alumno=alumno.id) }}" method="POST">
+                                <div class="tab-content" id="myTabContent">     
+                                    <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+                                        <!-- Se eliminó el table-responsive que era innecesario y causaba problemas visuales -->
+                                        <div class="mb-4">
+                                            
+                                            {% for tutor in alumno.tutores %}                           
+                                            <!-- Contenedor individual por si hay más de un tutor -->
+                                            <div class="tutor-form-group mb-5 pb-3 border-bottom">
+                                                <div class="text-center mb-3">
+                                                    <img src="https://github.com/mdo.png" class="rounded-circle img-thumbnail" style="width: 120px; height: 120px; object-fit: cover;" alt="Foto Tutor">
+                                                </div>
+                                                
+                                                <div class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label for="nombre_t_{{ loop.index }}" class="form-label">Nombre</label>
+                                                        <!-- Nota: El atributo 'name' se mantiene igual, pero los 'id' ahora son únicos usando loop.index -->
+                                                        <input type="text" class="form-control" name="nombre_t" id="nombre_t_{{ loop.index }}" value="{{tutor.nombre}}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="apellido_t_{{ loop.index }}" class="form-label">Apellido</label>
+                                                        <input type="text" class="form-control" name="apellido_t" id="apellido_t_{{ loop.index }}" value="{{tutor.apellido}}">
+                                                    </div>
+                                                    <div class="col-12">
+                                                        <label for="direccion_t_{{ loop.index }}" class="form-label">Dirección</label>
+                                                        <input type="text" class="form-control" name="direccion_t" id="direccion_t_{{ loop.index }}" value="{{tutor.direccion}}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="dni_t_{{ loop.index }}" class="form-label">DNI</label>
+                                                        <input type="text" class="form-control" name="dni_t" id="dni_t_{{ loop.index }}" value="{{tutor.dni}}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="fecha_nacimiento_t_{{ loop.index }}" class="form-label">Fecha de Nacimiento</label>
+                                                        <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t_{{ loop.index }}" value="{{tutor.fecha_nacimiento}}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="genero_t_{{ loop.index }}" class="form-label">Género</label>
+                                                        <select name="genero_t" id="genero_t_{{ loop.index }}" class="form-select">
+                                                            <option value="Masculino" {% if tutor.genero == "Masculino" %}selected{% endif %}>Masculino</option>
+                                                            <option value="Femenino" {% if tutor.genero == "Femenino" %}selected{% endif %}>Femenino</option>
+                                                            <option value="No Binario" {% if tutor.genero == "No Binario" %}selected{% endif %}>No Binario</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="telefono_t_{{ loop.index }}" class="form-label">Teléfono</label>
+                                                        <input type="text" class="form-control" name="telefono_t" id="telefono_t_{{ loop.index }}" value="{{tutor.telefono}}">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="email_t_{{ loop.index }}" class="form-label">Email</label>
+                                                        <input type="email" class="form-control" name="email_t" id="email_t_{{ loop.index }}" value="{{tutor.email}}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            
                                         </div>
-                                        <div class="col-md-6">
-                                            <label for="apellido_t" class="form-label">Apellido</label>
-                                            <input type="text" class="form-control" name="apellido_t" id="apellido_t" value="{{tutor.apellido}}">
-                                        </div>
-                                        <div class="col-12">
-                                            <label for="direccion_t" class="form-label">Direccion</label>
-                                            <input type="text" class="form-control" name="direccion_t" id="direccion_t" value="{{tutor.direccion}}">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="dni_t" class="form-label">DNI</label>
-                                            <input type="text" class="form-control" name="dni_t" id="dni_t" value="{{tutor.dni}}">
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="fecha_nacimiento_t" class="form-label">Fecha de Nacimiento</label>
-                                            <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t" value="{{tutor.fecha_nacimiento}}">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="genero_t" class="form-label">Genero</label>
-                                            <select name="genero_t" id="genero_t" class="form-control">
-                                                <option value="Masculino" {% if tutor.genero == "Masculino" %}selected{% endif %}>Masculino</option>
-                                                <option value="Femenino" {% if tutor.genero == "Femenino" %}selected{% endif %}>Femenino</option>
-                                                <option value="No Binario" {% if tutor.genero == "No Binario" %}selected{% endif %}>No Binario</option>
-                                            </select>
-                                        </div>
-                                        <div class="col-6">
-                                            <label for="email_t" class="form-label">Email</label>
-                                            <input type="text" class="form-control" name="email_t" id="email_t" value="{{tutor.email}}">
-                                        </div>
-                                        <div class="col-md-6">
-                                            <label for="telefono_t" class="form-label">Telefono</label>
-                                            <input type="text" class="form-control" name="telefono_t" id="telefono_t" value="{{tutor.telefono}}">
-                                        </div>
-                                  </div>
-                              {% endfor %}
+                                    </div>
+                                    
+                                </div> <!-- /tab-content -->
+                                
+                                <!-- BOTONES DEL FORMULARIO -->
+                                <div class="col-12 mt-4 text-end">
+                                    <a href="{{ url_for('alumnos.view', id=alumno.id) }}" class="btn btn-outline-danger me-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle me-1" viewBox="0 0 16 16">
+                                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                        </svg> Cancelar
+                                    </a>
+                                    <button type="submit" class="btn btn-outline-success">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2 me-1" viewBox="0 0 16 16">
+                                            <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                                        </svg> Guardar
+                                    </button>
                                 </div>
-                            </div>
-                          </div> <!-- Cierre de tab-content -->
-                          <!-- BOTONES DEL FORMULARIO -->
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
-                        <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
-                      </svg> Guardar</button>
-                                <a href="{{ url_for('alumnos.view', id=alumno.id) }}" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                </svg> Cancelar</a>
-                            </div>
-                        </form> <!-- CIERRE DEL FORMULARIO AQUÍ (Correctamente encapsulado) -->
-                    </div> <!-- Cierre de card-body -->
-              </div> <!-- Cierre de card -->
-            </div> <!-- Cierre de tab-content -->
-</div>
+                            </form>
+                        </div> <!-- /card-body -->
+                    </div> <!-- /card -->
+                </div> <!-- /Columna Derecha -->     
+            </div> <!-- /row g-4 -->
+        </div> <!-- /bg-white -->
+    </div> <!-- /col-12 -->
+</div> <!-- /row -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}
