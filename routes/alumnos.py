@@ -7,20 +7,50 @@ from sqlalchemy.orm import joinedload
 
 alumnos = Blueprint("alumnos", __name__)
 
-@alumnos.route('/alumnos/home', methods=["POST","GET"]) #listado de alumnos
+@alumnos.route('/alumnos/home', methods=["GET"]) #listado de alumnos
 def home():
-    alumnos = Alumno.query.all()
+    # 2. Capturamos el parámetro 'tag' de la URL. 
+    # Usamos '' como valor por defecto si no se envió nada.
+    tag_busqueda = request.args.get('tag', '').strip()
+    if tag_busqueda:
+        # Buscar por apellido O por legajo ignorando mayúsculas/minúsculas (ilike)
+        alumnos_db = Alumno.query.filter(
+            (Alumno.apellido.ilike(f'%{tag_busqueda}%')) | 
+            (Alumno.legajo.ilike(f'%{tag_busqueda}%'))
+        ).all()
+    else:
+        # Si no hay búsqueda (entro por primera vez), traemos todos
+        alumnos_db = Alumno.query.all()
+    #Convertimos los objetos de la DB a una lista de diccionarios
+    # para que tu {{ alumnos | tojson | safe }} en JavaScript funcione correctamente.
+    lista_alumnos = []
+    for a in alumnos_db:
+        lista_alumnos.append({
+            "id": a.id,
+            "legajo": a.legajo,
+            "apellido": a.apellido,
+            "nombre": a.nombre,
+            "cuil": a.cuil
+        })
+    cantidad = len(lista_alumnos)
+    # 5. Pasamos las variables a tu plantilla HTML
+    return render_template('/alumnos/home.html', 
+                           alumnos=lista_alumnos, 
+                           cantidad=cantidad)
+    """ alumnos = Alumno.query.all()
     cantidad = len(alumnos)
-    # alumnos = Persona.query.filter(Persona.tipo_persona=='alumno')
-    if request.method == "POST" and 'tag' in request.form:
-        tag = request.form['tag']
+    list_alumnos = [alumno.to_dict() for alumno in alumnos]
+    if request.method == "GET" and 'tag':
+        tag = request.args.get('tag')
         search = "%{}%".format(tag)
         alumnos = Alumno.query.filter(Alumno.apellido.like(search) | Alumno.legajo.like(search)).all()
+        list_alumnos = [alumno.to_dict() for alumno in alumnos]
+        resultado = len(list_alumnos)
         if not alumnos:
             flash('No existe registro...')
         else:
-            return render_template('/alumnos/home.html', alumnos=alumnos, cantidad=cantidad)
-    return render_template('/alumnos/home.html', alumnos=alumnos, cantidad=cantidad)
+            return render_template('/alumnos/home.html', alumnos=list_alumnos, cantidad=resultado)
+    return render_template('/alumnos/home.html', alumnos=list_alumnos, cantidad=cantidad) """
 
 @alumnos.route('/inscripcion')
 def inscripcion():

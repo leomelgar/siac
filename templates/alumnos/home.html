@@ -14,52 +14,169 @@
   <div class="col-md-9">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
-    <h2 class="text-secondary">Gestion Alumnos</h2>
+    <div class="container bg-light p-1 rounded-3"> 
+    <div class="container mt-5">
+    <h2 class="text-secondary text-center">Gestion Alumnos</h2>
     <!-- {% include 'partials/_searchTutor.html' %} -->    
-    <div class="row">
-      <div class="d-flex justify-content-between align-items-center mb-3 col-md-9 btn-group">
-        <form action="/alumnos/home" method="POST" class="d-flex" role="search">
-          <input class="form-control me-2" type="search" name="tag" placeholder="Buscar por Apellido o Legajo" aria-label="Search">
-          <button class="btn btn-outline-success" type="submit">Buscar</button>
+    <div class="row align-items-center mb-3">
+      <!-- Buscador (Ocupa 9 columnas en desktop) -->
+      <div class="col-md-9 mb-3 mb-md-0">
+        <form action="{{ url_for('alumnos.home') }}" method="GET" class="d-flex w-100" role="search">
+          <!-- Se agregó form-control-sm para achicar el input -->
+          <input class="form-control form-control-sm me-2" type="search" name="tag" placeholder="Buscar por Apellido o Legajo" aria-label="Search">      
+          <!-- Se agregó btn-sm, d-flex, align-items-center y gap-2 -->
+          <button class="btn btn-outline-success btn-sm d-flex align-items-center gap-2" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg> 
+            Buscar
+          </button>
         </form>
       </div>
-      <div class="d-flex justify-content-between align-items-center mb-3 col-md-3 btn-group">
-          <a class="btn btn-outline-primary" data-bs-toggle="modal" href="{{ url_for('alumnos.inscripcion') }}">Agregar Alumno</a>
+      <!-- Botón Agregar (Ocupa 3 columnas en desktop, alineado a la derecha) -->
+      <div class="col-md-3 d-flex justify-content-md-end">
+        <!-- Se agregó btn-sm, d-flex, align-items-center y gap-2 -->
+        <a class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2" href="{{ url_for('alumnos.inscripcion') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+            <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+            <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+          </svg> 
+          Agregar Alumno
+        </a>
       </div>
     </div>
+    <span class="badge bg-info text-dark">Cantidad de Registros: {{ cantidad }}</span>
     <hr class="my-4">
-    <span class="badge border border-primary">Cantidad de Registros: {{ cantidad }}</span>
-    <table class="table table-dark table-hover">
-      <thead>
-        <tr>
-          <th></th>
-          <th scope="col">Legajo</th>
-          <th scope="col">Apellido</th>
-          <th scope="col">Nombre</th>
-          <th scope="col">Cuil</th>
-          <th scope="col"></th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for alumno in alumnos %}
-        <tr>
-          <td><a href="{{url_for('alumnos.view', id=alumno.id)}}" class="">
-        <img src="https://github.com/mdo.png" alt="" width="32" height="32" class="rounded-circle"></a></td>
-          
-          <td><strong>{{alumno.legajo}}</strong></td>
-          <td><strong>{{alumno.apellido}}</strong></td>
-          <td>{{alumno.nombre}}</td>
-          <td>{{alumno.cuil}}</td>
-          <td><div>
-            <a href="{{url_for('alumnos.view', id=alumno.id)}}" class="btn-outline-info btn-sm rounded-0"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
-              <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
-              <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
-              </svg></a>
-          </div></td>
-        </tr>
-          {% endfor %}
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">Legajo</th>
+            <th scope="col">Apellido</th>
+            <th scope="col">Nombre</th>
+            <th scope="col">Cuil</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody id="table-body">
+        <!-- Aqui se renderiza las filas de la tabla -->
+        </tbody>
+      </table>
+    </div>
+       <!-- Controles de Paginación -->
+    <nav aria-label="Navegación de páginas">
+      <ul class="pagination pagination-sm justify-content-center" id="pagination-wrapper">
+      <!-- Los botones de paginación se insertarán aquí dinámicamente -->
+      </ul>
+    </nav>
+      </div>
+    </div>
   </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Jinja2 inserta los datos de Python directamente como JSON en JavaScript
+    let alumnos = {{ alumnos | tojson | safe }};
+    // 2. Configuración de la paginación
+    const rowsPerPage = 5;
+    let currentPage = 1;
+    // 3. Función para renderizar la tabla según la página actual
+    function displayTable(data, wrapper, rowsPerPage, page) {
+        wrapper.innerHTML = ""; // Limpiamos la tabla
+        if (data.length === 0) {
+        wrapper.innerHTML = `<tr><td colspan="5" class="text-center text-muted">
+                            <div class="alert alert-info" role="alert">
+                            Sin resultados, con el nombre o legajo.!</div>
+                            </td></tr>`;
+        return;
+    }
+        page--; // Restamos 1 porque los arrays empiezan en índice 0
+
+        let start = rowsPerPage * page;
+        let end = start + rowsPerPage;
+        let paginatedItems = data.slice(start, end);
+
+       // Acumulamos el HTML en una variable para no saturar el DOM en cada iteración
+        let rowsHTML = ""; 
+
+        paginatedItems.forEach(item => {
+            rowsHTML += `
+                <tr>
+                    <td>${item.legajo}</td>
+                    <td>${item.apellido}</td>
+                    <td>${item.nombre}</td>
+                    <td>${item.cuil}</td> 
+                    <td>
+                        <div>
+                            <!-- Construcción de URL en el cliente usando item.id -->
+                            <a href="/alumnos/view/${item.id}" class="btn btn-outline-primary btn-sm rounded-0">
+                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
+                              <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
+                              <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
+                            </svg></a>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        wrapper.innerHTML = rowsHTML; // Una sola actualización al DOM
+    }
+
+   // 4. Función para crear los botones de paginación
+    function setupPagination(data, wrapper, rowsPerPage) {
+        let pageCount = Math.ceil(data.length / rowsPerPage);
+        let paginationHTML = ""; // Acumulador
+
+        // Botón "Anterior" (usamos javascript:void(0) para evitar que la página salte hacia arriba)
+        let prevDisabled = currentPage === 1 ? 'disabled' : '';
+        paginationHTML += `<li class="page-item ${prevDisabled}">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage - 1})">Anterior</a>
+        </li>`;
+
+        // Botones numéricos de páginas
+        for (let i = 1; i <= pageCount; i++) {
+            let activeClass = currentPage === i ? 'active' : '';
+            paginationHTML += `<li class="page-item ${activeClass}">
+                <a class="page-link" href="javascript:void(0)" onclick="changePage(${i})">${i}</a>
+            </li>`;
+        }
+
+        // Botón "Siguiente"
+        let nextDisabled = currentPage === pageCount ? 'disabled' : '';
+        paginationHTML += `<li class="page-item ${nextDisabled}">
+            <a class="page-link" href="javascript:void(0)" onclick="changePage(${currentPage + 1})">Siguiente</a>
+        </li>`;
+
+        wrapper.innerHTML = paginationHTML; // Una sola actualización al DOM
+    }
+
+    // 5. Función para cambiar de página
+    function changePage(page) {
+        let pageCount = Math.ceil(alumnos.length / rowsPerPage);
+        
+        // Evitar ir a páginas que no existen
+        if (page < 1 || page > pageCount) return;
+
+        currentPage = page;
+        
+        const tableBody = document.getElementById('table-body');
+        const paginationWrapper = document.getElementById('pagination-wrapper');
+
+        displayTable(alumnos, tableBody, rowsPerPage, currentPage);
+        setupPagination(alumnos, paginationWrapper, rowsPerPage);
+    }
+
+    // 6. Inicialización única al cargar la página
+    document.addEventListener("DOMContentLoaded", () => {
+        const tableBody = document.getElementById('table-body');
+        const paginationWrapper = document.getElementById('pagination-wrapper');
+
+        // Solo inicializamos si los elementos existen para evitar errores en otras vistas
+        if (tableBody && paginationWrapper) {
+            displayTable(alumnos, tableBody, rowsPerPage, currentPage);
+            setupPagination(alumnos, paginationWrapper, rowsPerPage);
+        }
+    });
+</script>
 {% endblock %}
