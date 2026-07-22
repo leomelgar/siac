@@ -7,13 +7,24 @@ docentes = Blueprint("docentes", __name__)
 
 @docentes.route('/docentes/home')
 def home():
-    #docentes = db.session.query(Docente).join(Persona).filter(Persona.id==Docente.id).all()
-    #docentes = Docente.query.join(Persona).filter(Persona.id==Docente.id).all()
-    docentes = Persona.query.filter(Persona.tipo_persona=="docente").all()
-    #docentes = Docente.query.all()
-    colegios = Colegio.query.all()
-    list_docentes = [docente.to_dict() for docente in docentes]
-    return render_template('/docentes/home.html', docentes=list_docentes, colegios=colegios)
+    # 2. Capturamos el parámetro 'tag' de la URL. 
+    # Usamos '' como valor por defecto si no se envió nada.
+    tag_busqueda = request.args.get('tag', '').strip()
+    if tag_busqueda:
+        # Buscar por apellido ignorando mayúsculas/minúsculas (ilike)
+        docentes_db = Docente.query.filter(
+            (Docente.apellido.ilike(f'%{tag_busqueda}%'))).all()
+    else:
+        # Si no hay búsqueda (entro por primera vez), traemos todos
+        docentes_db = Docente.query.all()
+    #Convertimos los objetos de la DB a una lista de diccionarios
+    # para que tu {{ docentes | tojson | safe }} en JavaScript funcione correctamente.
+    lista_docentes = [docentes.to_dict() for docentes in docentes_db]
+    cantidad = len(lista_docentes)
+    # 5. Pasamos las variables a tu plantilla HTML
+    return render_template('/docentes/home.html', 
+                           docentes=lista_docentes, 
+                           cantidad=cantidad)
 
 @docentes.route('/newDocente', methods=['POST'])
 def new_docente():
@@ -58,30 +69,15 @@ def new_docente():
         flash('Docente añadido correctamente!')
         return redirect(url_for('docentes.home'))
 
-@docentes.route('/searchDocente', methods=['POST'])
-def searchDocente():
-    if request.method == 'POST':
-        tag = request.form.get('tag')
-        if not tag:
-            flash('Por favor, ingrese un apellido para buscar.', 'warning')
-            return redirect(url_for('docentes.home'))
-        
-        # Realizamos la búsqueda usando LIKE para permitir coincidencias parciales
-        docentes = Persona.query.filter(Persona.tipo_persona=="docente", Persona.apellido.ilike(f'%{tag}%')).all()
-        list_docentes = [docente.to_dict() for docente in docentes]
-        if not docentes:
-            flash(f'No se encontraron docentes con el apellido "{tag}".', 'info')
-        
-        colegios = Colegio.query.all()
-        return render_template('/docentes/home.html', docentes=list_docentes, colegios=colegios)
-    else:
-        flash('Método de solicitud no permitido.', 'danger')
-        return redirect(url_for('docentes.home'))
+def calcular_edad(fecha_nacimiento):
+    hoy = datetime.today()
+    return hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
 
 @docentes.route('/docentes/view/<id>', methods=['GET'])
 def view(id):
     docente = Docente.query.get(id)
-    return render_template('/docentes/view.html', docente=docente)
+    edad = calcular_edad(docente.fecha_nacimiento)
+    return render_template('/docentes/view.html', docente=docente, edad=edad)
 
 @docentes.route("/docentes/updateDocente/<id>", methods=['POST', 'GET'])
 def updateDocente(id):

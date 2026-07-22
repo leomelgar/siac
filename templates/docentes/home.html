@@ -14,12 +14,6 @@
   <div class="col-md-9">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
-       <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#agregarDocente">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-          <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-          <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
-        </svg> Agregar Docente
-       </button>
        <!-- Modal -->
            <div class="modal fade" id="agregarDocente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
              <div class="modal-dialog modal-dialog-scrollable">
@@ -42,17 +36,33 @@
   <div class="container bg-light p-1 rounded-3"> 
     <div class="container mt-5">
     <h2 class="mb-4 text-center">Gestion de Docentes</h2>
-    <form action="/searchDocente" method="POST" class="row g-3 position-relative" role="search">
-      <div class="col-auto position-absolute top-0 start-50 translate-middle">
-        <input class="border rounded-pill text-center" type="search" name="tag" placeholder="Buscar por Nombre" aria-label="Search">
-        <button class="btn btn-outline-success btn-sm" type="submit">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg> Buscar
-        </button>
+    <div class="row align-items-center mb-3">
+      <!-- Buscador (Ocupa 9 columnas en desktop) -->
+      <div class="col-md-9 mb-3 mb-md-0">
+        <form action="{{ url_for('docentes.home') }}" method="GET" class="d-flex w-100" role="search">
+          <!-- Se agregó form-control-sm para achicar el input -->
+          <input class="form-control form-control-sm me-2" type="search" name="tag" placeholder="Buscar por Apellido" aria-label="Search">      
+          <!-- Se agregó btn-sm, d-flex, align-items-center y gap-2 -->
+          <button class="btn btn-outline-success btn-sm d-flex align-items-center gap-2" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg> 
+            Buscar
+          </button>
+        </form>
       </div>
-    </form>
-    <br>
+      <!-- Botón Agregar (Ocupa 3 columnas en desktop, alineado a la derecha) -->
+      <div class="col-md-3 d-flex justify-content-md-end">
+        <!-- Se agregó btn-sm, d-flex, align-items-center y gap-2 -->
+         <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#agregarDocente">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+          <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+        </svg> Agregar Docente
+       </button>
+      </div>
+    </div>
+    <span class="badge bg-info text-dark">Cantidad de Registros: {{ cantidad }}</span>
     <hr class="my-4">
     <div class="table-responsive">
       <table class="table table-striped table-hover table-bordered">
@@ -92,6 +102,13 @@
     // 3. Función para renderizar la tabla según la página actual
     function displayTable(data, wrapper, rowsPerPage, page) {
         wrapper.innerHTML = ""; // Limpiamos la tabla
+        if (data.length === 0) {
+        wrapper.innerHTML = `<tr><td colspan="5" class="text-center text-muted">
+                            <div class="alert alert-info" role="alert">
+                            Sin resultados, con el nombre o apellido.!</div>
+                            </td></tr>`;
+        return;
+        }
         page--; // Restamos 1 porque los arrays empiezan en índice 0
 
         let start = rowsPerPage * page;
