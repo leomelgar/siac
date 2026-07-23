@@ -1,15 +1,5 @@
 <form action="/newDocente" method="POST" class="card bg-black text-light">
   <div class="card-body p-4">
-    <!-- <h1 class="h5 mb-4">Agregar Datos del Docente</h1> -->
-
-    <div class="mb-3">
-      <label for="colegio">Colegio:</label>
-      <select name="id_colegio" class="form-select form-select-sm" aria-label=".form-select-sm example">
-        {% for colegio in colegios %}
-          <option value="{{colegio.id_colegio}}">{{colegio.nombre_colegio}}</option>
-        {% endfor %}  
-      </select>
-    </div>
     <div class="mb-3">
       <label for="nombre">Nombre:</label>
       <input

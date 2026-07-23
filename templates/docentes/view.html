@@ -6,99 +6,122 @@
 
 {% block body %}
     <!-- FORM -->
-<div class="row">
-  <div class="col-md-3">
-   <!-- menu lateral -->
-   {% include 'partials/_sidebarDteCdra.html' %}
-  </div>
-  <div class="col-md-9">
+ <div class="row">
+  <div class="justify-content-center"> 
+        <!-- INICIO DE LA MEJORA: Fila interna para centrar el contenido -->
+        <!-- justify-content-center centra la columna interna horizontalmente -->
+    <div class="row justify-content-center">
+    <!-- col-12 (100% en celulares), col-lg-10 (más angosto en PC para que no quede estirado) -->
+        <div class="col-12 col-lg-12">
+          <div class="bg-white">
+          <hr class="my-3 text-secondary">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
-    <h2 class="text-secondary">Legajo Docente</h2>
-     <!-- Botón Volver -->
-        <div class="mb-4">
-            <a href="{{ url_for('docentes.home') }}" class="btn btn-outline-secondary btn-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
-          <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
-          </svg> Volver al Listado</a>
-            <a href="{{ url_for('docentes.updateDocente', id=docente.id) }}" class="btn btn-outline-primary btn-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-                    <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-                </svg> Actualizar</a>
-            <form action="{{url_for('docentes.deleteDocente', id=docente.id)}}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este docente?');">
-                <button type="submit" class="btn btn-outline-danger btn-sm rounded-0">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                </svg> Eliminar Registro</button>
-            </form>
-            <!-- <a href="{{ url_for('docentes.deleteDocente', id=docente.id) }}" class="btn btn-outline-danger btn-sm rounded-0">Eliminar Registro</a> -->
+        <!-- Encabezado con Botón y Título -->
+        <div class="row mb-4 align-items-center">
+            <div class="col-auto mx-3">
+                <a href="{{ url_for('docentes.home') }}" class="btn btn-outline-secondary btn-sm">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                    </svg> Volver al Listado</a>  
+            </div>
+            <div class="col text-center">
+                <h2 class="text-dark mb-0">Legajo Docente</h2>
+            </div>
         </div>
-     <div class="container py-5">
+     <div class="container py-3">
         <div class="row g-4">
             <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
-            <div class="col-lg-4">
-                <div class="card shadow-sm border-0 text-center h-100">
+            <div class="col-lg-5">
+                <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
                     <div class="card-body pt-5">
-                        <!-- Foto de Perfil -->
-                        <img src="https://github.com/mdo.png"
-                             alt="Foto del Docente" 
-                             class="rounded-circle img-thumbnail mb-3" 
-                             style="width: 150px; height: 150px; object-fit: cover;">                        
-                        <!-- Nombre y Cargo -->
-                        <h4 class="card-title mb-1">{{docente.apellido}}, {{docente.nombre}}</h4>
-                        <p class="text-muted mb-3">Profesor {{docente.cargo}} de Ingeniería de Software</p>
-                        <!-- Estado -->
-                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill mb-4">{{docente.estado_contractual}}</span>
-                        <hr>
-                        <!-- Datos Legales -->
-                        <div class="text-start px-3">
-                            <p class="mb-2">
-                                <i class="fas fa-envelope text-primary me-2"></i>
-                                <span class="text-muted small d-block">N° de Documento</span>
-                                <strong>{{docente.dni}}</strong>
-                            </p>
-                            <p class="mb-0">
-                                <i class="fas fa-building text-primary me-2"></i>
-                                <span class="text-muted small d-block">Edad</span>
-                                <strong>{{edad}}</strong>
-                            </p>
-                        </div>
-                        <!-- Datos Rápidos de Contacto -->
-                        <div class="text-start px-3">
-                            <p class="mb-2">
-                                <i class="fas fa-envelope text-primary me-2"></i>
-                                <span class="text-muted small d-block">Correo Electrónico</span>
-                                <strong>{{docente.email}}</strong>
-                            </p>
-                            <p class="mb-2">
-                                <i class="fas fa-phone text-primary me-2"></i>
-                                <span class="text-muted small d-block">Teléfono </span>
-                                <strong>{{docente.telefono}}</strong>
-                            </p>
-                            <p class="mb-0">
-                                <i class="fas fa-building text-primary me-2"></i>
-                                <span class="text-muted small d-block">Domicilio</span>
-                                <strong>{{docente.direccion}}</strong>
-                            </p>
-                        </div>
-                    </div>
-                    <!-- Redes Sociales / Enlaces -->
-                    <div class="card-footer bg-transparent border-0 pb-4">
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="#" class="btn btn-sm btn-outline-primary rounded-circle"><i class="fab fa-linkedin-in"></i></a>
-                            <a href="#" class="btn btn-sm btn-outline-secondary rounded-circle"><i class="fab fa-github"></i></a>
-                            <a href="#" class="btn btn-sm btn-outline-danger rounded-circle"><i class="fas fa-graduation-cap"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- Encabezado y Foto de Perfil -->
+    <div class="text-center mb-4">
+        <img src="https://github.com/mdo.png"
+             alt="Foto del Docente" 
+             class="rounded-circle img-thumbnail mb-3" 
+             style="width: 150px; height: 150px; object-fit: cover;">                        
+        
+        <!-- Nombre y Cargo -->
+        <h4 class="card-title mb-1">{{docente.apellido}}, {{docente.nombre}}</h4>
+        <p class="text-muted mb-3">Profesor {{docente.cargo}} de Ingeniería de Software</p>
+        <h5 class="text-secondary mb-0">
+            Estado: <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill">{{docente.estado_contractual}}</span>
+        </h5>
+    </div>
 
-            <!-- Columna Derecha: Información Detallada -->
-            <div class="col-lg-8">
-                <div class="card shadow-sm border-0 h-100">
-                    <!-- Navegación por Pestañas (Tabs) -->
+    <hr>
+
+    <!-- Datos Legales y de Contacto (Organizados en 2 columnas horizontales) -->
+    <div class="row text-start px-3">
+        <!-- Columna 1: Datos Legales -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <h6 class="text-uppercase text-muted mb-3" style="font-size: 0.8rem;">Datos Legales</h6>
+            <p class="mb-2">
+                <span class="text-muted small me-1">N° de DNI:</span>
+                <strong>{{docente.dni}}</strong>
+            </p>
+            <p class="mb-2">
+                <span class="text-muted small me-1">N° Cuil:</span>
+                <strong>{{docente.cuil}}</strong>
+            </p>
+            <p class="mb-2">
+                <span class="text-muted small me-1">Fecha de Nac.:</span>
+                <strong>{{docente.fecha_nacimiento}}</strong>
+            </p>
+            <p class="mb-0">
+                <span class="text-muted small me-1">Edad:</span>
+                <strong>{{edad}}</strong>
+            </p>
+        </div>
+
+        <!-- Columna 2: Datos Rápidos de Contacto -->
+        <div class="col-md-6">
+            <h6 class="text-uppercase text-muted mb-3" style="font-size: 0.8rem;">Contacto</h6>
+            <p class="mb-2">
+                <span class="text-muted small me-1">Email:</span>
+                <strong>{{docente.email}}</strong>
+            </p>
+            <p class="mb-2">
+                <span class="text-muted small me-1">Teléfono:</span>
+                <strong>{{docente.telefono}}</strong>
+            </p>
+            <p class="mb-0">
+                <span class="text-muted small me-1">Domicilio:</span>
+                <strong>{{docente.direccion}}</strong>
+            </p>
+        </div>
+        </div>
+    </div>
+                    <!-- Opciones para gestionar alumno -->
+    <div class="card-footer bg-transparent border-0 pb-4">
+        <!-- align-items-stretch asegura que todos tengan la misma altura -->
+        <div class="d-flex justify-content-center align-items-stretch gap-2">
+            <!-- Botón 1: Editar -->
+            <a href="{{ url_for('docentes.updateDocente', id=docente.id) }}" class="btn btn-sm btn-outline-primary w-100 d-flex align-items-center justify-content-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
+                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                </svg>
+                Editar
+            </a>
+            <!-- Botón 3: Borrar Registro (Dentro de un form flexificado) -->
+            <form action="#" method="POST" class="m-0 p-0 w-100 d-flex" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
+                <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
+                        <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+                        <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                    </svg> Eliminar
+                </button>
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    <!-- Columna Derecha: Información Detallada -->
+    <div class="col-lg-7">
+        <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
+           <!-- Navegación por Pestañas (Tabs) -->
                     <div class="card-header bg-transparent border-0 pt-3">
                         <ul class="nav nav-tabs card-header-tabs" id="docenteTab" role="tablist">
                             <li class="nav-item" role="presentation">
@@ -129,7 +152,7 @@
                                     <li class="mb-3 ps-3 border-start border-primary border-3">
                                         <div class="fw-bold">Ingreso al Establecimiento</div>
                                         <div class="text-muted small">
-                                          {{ docente.fecha_contratacion.strftime('%d/%m/%Y') }}
+                                          {{ docente.fecha_contratacion.strftime('%d/%m/%Y') if docente.fecha_contratacion else '-' }}
                                         </div>
                                     </li>
                                     <li class="mb-0 ps-3 border-start border-primary border-3">
@@ -169,10 +192,10 @@
                                 </div>
                             </div> <!-- Cierre de tab-pane docencia-pane -->
                         </div> <!-- Cierre de tab-content -->
-                    </div> <!-- Cierre de card-body -->
-                </div> <!-- Cierre de card -->
-            </div> <!-- Cierre de col-lg-8 -->
-        </div> <!-- Cierre de row -->
-    </div> <!-- Cierre de container -->
+                    </div>
+              </div> <!-- Cierre de card -->
+            </div> <!-- Cierre de tab-content -->
+    </div> <!-- Cierre de row -->
+</div> <!-- Cierre de container -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

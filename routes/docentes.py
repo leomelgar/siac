@@ -30,23 +30,27 @@ def home():
 def new_docente():
     if request.method == 'POST':
         # 1. Capturar los datos enviados desde las etiquetas <input name="..."> de HTML
-        nombre = request.form.get('nombre')
-        apellido = request.form.get('apellido')
-        dni = request.form.get('dni')
+        nombre = request.form.get('nombre', '')
+        apellido = request.form.get('apellido', '')
+        dni = request.form.get('dni', '')
         fecha_nac_str = request.form.get('fecha_nacimiento')
-        direccion = request.form.get('direccion')
-        telefono = request.form.get('telefono')
-        email = request.form.get('email')
+        direccion = request.form.get('direccion', '')
+        telefono = request.form.get('telefono', '')
+        email = request.form.get('email', '')
         genero = request.form.get('genero')
-        id_colegio = request.form.get('id_colegio')
-        cuil = request.form.get('dni')
+        #id_colegio = request.form.get('id_colegio')
+        cuil = request.form.get('dni', '')
         
         try:
+            # Si no hay fecha, strptime fallaría. Validamos primero.
+            if not fecha_nac_str:
+                raise ValueError("La fecha de nacimiento es obligatoria.")
             fecha_nacimiento = datetime.strptime(fecha_nac_str, '%Y-%m-%d').date()
             fecha_contratacion = None
-        except ValueError:
-            flash("El formato de fecha ingresado no es válido.", "danger")
-            return render_template('/docentes/home.html')
+        except (ValueError, TypeError): # Agregamos TypeError por si llega None
+            flash("El formato de fecha ingresado no es válido o está vacío.", "danger")
+            # Quitamos la barra inicial del path del template
+            return render_template('docentes/home.html')
 
         #new_docente = Docente(nombre, apellido, dni, fecha_nac, direccion, telefono, email, genero, id_colegio, cuil, cargo, fecha_contratacion, estado_contractual)
         new_docente = Docente(
@@ -58,7 +62,7 @@ def new_docente():
             telefono=telefono.strip(),
             email=email.strip() or None,  # Si está vacío lo guarda como NULL
             genero=genero,
-            id_colegio=int(id_colegio),
+            id_colegio=1,
             cuil=cuil,
             cargo=None,
             fecha_contratacion=None,
