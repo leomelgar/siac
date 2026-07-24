@@ -13,15 +13,8 @@
   <div class="col-md-9">
     <!-- MESSAGE -->
     {% include 'partials/_message.html' %}
-    <!--  -->
-    <!-- Botón y Modal Agregar Asignatura (Se mantiene igual, fuera de la tabla) -->
-<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#agregarAsignatura">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
-    <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"/>
-    <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
-  </svg> Agregar Asignatura
-</button>
-
+  <div class="container bg-light p-1 rounded-3"> 
+    <div class="container mt-5">
 <!-- ... (Tu modal de Agregar Asignatura va aquí) ... -->
 <div class="modal fade" id="agregarAsignatura" tabindex="-1" aria-labelledby="modalAsignatura" aria-hidden="true">
   <div class="modal-dialog modal-dialog-scrollable">
@@ -58,7 +51,7 @@
                 <option value="75">75</option>
               </select>
             </div>
-          <button class="btn btn-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
+          <button class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
             <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
             </svg> Guardar</button>
         </div>
@@ -70,22 +63,38 @@
     </div>
   </div>
 </div>
-<hr class="my-4">
 <div class="container bg-light p-1 rounded-3"> 
   <div class="container mt-5">
       <h2 class="mb-4 text-center">Lista de Asignaturas</h2>
       <!-- Buscador de Asignaturas -->
-    <form action="/searchAsignatura" method="POST" class="row g-3 position-relative" role="search">
-      <div class="col-auto position-absolute top-0 start-50 translate-middle">
-        <input class="border rounded-pill text-center" type="search" name="tag" placeholder="Buscar por Nombre" aria-label="Search">
-        <button class="btn btn-outline-success btn-sm" type="submit">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-          </svg> Buscar
-        </button>
+    <div class="row align-items-center mb-3">
+      <!-- Buscador (Ocupa 9 columnas en desktop) -->
+      <div class="col-md-9 mb-3 mb-md-0">
+      <form action="/searchAsignatura" method="POST" class="d-flex w-100" role="search">
+          <!-- Se agregó form-control-sm para achicar el input -->
+          <input class="form-control form-control-sm me-2" type="search" name="tag" placeholder="Buscar por nombre" aria-label="Search">      
+          <!-- Se agregó btn-sm, d-flex, align-items-center y gap-2 -->
+          <button class="btn btn-outline-success btn-sm d-flex align-items-center gap-2" type="submit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg> 
+            Buscar
+          </button>
+        </form>
       </div>
-    </form>
-    <br>
+      <!-- Botón Agregar (Ocupa 3 columnas en desktop, alineado a la derecha) -->
+      <div class="col-md-3 d-flex justify-content-md-end">
+            <!-- Botón y Modal Agregar Asignatura (Se mantiene igual, fuera de la tabla) -->
+        <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#agregarAsignatura">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
+            <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z"/>
+            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+          </svg> Agregar Asignatura
+        </button>
+      </div>  
+    </div>
+
+    <span class="badge bg-info text-dark">Cantidad de Registros: {{ cantidad }}</span>
     <hr class=""my-4>
     <!-- Contenedor responsive para la tabla -->
       <div class="table-responsive">

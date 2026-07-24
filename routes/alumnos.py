@@ -177,7 +177,7 @@ def view(id):
     #alumno = Alumno.query.get(id)
     #tutor = alumno_tutor.query.get(tutor_id==alumno.id)
     age = calculateAge(alumno.fecha_nacimiento)
-    return render_template('/alumnos/detailAlumno.html', alumno=alumno, age=age)
+    return render_template('/alumnos/detailAlumno.html', alumno=alumno, edad=age)
 
 @alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
 def update_alumno(alumno):
