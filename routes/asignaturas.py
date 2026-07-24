@@ -8,9 +8,10 @@ asignaturas = Blueprint("asignaturas", __name__)
 @asignaturas.route("/asignaturas/list")
 def list():
     asignaturas = Asignatura.query.all()
+    cantidad = len(asignaturas)
     # 2. Convertimos la lista de objetos a una lista de diccionarios
     lista_asignaturas = [asignatura.to_dict() for asignatura in asignaturas]
-    return render_template("/asignaturas/list.html", asignaturas=lista_asignaturas)
+    return render_template("/asignaturas/list.html", asignaturas=lista_asignaturas, cantidad=cantidad)
 
 @asignaturas.route("/asignaturas/new", methods=["POST"])
 def new():
@@ -55,12 +56,13 @@ def searchAsignatura():
         
         # Realizamos la búsqueda usando LIKE para permitir coincidencias parciales
         asignaturas = Asignatura.query.filter(Asignatura.nombre_asignatura.ilike(f'%{tag}%')).all()
+        cantidad = len(asignaturas)
         lista_asignaturas = [asignatura.to_dict() for asignatura in asignaturas]
         if not asignaturas:
             flash(f'No se encontraron asignaturas con el nombre "{tag}".', 'info')
         
         #colegios = Colegio.query.all()
-        return render_template('/asignaturas/list.html', asignaturas=lista_asignaturas)
+        return render_template('/asignaturas/list.html', asignaturas=lista_asignaturas, cantidad=cantidad)
     else:
         flash('Método de solicitud no permitido.', 'danger')
         return redirect(url_for('asignaturas.list'))
