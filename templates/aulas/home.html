@@ -16,6 +16,23 @@
           <hr class="my-3 text-secondary">
        <!-- MESSAGE -->
        {% include 'partials/_message.html' %}
+       <!-- Modal Agregar Aula-->
+           <div class="modal fade" id="agregarAula" tabindex="-1" aria-labelledby="agregarAula" aria-hidden="true">
+             <div class="modal-dialog modal-dialog-scrollable">
+               <div class="modal-content">
+                 <div class="modal-header">
+                   <h5 class="modal-title" id="agregarAula">Agregar Aula</h5>
+                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                 </div>
+                 <div class="modal-body">
+                   {% include 'partials/_formAula.html' %}
+                 </div>
+                 <div class="modal-footer">
+                   
+                 </div>
+               </div>
+             </div>
+           </div>
         <!-- Encabezado con Botón y Título -->
                     <div class="row mb-4 align-items-center">
                         <div class="col-auto mx-3">
@@ -28,65 +45,66 @@
                         <div class="col text-center">
                             <h3 class="text-dark mb-0">Aulas</h3>
                         </div>
+                        <div class="col-auto mx-3">
+                            <a class="btn btn-sm btn-outline-success" href="{{url_for('aulas.new_aula')}}" data-bs-toggle="modal" data-bs-target="#agregarAula">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-add" viewBox="0 0 16 16">
+                                <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"/>
+                                <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6.5a.5.5 0 0 1-1 0V1H3v14h3v-2.5a.5.5 0 0 1 .5-.5H8v4H3a1 1 0 0 1-1-1z"/>
+                                <path d="M4.5 2a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm-6 3a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm3 0a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+                                </svg> Agregar
+                            </a>
+                        </div>
                     </div>
-     <div class="container py-3">
-        <div class="row g-4">
-            <!-- Columna Izquierda: Tarjeta Principal de Perfil -->
-            <div class="col-lg-5">
-                <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
-                    <div class="card-body pt-5">
-    <hr>
-
-    <!-- Datos (Organizados en 2 columnas horizontales) -->
-    <div class="row text-start px-3">
-        <!-- Columna 1: Datos Legales -->
-        <div class="col-md-6 mb-4 mb-md-0">
-            <h6 class="text-uppercase text-muted mb-3" style="font-size: 0.8rem;">Datos Personales</h6>
-            <p class="mb-2">
-                <i class="fas fa-id-card text-dark me-2" style="width: 16px; text-align: center;"></i>
-                <span class="text-muted small me-1">N° de DNI:</span>
-                <strong></strong>
-            </p>
-            <p class="mb-2">
-                <i class="fas fa-id-badge text-dark me-2" style="width: 16px; text-align: center;"></i>
-                <span class="text-muted small me-1">N° Cuil:</span>
-                <strong></strong>
-            </p>
-            <p class="mb-2">
-                <i class="fas fa-calendar-alt text-dark me-2" style="width: 16px; text-align: center;"></i>
-                <span class="text-muted small me-1">Fecha de Nac.:</span>
-                <strong></strong>
-            </p>
+        <hr class="my-3 text-secondary">
+    <div class="container py-3 ">
+    <div class="row g-4">
+    {% for aula in aulas %}
+    <div class="col-lg-3 col-md-6">
+        <!-- 1. Quité 'p-3' de aquí para evitar doble padding y bajé 'mb-5' a 'mb-3' -->
+        <div class="card shadow mb-3 bg-body rounded-3 border-1 border-secondary h-100">
+            
+            <!-- 2. Dejamos el padding solo en el body (p-3) -->
+            <div class="card-body p-3">
+                <!-- 3. Reduje el margen inferior del título de mb-3 a mb-2 -->
+                <h6 class="text-uppercase text-center text-muted mb-2" style="font-size: 0.8rem;">
+                    <strong>{{aula.nombre_aula}}</strong>
+                </h6>
+                
+                <!-- 4. Añadí 'my-2' a la línea para que no genere tanto espacio arriba y abajo -->
+                <hr class="my-2">
+                
+                <div class="row text-start px-2">
+                    <!-- 5. Quité 'mb-4' que estaba sumando espacio extra -->
+                    <div class="col-12">
+                        <!-- 6. Reduje mb-2 a mb-1 en los datos -->
+                        <div class="d-flex justify-content-between align-items-baseline mb-1">
+                            <span class="text-muted small me-2">Ubicación:</span>
+                            <strong class="text-end" style="font-size: 0.9rem;">{{aula.ubicacion}}</strong>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between align-items-baseline mb-0">
+                            <span class="text-muted small me-2">Capacidad:</span>
+                            <strong class="text-end" style="font-size: 0.9rem;">{{aula.capacidad}}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 7. Cambié 'pb-4' a 'pb-3' y añadí 'pt-0' para acercar el botón al contenido -->
+            <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                <div class="d-flex justify-content-center align-items-stretch gap-2">
+                    <a href="#" class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-                    <!-- Opciones para gestionar alumno -->
-        <div class="card-footer bg-transparent border-0 pb-4">
-    <!-- align-items-stretch asegura que todos tengan la misma altura -->
-    <div class="d-flex justify-content-center align-items-stretch gap-2">
-        <!-- Botón 1: Editar -->
-        <a href="#" class="btn btn-sm btn-outline-primary w-100 d-flex align-items-center justify-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-1" viewBox="0 0 16 16">
-                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
-            </svg>
-            Editar
-        </a>
-        <!-- Botón 3: Borrar Registro (Dentro de un form flexificado) -->
-        <form action="#" method="POST" class="m-0 p-0 w-100 d-flex" onsubmit="return confirm('¿Estás seguro de que deseas eliminar permanentemente a este alumno?');">
-            <button type="submit" class="btn btn-sm btn-outline-danger w-100 d-flex align-items-center justify-content-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-dash" viewBox="0 0 16 16">
-                    <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7M11 12h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1 0-1m0-7a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
-                    <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
-                 </svg> Eliminar
-            </button>
-        </form>
-    </div>
-    </div>
-        </div>
-    </div>
-    
-            </div> <!-- Cierre de tab-content -->
+    {% endfor %}
+</div><!-- Cierre de tab-content -->
     </div> <!-- Cierre de row -->
 </div> <!-- Cierre de container -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

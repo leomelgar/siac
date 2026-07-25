@@ -10,25 +10,20 @@ def home():
     aulas = Aula.query.all()
     return render_template('/aulas/home.html', aulas=aulas)
 
-@aulas.route('/aulas/nuevo', methods=["POST","GET"])
-def new():
-    aulas = Aula.query.all()
-    return render_template('/aulas/new.html', aulas=aulas)
 
-@aulas.route('/aulas/add_aula', methods=["POST"])
-def add_aula():
+
+@aulas.route('/new', methods=["POST"])
+def new_aula():
     if request.method=="POST":
-        nombre_curso = request.form['nombre_curso']
-        division = request.form['division']
-        periodo = request.form['periodo']
-        aula_id = request.form['aula_id']
-        turno_id = request.form['turno_id']
-       
-        #new_curso = Curso(nombre_curso, division, periodo, aula_id, turno_id)
-        #db.session.add(new_curso)
-        #db.session.commit()
-        flash('Curso añadido correctamente!')
-        return redirect(url_for('cursos.home'))
+        nombre_aula = request.form['nombre_aula']
+        capacidad = request.form['capacidad']
+        ubicacion = request.form['ubicacion']
+        id_colegio =1
+        new_aula = Aula(id_colegio,nombre_aula, capacidad, ubicacion)
+        db.session.add(new_aula)
+        db.session.commit()
+        flash('Aula creada correctamente!')
+        return redirect(url_for('aulas.home'))
 
 @aulas.route('/cursos/delete/<id_aula>')
 def delete(id_aula):
