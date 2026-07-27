@@ -1,0 +1,54 @@
+{% include 'partials/_navbar.html' %}
+
+<div class="container mt-5" style="max-width: 500px;">
+  <h2 class="mb-4 text-center">Crear acceso al sistema</h2>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for categoria, mensaje in messages %}
+        <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="POST" action="{{ url_for('auth.registrar') }}">
+
+    {% if persona %}
+      <div class="alert alert-secondary">
+        Creando acceso para: <strong>{{ persona.nombre }} {{ persona.apellido }}</strong>
+        (DNI: {{ persona.dni }})
+      </div>
+      <input type="hidden" name="id_persona" value="{{ persona.id }}">
+    {% else %}
+      <div class="mb-3">
+        <label for="id_persona" class="form-label">ID de persona</label>
+        <input type="number" class="form-control" id="id_persona" name="id_persona" required>
+      </div>
+    {% endif %}
+
+    <div class="mb-3">
+      <label for="id_rol" class="form-label">Rol</label>
+      <select class="form-select" id="id_rol" name="id_rol" required>
+        <option value="" disabled selected>Seleccioná un rol</option>
+        {% for rol in roles %}
+          <option value="{{ rol.id_rol }}">{{ rol.nombre_rol }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label for="username" class="form-label">Usuario</label>
+      <input type="text" class="form-control" id="username" name="username" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Contraseña</label>
+      <input type="password" class="form-control" id="password" name="password" required minlength="8">
+      <div class="form-text">Mínimo 8 caracteres.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100">Crear usuario</button>
+  </form>
+</div>
+
+{% include 'partials/_footer.html' %}
