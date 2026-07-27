@@ -124,3 +124,5 @@ def _registrar_post():
 @login_required
 def me():
     return render_template('auth/me.html', usuario=current_user, persona=current_user.persona)
+
+#https://claude.ai/share/46d94338-6ea4-4038-a5eb-42cdc9de56c9
