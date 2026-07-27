@@ -7,6 +7,7 @@ load_dotenv()
 # password = os.environ["MYSQL_PASSWORD"]
 # host = os.environ["MYSQL_HOST"]
 # database = os.environ["MYSQL_DATABASE"]
+SECRET_KEY = os.environ.get('SECRET_KEY', 'sisPruebaV1')
 user = "leonux"
 password = "crysis2pc"
 host = "127.0.0.1"
