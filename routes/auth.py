@@ -15,7 +15,7 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('alumnos.home'))  # ajustá al endpoint que uses como "inicio"
+        return redirect(url_for('alumnos.home'))  # ajustá al endpoint que uses como "inicio, por ahora es el listado de alumnos"
 
     if request.method == 'GET':
         return render_template('auth/login.html')

@@ -30,6 +30,10 @@ def create_app():
     from utils.template_filters import register_filters
     register_filters(app)
 
+     # --- Páginas de error propias (401, 403, 404) ---
+    from utils.error_handlers import register_error_handlers
+    register_error_handlers(app)
+
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'          # blueprint 'auth', endpoint 'login'
     login_manager.login_message = 'Debés iniciar sesión para acceder a esta página.'
