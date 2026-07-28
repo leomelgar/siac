@@ -5,8 +5,11 @@
 {% endblock %}
 {% block body %}
 {% include 'partials/_navbar.html' %}
-
-<div class="container mt-5" style="max-width: 420px;">
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <!-- col-12 en móviles, col-lg-6 en PC. Al estar dentro de row justify-content-center, queda perfectamente centrado -->
+    <div class="col-12 col-md-8 col-lg-6 d-flex justify-content-center">
+  <div class="bg-white p-4 w-100 rounded shadow-sm" style="max-width: 500px;">
   <h2 class="mb-4 text-center">Iniciar sesión</h2>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
@@ -36,6 +39,7 @@
     <button type="submit" class="btn btn-primary w-100">Ingresar</button>
   </form>
 </div>
-
-{% include 'partials/_footer.html' %}
+    </div>
+  </div>
+</div>
 {% endblock %}

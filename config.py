@@ -14,4 +14,3 @@ host = "127.0.0.1"
 database = "siac_2_db"
 
 DATABASE_CONNECTION_URI = f'mysql+pymysql://{user}:{password}@{host}/{database}'
-print(DATABASE_CONNECTION_URI)

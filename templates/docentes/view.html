@@ -112,8 +112,8 @@
                     Ya tiene usuario: {{ docente.usuario.username }}
                 </span>
                 {% else %}
-                <a href="{{ url_for('auth.registrar', id_persona=docente.id) }}" class="btn btn-primary btn-sm">
-                    Crear acceso al sistema
+                <a href="{{ url_for('auth.registrar', id_persona=docente.id) }}" class="btn btn-sm btn-outline-secondary w-100 d-flex align-items-center justify-content-center">
+                    Crear acceso
                 </a>
                 {% endif %}
             <!-- Botón 3: Borrar Registro (Dentro de un form flexificado) -->

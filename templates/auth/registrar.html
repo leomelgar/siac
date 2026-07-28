@@ -1,54 +1,77 @@
-{% include 'partials/_navbar.html' %}
+{% extends 'layout.html' %}
 
-<div class="container mt-5" style="max-width: 500px;">
-  <h2 class="mb-4 text-center">Crear acceso al sistema</h2>
+{% block title %}
+  Docentes | Acceso
+{% endblock %}
 
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      {% for categoria, mensaje in messages %}
-        <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
+{% block body %}
 
-  <form method="POST" action="{{ url_for('auth.registrar') }}">
+  <div class="container mt-5">
+  <div class="row justify-content-center">
+    <!-- col-12 en móviles, col-lg-6 en PC. Al estar dentro de row justify-content-center, queda perfectamente centrado -->
+    <div class="col-12 col-md-8 col-lg-6 d-flex justify-content-center">
+      
+      <div class="bg-white p-4 w-100 rounded shadow-sm" style="max-width: 500px;">
+        <h2 class="mb-4 text-center">Dar acceso al sistema</h2>
 
-    {% if persona %}
-      <div class="alert alert-secondary">
-        Creando acceso para: <strong>{{ persona.nombre }} {{ persona.apellido }}</strong>
-        (DNI: {{ persona.dni }})
-      </div>
-      <input type="hidden" name="id_persona" value="{{ persona.id }}">
-    {% else %}
-      <div class="mb-3">
-        <label for="id_persona" class="form-label">ID de persona</label>
-        <input type="number" class="form-control" id="id_persona" name="id_persona" required>
-      </div>
-    {% endif %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for categoria, mensaje in messages %}
+              <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
 
-    <div class="mb-3">
-      <label for="id_rol" class="form-label">Rol</label>
-      <select class="form-select" id="id_rol" name="id_rol" required>
-        <option value="" disabled selected>Seleccioná un rol</option>
-        {% for rol in roles %}
-          <option value="{{ rol.id_rol }}">{{ rol.nombre_rol }}</option>
-        {% endfor %}
-      </select>
+        <form method="POST" action="{{ url_for('auth.registrar') }}">
+
+          {% if persona %}
+            <div class="alert alert-primary" role="alert">
+              Creando acceso para: <strong>{{ persona.nombre }} {{ persona.apellido }}</strong>
+              <br>(DNI: {{ persona.dni }}) <span class="text-success"> - {{persona.tipo_persona}}</span>
+            </div>
+            <input type="hidden" name="id_persona" value="{{ persona.id }}">
+          {% else %}
+            <div class="mb-3">
+              <label for="id_persona" class="form-label">ID de persona</label>
+              <input type="number" class="form-control" id="id_persona" name="id_persona" required>
+            </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label for="id_rol" class="form-label">Rol</label>
+            <select class="form-select" id="id_rol" name="id_rol" required>
+              <option value="" disabled selected>Seleccioná un rol</option>
+              {% for rol in roles %}
+                <option value="{{ rol.id_rol }}">{{ rol.nombre_rol }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="username" class="form-label">Usuario</label>
+            <input type="text" class="form-control" id="username" name="username" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password" required minlength="8">
+            <div class="form-text">Mínimo 8 caracteres.</div>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-check" viewBox="0 0 16 16">
+              <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m1.679-4.493-1.335 2.226a.75.75 0 0 1-1.174.144l-.774-.773a.5.5 0 0 1 .708-.708l.547.548 1.17-1.951a.5.5 0 1 1 .858.514M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
+              <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+            </svg> Crear usuario</button>
+            <a href="#" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+              <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+            </svg> Cancelar</a>
+          </div>
+        </form>
+      </div>   
     </div>
-
-    <div class="mb-3">
-      <label for="username" class="form-label">Usuario</label>
-      <input type="text" class="form-control" id="username" name="username" required>
-    </div>
-
-    <div class="mb-3">
-      <label for="password" class="form-label">Contraseña</label>
-      <input type="password" class="form-control" id="password" name="password" required minlength="8">
-      <div class="form-text">Mínimo 8 caracteres.</div>
-    </div>
-
-    <button type="submit" class="btn btn-primary w-100">Crear usuario</button>
-  </form>
+  </div>
 </div>
 
-{% include 'partials/_footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% endblock %}

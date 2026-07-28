@@ -18,14 +18,18 @@ def create_app():
     app = Flask(__name__)
 
     # settings
-    app.config["SECRET_KEY"]
+    app.config["SECRET_KEY"]='sisPruebaV1'
     app.config["SQLALCHEMY_DATABASE_URI"] = DATABASE_CONNECTION_URI
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
     # no cache
     app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
     db.init_app(app)
-    #db = SQLAlchemy(app)
+
+    # --- Filtros Jinja personalizados ---
+    from utils.template_filters import register_filters
+    register_filters(app)
+
     login_manager.init_app(app)
     login_manager.login_view = 'auth.login'          # blueprint 'auth', endpoint 'login'
     login_manager.login_message = 'Debés iniciar sesión para acceder a esta página.'
@@ -54,5 +58,3 @@ def load_user(id_usuario):
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True, host="0.0.0.0")
-
-#https://search.brave.com/ask?q=dise%C3%B1a+una+base+de+datos+relacional+para+un+colegio%2C+usando+como+entidades%3A+docentes%2C+alumnos%2C+tutores+o+padres%2C+clases%2C+asignaturas%2C+asistencias%2C+aulas%2C+horarios%2C+turnos%2C+matricula&conversation=09449ab4044c71666cff6ccdde0d74f5d65e#tsD7lfqaHop5ZTDXkvXYHRKniXz_ZLZG_QRNdwlWZSw

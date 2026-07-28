@@ -1,9 +1,15 @@
-from crypt import methods
+#from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 from models.colege import Aula, Colegio
 from utils.db import db
 
 aulas = Blueprint("aulas", __name__)
+
+@aulas.before_request
+@login_required
+def requerir_login():
+    pass
 
 @aulas.route('/aulas/home')
 def home():

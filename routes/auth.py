@@ -63,7 +63,7 @@ def registrar():
         # Si la persona ya tiene usuario, no tiene sentido mostrar el formulario
         if persona is not None and persona.usuario is not None:
             flash('Esta persona ya tiene un usuario asignado', 'warning')
-            return redirect(request.referrer or url_for('alumnos.home'))
+            return redirect(request.referrer or url_for('auth.login'))
 
         roles = Rol.query.all()
         return render_template('auth/registrar.html', persona=persona, roles=roles)
@@ -124,5 +124,3 @@ def _registrar_post():
 @login_required
 def me():
     return render_template('auth/me.html', usuario=current_user, persona=current_user.persona)
-
-#https://claude.ai/share/46d94338-6ea4-4038-a5eb-42cdc9de56c9

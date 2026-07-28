@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 from models.colege import Alumno, Tutor, Persona, Colegio, alumno_tutor
 from utils.db import db
 from datetime import datetime as dt
@@ -6,6 +7,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import joinedload
 
 alumnos = Blueprint("alumnos", __name__)
+
+@alumnos.before_request
+@login_required
+def requerir_login():
+    pass
 
 @alumnos.route('/alumnos/home', methods=["GET"]) #listado de alumnos
 def home():
