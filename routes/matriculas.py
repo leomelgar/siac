@@ -15,6 +15,8 @@ def listar():
     periodo = request.args.get('periodo', type=int)
     id_colegio = request.args.get('id_colegio', type=int)
     estado = request.args.get('estado', type=str)
+    page = request.args.get('page', 1, type=int)
+    per_page = 15          # Cantidad de registros por página (ajustable)
 
     query = Matricula.query
 
@@ -25,10 +27,13 @@ def listar():
     if estado:
         query = query.filter(Matricula.estado_matricula == estado)
 
-    matriculas = query.order_by(
+    # Orden + paginación
+    pagination = query.order_by(
         Matricula.periodo_lectivo.desc(),
         Matricula.id_matricula.desc()
-    ).all()
+    ).paginate(page=page, per_page=per_page, error_out=False)
+
+    matriculas = pagination.items
 
     # Datos para los selects de filtro
     periodos = db.session.query(Matricula.periodo_lectivo)\
@@ -42,6 +47,7 @@ def listar():
     return render_template(
         'matricula/listar.html',
         matriculas=matriculas,
+        pagination=pagination,
         periodos=periodos,
         colegios=colegios,
         filtro_periodo=periodo,
