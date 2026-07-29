@@ -7,6 +7,7 @@ from routes.alumnos import alumnos
 from routes.asignaturas import asignaturas
 from routes.aulas import aulas
 from routes.auth import auth
+from routes.matriculas import matricula_bp
 from flask_sqlalchemy import SQLAlchemy
 from config import DATABASE_CONNECTION_URI
 from utils.db import db
@@ -44,7 +45,7 @@ def create_app():
     app.register_blueprint(colegios)
     app.register_blueprint(docentes)
     app.register_blueprint(alumnos)
-    #app.register_blueprint(catedras)
+    app.register_blueprint(matricula_bp)
     app.register_blueprint(asignaturas)
     app.register_blueprint(aulas)
     #app.register_blueprint(clases)

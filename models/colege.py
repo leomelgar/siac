@@ -440,6 +440,14 @@ class Matricula(db.Model):
     def repr(self):
         return f"<Matricula Alumno ID: {self.id_alumno} - Grado: {self.grado_nivel} ({self.periodo_lectivo})>"
 
+    # Constraint de unicidad
+    __table_args__ = (
+        db.UniqueConstraint(
+            'id_alumno', 'id_colegio', 'periodo_lectivo',
+            name='uq_matricula_alumno_colegio_periodo'
+        ),
+    )
+
 # ==========================================
 # ASISTENCIA DIARIA (Modificada)
 # ==========================================
