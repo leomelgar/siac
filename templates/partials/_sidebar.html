@@ -5,13 +5,17 @@
     </a>
     <ul class="list-unstyled ps-0">
       <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+        <button type="button"
+          class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed"
+          data-bs-toggle="collapse"
+          data-bs-target="#alumnos-collapse"
+          aria-expanded="false">
           Alumnos
         </button>
-        <div class="collapse show" id="home-collapse">
+        <div class="collapse" id="alumnos-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li><a href="{{ url_for('alumnos.inscripcion') }}" class="link-dark d-inline-flex text-decoration-none rounded">Inscripcion</a></li>
-            <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Notificaciones</a></li>
+            <li><a href="{{ url_for('matricula.listar') }}" class="link-dark d-inline-flex text-decoration-none rounded">Matriculas</a></li>
             <li><a href="{{ url_for('alumnos.home') }}" class="link-dark d-inline-flex text-decoration-none rounded">Listado</a></li>
           </ul>
         </div>
@@ -38,7 +42,8 @@
             <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Nueva</a></li>
             <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">Ver Todas</a></li>
           </ul>
-        </div>
+        </div>  
       </li>
     </ul>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

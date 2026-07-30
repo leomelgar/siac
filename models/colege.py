@@ -420,24 +420,41 @@ class Horario(db.Model):
 class Matricula(db.Model):
     """Vincula a un alumno con una institución y un año escolar determinado."""
     __tablename__ = 'matricula'
+
     id_matricula = db.Column(db.Integer, primary_key=True)
     id_alumno = db.Column(db.Integer, db.ForeignKey('alumno.id'), nullable=False)
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
     fecha_inscripcion = db.Column(db.Date, nullable=False)
-    grado_nivel = db.Column(db.String(50), nullable=False) # Ej: 5to Año Secundaria
-    periodo_lectivo = db.Column(db.Integer, nullable=False) # Ej: 2026
-    estado_matricula = db.Column(db.String(20), default="Activo") # Activo, Baja, Suspendido
+    grado_nivel = db.Column(db.String(50), nullable=False)
+    periodo_lectivo = db.Column(db.Integer, nullable=False)
+    estado_matricula = db.Column(db.String(20), default="Activo")
+    
+    # Nuevo campo
+    tipo_ingreso = db.Column(db.String(50), nullable=False)
+    # Valores: "Ingreso desde primaria" | "Pase de otro establecimiento"
+
+    # Relaciones
     alumno = db.relationship('Alumno', back_populates='matriculas')
     colegio = db.relationship('Colegio', back_populates='matriculas')
-    def init(self, id_alumno, id_colegio, fecha_inscripcion, grado_nivel, periodo_lectivo, estado_matricula="Activo"):
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            'id_alumno', 'id_colegio', 'periodo_lectivo',
+            name='uq_matricula_alumno_colegio_periodo'
+        ),
+    )
+
+    def __init__(self, id_alumno, id_colegio, fecha_inscripcion, grado_nivel,
+                 periodo_lectivo, tipo_ingreso, estado_matricula="Activo"):
         self.id_alumno = id_alumno
         self.id_colegio = id_colegio
         self.fecha_inscripcion = fecha_inscripcion
         self.grado_nivel = grado_nivel
         self.periodo_lectivo = periodo_lectivo
+        self.tipo_ingreso = tipo_ingreso
         self.estado_matricula = estado_matricula
-        
-    def repr(self):
+
+    def __repr__(self):
         return f"<Matricula Alumno ID: {self.id_alumno} - Grado: {self.grado_nivel} ({self.periodo_lectivo})>"
 
     # Constraint de unicidad
