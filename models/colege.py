@@ -1,6 +1,7 @@
 from utils.db import db
 from datetime import datetime
 from flask_login import UserMixin
+from flask import url_for
 # ==========================================
 # 1. TABLAS INTERMEDIAS Y ASOCIATIVAS
 # ==========================================
@@ -283,6 +284,11 @@ class Usuario(db.Model, UserMixin):
     @property
     def is_active(self):
         return self.activo
+    @property
+    def avatar_url(self):
+        if self.avatar:
+            return url_for('static', filename=self.avatar)
+        return url_for('avatar_svg', username=self.username or 'U')
 
 # ==========================================
 # 4. NUEVOS MODELOS (GESTIÓN ACADÉMICA)
