@@ -66,10 +66,15 @@
                                   <!-- Banner que aparece cuando ya se eligió un tutor de la búsqueda -->
                                   <div id="tutor-seleccionado" class="alert alert-success justify-content-between align-items-center mt-2" style="display:none;">
                                       <span>Tutor seleccionado: <strong id="texto-tutor-seleccionado"></strong></span>
-                                      <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-cambiar-tutor"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
-                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
-                                      </svg> Cambiar</button>
+                                      <div class="d-flex gap-2">
+                                          
+                                          <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-cambiar-tutor">
+                                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                                  <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                                  <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                              </svg> Cambiar
+                                          </button>
+                                      </div>
                                   </div>
                                   <!-- ------------- Fin de Buscador de Tutor ----------- -->
                                   <hr class="my-3 text-secondary">
@@ -143,6 +148,15 @@
                                     <div class="col-md-6">
                                       <label for="telefono_t" class="form-label">Telefono</label>
                                       <input type="text" class="form-control" name="telefono_t" id="telefono_t">
+                                    </div>
+                                    <!-- BOTÓN EDITAR: solo visible cuando hay un tutor seleccionado -->
+                                    <div class="col-12 mt-3" id="contenedor-btn-editar" style="display:none;">
+                                      <button type="button" class="btn btn-outline-primary" id="btn-editar-tutor" title="Editar datos del tutor">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+                                        </svg>
+                                        Editar
+                                      </button>
                                     </div>
                                   </div>
                                 </div>
@@ -219,25 +233,27 @@
 {% block scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const inputBuscar    = document.getElementById('buscar-tutor');
-    const resultadosDiv  = document.getElementById('resultados-busqueda');
-    const tutorSelDiv    = document.getElementById('tutor-seleccionado');
-    const textoTutor     = document.getElementById('texto-tutor-seleccionado');
-    const inputIdTutor   = document.getElementById('tutor_id');
-    const btnLimpiar     = document.getElementById('btn-limpiar-busqueda');
-    const btnCambiar     = document.getElementById('btn-cambiar-tutor');
-    const form           = document.getElementById('form-matricula');
+    const inputBuscar      = document.getElementById('buscar-tutor');
+    const resultadosDiv    = document.getElementById('resultados-busqueda');
+    const tutorSelDiv      = document.getElementById('tutor-seleccionado');
+    const textoTutor       = document.getElementById('texto-tutor-seleccionado');
+    const inputIdTutor     = document.getElementById('tutor_id');
+    const btnLimpiar       = document.getElementById('btn-limpiar-busqueda');
+    const btnCambiar       = document.getElementById('btn-cambiar-tutor');
+    const btnEditar        = document.getElementById('btn-editar-tutor');
+    const contenedorEditar = document.getElementById('contenedor-btn-editar');
+    const form             = document.getElementById('form-matricula');
 
-    // Campos del formulario del tutor que se autocompletan
-    const campoNombre    = document.getElementById('nombre_t');
-    const campoApellido  = document.getElementById('apellido_t');
-    const campoDireccion = document.getElementById('direccion_t');
-    const campoDni       = document.getElementById('dni_t');
-    const campoOcupacion = document.getElementById('ocupacion');
+    // Campos del formulario del tutor
+    const campoNombre     = document.getElementById('nombre_t');
+    const campoApellido   = document.getElementById('apellido_t');
+    const campoDireccion  = document.getElementById('direccion_t');
+    const campoDni        = document.getElementById('dni_t');
+    const campoOcupacion  = document.getElementById('ocupacion');
     const campoParentesco = document.getElementById('parentesco');
-    const campoFechaNac  = document.getElementById('fecha_nacimiento_t');
-    const campoEmail     = document.getElementById('email_t');
-    const campoTelefono  = document.getElementById('telefono_t');
+    const campoFechaNac   = document.getElementById('fecha_nacimiento_t');
+    const campoEmail      = document.getElementById('email_t');
+    const campoTelefono   = document.getElementById('telefono_t');
 
     const camposTutor = [
         campoNombre, campoApellido, campoDireccion, campoDni,
@@ -245,8 +261,9 @@ document.addEventListener('DOMContentLoaded', function () {
     ];
 
     let timeout = null;
+    let modoEdicion = false;
 
-    // Búsqueda mientras se escribe
+    // ---------- Búsqueda ----------
     inputBuscar.addEventListener('input', function () {
         clearTimeout(timeout);
         const q = this.value.trim();
@@ -281,37 +298,32 @@ document.addEventListener('DOMContentLoaded', function () {
                     resultadosDiv.innerHTML = '<div class="list-group-item text-danger">Error al buscar</div>';
                     resultadosDiv.style.display = 'block';
                 });
-        }, 300); // debounce 300 ms
+        }, 300);
     });
 
-    // Autocompleta el formulario con los datos del tutor elegido
+    // ---------- Seleccionar tutor ----------
     function seleccionarTutor(tutor) {
+        modoEdicion = false;
         inputIdTutor.value = tutor.id;
 
-        campoNombre.value    = tutor.nombre || '';
-        campoApellido.value  = tutor.apellido || '';
-        campoDireccion.value = tutor.direccion || '';
-        campoDni.value       = tutor.dni || '';
-        campoOcupacion.value = tutor.ocupacion || '';
+        campoNombre.value     = tutor.nombre || '';
+        campoApellido.value   = tutor.apellido || '';
+        campoDireccion.value  = tutor.direccion || '';
+        campoDni.value        = tutor.dni || '';
+        campoOcupacion.value  = tutor.ocupacion || '';
         campoParentesco.value = tutor.parentesco || '';
-        campoFechaNac.value  = tutor.fecha_nacimiento || ''; // formato YYYY-MM-DD
-        campoEmail.value     = tutor.email || '';
-        campoTelefono.value  = tutor.telefono || '';
+        campoFechaNac.value   = tutor.fecha_nacimiento || '';
+        campoEmail.value      = tutor.email || '';
+        campoTelefono.value   = tutor.telefono || '';
 
-        // Radios de género del tutor
         document.querySelectorAll('input[name="genero_t"]').forEach(r => {
             r.checked = (r.value === tutor.genero);
         });
-
-        // Radios de legal (true/false)
         document.querySelectorAll('input[name="legal"]').forEach(r => {
             r.checked = (r.value === String(tutor.legal));
         });
 
-        // Bloqueamos los campos: los datos vienen del tutor ya registrado,
-        // así el backend usa tutor_id y no vuelve a leer estos inputs.
-        camposTutor.forEach(c => c.disabled = true);
-        document.querySelectorAll('input[name="genero_t"], input[name="legal"]').forEach(r => r.disabled = true);
+        setCamposTutorDisabled(true);
 
         textoTutor.textContent = tutor.texto;
         tutorSelDiv.style.display = 'flex';
@@ -319,10 +331,55 @@ document.addEventListener('DOMContentLoaded', function () {
         btnLimpiar.style.display = 'none';
         resultadosDiv.style.display = 'none';
         resultadosDiv.innerHTML = '';
+
+        // Mostrar el botón Editar abajo del formulario
+        if (contenedorEditar) contenedorEditar.style.display = 'block';
+        restaurarBotonEditar();
     }
 
-    // Vuelve al estado de "crear tutor nuevo" / buscar de nuevo
+    function setCamposTutorDisabled(disabled) {
+        camposTutor.forEach(c => c.disabled = disabled);
+        document.querySelectorAll('input[name="genero_t"], input[name="legal"]').forEach(r => {
+            r.disabled = disabled;
+        });
+    }
+
+    // ---------- Activar edición ----------
+    function activarEdicion() {
+        if (!inputIdTutor.value) return;
+
+        modoEdicion = true;
+        setCamposTutorDisabled(false);
+
+        if (btnEditar) {
+            btnEditar.classList.remove('btn-outline-primary');
+            btnEditar.classList.add('btn-primary');
+            btnEditar.innerHTML = `
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0"/>
+                </svg>
+                Editando... (los cambios se guardan al enviar)`;
+            btnEditar.title = 'Los cambios se guardarán al enviar el formulario';
+        }
+
+        campoNombre.focus();
+    }
+
+    function restaurarBotonEditar() {
+        if (!btnEditar) return;
+        btnEditar.classList.remove('btn-primary');
+        btnEditar.classList.add('btn-outline-primary');
+        btnEditar.innerHTML = `
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+            </svg>
+            Editar`;
+        btnEditar.title = 'Editar datos del tutor';
+    }
+
+    // ---------- Limpiar selección ----------
     function limpiarSeleccion() {
+        modoEdicion = false;
         inputIdTutor.value = '';
 
         camposTutor.forEach(c => { c.disabled = false; c.value = ''; });
@@ -331,6 +388,9 @@ document.addEventListener('DOMContentLoaded', function () {
             r.checked = false;
         });
         if (campoParentesco) campoParentesco.selectedIndex = 0;
+
+        if (contenedorEditar) contenedorEditar.style.display = 'none';
+        restaurarBotonEditar();
 
         textoTutor.textContent = '';
         tutorSelDiv.style.display = 'none';
@@ -342,6 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     btnLimpiar.addEventListener('click', limpiarSeleccion);
     btnCambiar.addEventListener('click', limpiarSeleccion);
+    if (btnEditar) btnEditar.addEventListener('click', activarEdicion);
 
     // Cerrar resultados al hacer clic fuera
     document.addEventListener('click', function (e) {
@@ -350,9 +411,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Antes de enviar: si NO hay tutor seleccionado, exigimos como mínimo
-    // nombre/apellido/dni para no mandar el form vacío (el resto de las
-    // validaciones "duras" -fechas, etc.- las hace el backend).
+    // Validación al enviar
     form.addEventListener('submit', function (e) {
         if (!inputIdTutor.value) {
             if (!campoNombre.value.trim() || !campoApellido.value.trim() || !campoDni.value.trim()) {
@@ -362,6 +421,5 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
-});
-</script>
+});</script>
 {% endblock %}
