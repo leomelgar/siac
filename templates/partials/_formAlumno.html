@@ -6,16 +6,16 @@
                     <div class="card-body pt-5">
                         <!-- Foto de Perfil -->
                         <img src="https://github.com/mdo.png"
-                             alt="Foto del Alumno" 
-                             class="rounded-circle img-thumbnail mb-3" 
-                             style="width: 150px; height: 150px; object-fit: cover;">                        
+                             alt="Foto del Alumno"
+                             class="rounded-circle img-thumbnail mb-3"
+                             style="width: 150px; height: 150px; object-fit: cover;">
                     </div>
                     <div class="col-12 p-4">
                       <a href="#" class="btn btn-outline-success">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
                         <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
                         <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708z"/>
-                      </svg> Cargar Archivos</a>                        
+                      </svg> Cargar Archivos</a>
                     </div>
                 </div>
             </div>
@@ -36,149 +36,332 @@
 
                     <!-- Contenido de las Pestañas -->
                     <div class="card-body p-4">
-                        <div class="tab-content" id="myTabContent">  
-                            <!-- PESTAÑA 1: DATOS PERSONALES DEL TUTOR-->
-                            <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
-                              <form class="row g-3" action="{{url_for('alumnos.new_alumno')}}" method="POST">
-                                <div class="col-md-6">
-                                  <label for="nombre_t" class="form-label">Nombre</label>
-                                  <input type="text" class="form-control" name="nombre_t" id="nombre_t">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="apellido_t" class="form-label">Apellido</label>
-                                  <input type="text" class="form-control" name="apellido_t" id="apellido_t">
-                                </div>
-                                <div class="col-12">
-                                  <label for="direccion_t" class="form-label">Direccion</label>
-                                  <input type="text" class="form-control" name="direccion_t" id="direccion_t">
-                                </div>
-                                <div class="col-6">
-                                  <label for="dni_t" class="form-label">DNI</label>
-                                  <input type="text" class="form-control" name="dni_t" id="dni_t">
-                                </div>
-                                <div class="col-6">
-                                  <label for="ocupacion" class="form-label">Ocupacion</label>
-                                  <input type="text" class="form-control" name="ocupacion" id="ocupacion">
-                                </div>
-                                <div class="col-md-4">
-                                  <label for="parentesco" class="form-label">Parentesco</label>
-                                  <select name="parentesco" class="form-select">
-                                    <!-- CORRECCIÓN: Agregamos value="" y disabled -->
-                                    <option value="" selected disabled>elegir...</option>
-                                    <option value="Padre">Padre</option>
-                                    <option value="Madre">Madre</option>
-                                    <option value="Hermano-a">Hermano-a</option>
-                                    <option value="Abuelo-a">Abuelo-a</option>
-                                    <option value="Otro">Otro</option>
-                                  </select>
-                                </div>
-                                <div class="col-md-6">
-                                  <div class="form-check form-check-inline">
-                                    <label class="form-check-label" for="legal">Legal</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="legal" id="legal" value='True'>
-                                    <label class="form-check-label" for="legal">Si</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="legal" id="legal" value='False'>
-                                    <label class="form-check-label" for="legal">No</label>
-                                  </div>
-                                </div>
-                                <div class="mb-3">
-                                  <label for="genero_t">Genero:</label>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero_t" value="masculino">
-                                    <label class="form-check-label" for="genero_t">Masculino</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero_t" value="femenino">
-                                    <label class="form-check-label" for="genero_t">Femenino</label>
-                                  </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero_t" id="inlineRadio3" value="no binario">
-                                    <label class="form-check-label" for="genero_t">No Binario</label>
-                                  </div>
-                                </div>
-                                <div class="col-6">
-                                  <label for="fecha_nacimiento_t" class="form-label">Fecha de Nacimiento</label>
-                                  <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t">
-                                </div>
-                                <div class="col-6">
-                                  <label for="email_t" class="form-label">Email</label>
-                                  <input type="text" class="form-control" name="email_t" id="email_t">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="telefono_t" class="form-label">Telefono</label>
-                                  <input type="text" class="form-control" name="telefono_t" id="telefono_t">
-                                </div>
-                            </div>
+                        <!-- El form envuelve las dos pestañas: los inputs ocultos por Bootstrap igual viajan en el POST -->
+                        <form class="row g-3" id="form-matricula" action="{{ url_for('alumnos.new_alumno') }}" method="POST">
 
-                            <!-- PESTAÑA 2: AGREGAR DATOS DEL ALUMNO -->
-                            <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
-                              <div class="form-row row g-3">
-                                  <div class="col-md-6">
-                                  <label for="nombre" class="form-label">Nombre</label>
-                                  <input type="text" class="form-control" name="nombre" id="nombre">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="apellido" class="form-label">Apellido</label>
-                                  <input type="text" class="form-control" name="apellido" id="apellido">
-                                </div>
-                                <div class="col-12">
-                                  <label for="direccion" class="form-label">Direccion</label>
-                                  <input type="text" class="form-control" name="direccion" id="direccion">
-                                </div>
-                                <div class="col-6">
-                                  <label for="dni" class="form-label">DNI</label>
-                                  <input type="text" class="form-control" name="dni" id="dni">
-                                </div>
-                                <div class="col-md-6">
-                                  <label for="cuil" class="form-label">Cuil</label>
-                                  <input type="text" class="form-control" name="cuil" id="cuil">
-                                </div>
-                                <div class="col-6">
-                                  <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
-                                  <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento">
-                                </div>
-                                <div class="mb-3">
-                                  <label for="generoo">Genero:</label>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero" value="masculino">
-                                    <label class="form-check-label" for="genero">Masculino</label>
+                            <!-- Id del tutor seleccionado en el buscador. Vacío = se crea un tutor nuevo con los datos del formulario -->
+                            <input type="hidden" name="tutor_id" id="tutor_id" value="">
+
+                            <div class="tab-content" id="myTabContent">
+                                <!-- PESTAÑA 1: DATOS PERSONALES DEL TUTOR-->
+                                <div class="tab-pane fade show active" id="perfil-pane" role="tabpanel" tabindex="0">
+
+                                  <!-- Buscador de Tutor, si previamente sabe que ya esta registrado -->
+                                  <div class="position-relative">
+                                      <div class="input-group">
+                                          <input type="text" id="buscar-tutor" class="form-control"
+                                                placeholder="Buscar tutor por apellido o dni..." autocomplete="off" title="En caso de un ingreso con tutor existente en sistema">
+                                          <button type="button" class="btn btn-outline-secondary" id="btn-limpiar-busqueda" title="Limpiar">
+                                              ✕
+                                          </button>
+                                      </div>
+
+                                      <div id="resultados-busqueda"
+                                          class="list-group shadow-sm"
+                                          style="display: none; max-height: 250px; overflow-y: auto;
+                                                  position: absolute; top: 100%; left: 0; right: 0; z-index: 1050;">
+                                      </div>
                                   </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero" value="femenino">
-                                    <label class="form-check-label" for="genero">Femenino</label>
+
+                                  <!-- Banner que aparece cuando ya se eligió un tutor de la búsqueda -->
+                                  <div id="tutor-seleccionado" class="alert alert-success justify-content-between align-items-center mt-2" style="display:none;">
+                                      <span>Tutor seleccionado: <strong id="texto-tutor-seleccionado"></strong></span>
+                                      <button type="button" class="btn btn-sm btn-outline-secondary" id="btn-cambiar-tutor"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2z"/>
+                                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466"/>
+                                      </svg> Cambiar</button>
                                   </div>
-                                  <div class="form-check form-check-inline">
-                                    <input class="form-check-input" type="radio" name="genero" value="no binario">
-                                    <label class="form-check-label" for="genero">No Binario</label>
+                                  <!-- ------------- Fin de Buscador de Tutor ----------- -->
+                                  <hr class="my-3 text-secondary">
+
+                                  <div class="row g-3">
+                                    <div class="col-md-6">
+                                      <label for="nombre_t" class="form-label">Nombre</label>
+                                      <input type="text" class="form-control" name="nombre_t" id="nombre_t">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="apellido_t" class="form-label">Apellido</label>
+                                      <input type="text" class="form-control" name="apellido_t" id="apellido_t">
+                                    </div>
+                                    <div class="col-12">
+                                      <label for="direccion_t" class="form-label">Direccion</label>
+                                      <input type="text" class="form-control" name="direccion_t" id="direccion_t">
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="dni_t" class="form-label">DNI</label>
+                                      <input type="text" class="form-control" name="dni_t" id="dni_t">
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="ocupacion" class="form-label">Ocupacion</label>
+                                      <input type="text" class="form-control" name="ocupacion" id="ocupacion">
+                                    </div>
+                                    <div class="col-md-4">
+                                      <label for="parentesco" class="form-label">Parentesco</label>
+                                      <select name="parentesco" id="parentesco" class="form-select">
+                                        <option value="" selected disabled>elegir...</option>
+                                        <option value="Padre">Padre</option>
+                                        <option value="Madre">Madre</option>
+                                        <option value="Hermano-a">Hermano-a</option>
+                                        <option value="Abuelo-a">Abuelo-a</option>
+                                        <option value="Otro">Otro</option>
+                                      </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label class="form-label d-block">Legal</label>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="legal" id="legal_si" value="True">
+                                        <label class="form-check-label" for="legal_si">Si</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="legal" id="legal_no" value="False">
+                                        <label class="form-check-label" for="legal_no">No</label>
+                                      </div>
+                                    </div>
+                                    <div class="col-12">
+                                      <label class="form-label d-block">Genero:</label>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="genero_t" id="genero_t_m" value="masculino">
+                                        <label class="form-check-label" for="genero_t_m">Masculino</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="genero_t" id="genero_t_f" value="femenino">
+                                        <label class="form-check-label" for="genero_t_f">Femenino</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="genero_t" id="genero_t_nb" value="no binario">
+                                        <label class="form-check-label" for="genero_t_nb">No Binario</label>
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="fecha_nacimiento_t" class="form-label">Fecha de Nacimiento</label>
+                                      <input type="date" class="form-control" name="fecha_nacimiento_t" id="fecha_nacimiento_t">
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="email_t" class="form-label">Email</label>
+                                      <input type="text" class="form-control" name="email_t" id="email_t">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="telefono_t" class="form-label">Telefono</label>
+                                      <input type="text" class="form-control" name="telefono_t" id="telefono_t">
+                                    </div>
                                   </div>
                                 </div>
-                                <div class="col-6">
-                                  <label for="email" class="form-label">Email</label>
-                                  <input type="text" class="form-control" name="email" id="email">
+
+                                <!-- PESTAÑA 2: AGREGAR DATOS DEL ALUMNO -->
+                                <div class="tab-pane fade" id="docencia-pane" role="tabpanel" tabindex="0">
+                                  <div class="form-row row g-3">
+                                      <div class="col-md-6">
+                                      <label for="nombre" class="form-label">Nombre</label>
+                                      <input type="text" class="form-control" name="nombre" id="nombre">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="apellido" class="form-label">Apellido</label>
+                                      <input type="text" class="form-control" name="apellido" id="apellido">
+                                    </div>
+                                    <div class="col-12">
+                                      <label for="direccion" class="form-label">Direccion</label>
+                                      <input type="text" class="form-control" name="direccion" id="direccion">
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="dni" class="form-label">DNI</label>
+                                      <input type="text" class="form-control" name="dni" id="dni">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="cuil" class="form-label">Cuil</label>
+                                      <input type="text" class="form-control" name="cuil" id="cuil">
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                      <input type="date" class="form-control" name="fecha_nacimiento" id="fecha_nacimiento">
+                                    </div>
+                                    <div class="col-12">
+                                      <label class="form-label d-block">Genero:</label>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="genero" id="genero_m" value="masculino">
+                                        <label class="form-check-label" for="genero_m">Masculino</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="genero" id="genero_f" value="femenino">
+                                        <label class="form-check-label" for="genero_f">Femenino</label>
+                                      </div>
+                                      <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="genero" id="genero_nb" value="no binario">
+                                        <label class="form-check-label" for="genero_nb">No Binario</label>
+                                      </div>
+                                    </div>
+                                    <div class="col-6">
+                                      <label for="email" class="form-label">Email</label>
+                                      <input type="text" class="form-control" name="email" id="email">
+                                    </div>
+                                    <div class="col-md-6">
+                                      <label for="telefono" class="form-label">Telefono</label>
+                                      <input type="text" class="form-control" name="telefono" id="telefono">
+                                    </div>
+                                  </div>
+                                  <div class="col-12 mt-4">
+                                    <button type="submit" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
+                                    <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
+                                    </svg> Guardar</button>
+                                    <a href="{{ url_for('alumnos.home') }}" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
+                                    </svg> Cancelar</a>
+                                  </div>
                                 </div>
-                                <div class="col-md-6">
-                                  <label for="telefono" class="form-label">Telefono</label>
-                                  <input type="text" class="form-control" name="telefono" id="telefono">
-                                </div>
-                              </div>
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-save2" viewBox="0 0 16 16">
-                                <path d="M2 1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H9.5a1 1 0 0 0-1 1v4.5h2a.5.5 0 0 1 .354.854l-2.5 2.5a.5.5 0 0 1-.708 0l-2.5-2.5A.5.5 0 0 1 5.5 6.5h2V2a2 2 0 0 1 2-2H14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h2.5a.5.5 0 0 1 0 1H2z"/>
-                                </svg> Guardar</button>
-                                <a href="{{ url_for('alumnos.home') }}" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-circle" viewBox="0 0 16 16">
-                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/>
-                                </svg> Cancelar</a>
                             </div>
-                            </form>
-                          </div>
-                          </div>
-                        </div>
-                      </div> 
+                        </form>
+                      </div>
                     </div>
                   </div>
   </div>
+</div>
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const inputBuscar    = document.getElementById('buscar-tutor');
+    const resultadosDiv  = document.getElementById('resultados-busqueda');
+    const tutorSelDiv    = document.getElementById('tutor-seleccionado');
+    const textoTutor     = document.getElementById('texto-tutor-seleccionado');
+    const inputIdTutor   = document.getElementById('tutor_id');
+    const btnLimpiar     = document.getElementById('btn-limpiar-busqueda');
+    const btnCambiar     = document.getElementById('btn-cambiar-tutor');
+    const form           = document.getElementById('form-matricula');
+
+    // Campos del formulario del tutor que se autocompletan
+    const campoNombre    = document.getElementById('nombre_t');
+    const campoApellido  = document.getElementById('apellido_t');
+    const campoDireccion = document.getElementById('direccion_t');
+    const campoDni       = document.getElementById('dni_t');
+    const campoOcupacion = document.getElementById('ocupacion');
+    const campoParentesco = document.getElementById('parentesco');
+    const campoFechaNac  = document.getElementById('fecha_nacimiento_t');
+    const campoEmail     = document.getElementById('email_t');
+    const campoTelefono  = document.getElementById('telefono_t');
+
+    const camposTutor = [
+        campoNombre, campoApellido, campoDireccion, campoDni,
+        campoOcupacion, campoParentesco, campoFechaNac, campoEmail, campoTelefono
+    ];
+
+    let timeout = null;
+
+    // Búsqueda mientras se escribe
+    inputBuscar.addEventListener('input', function () {
+        clearTimeout(timeout);
+        const q = this.value.trim();
+
+        if (q.length < 2) {
+            resultadosDiv.style.display = 'none';
+            resultadosDiv.innerHTML = '';
+            return;
+        }
+
+        timeout = setTimeout(() => {
+            fetch(`{{ url_for('alumnos.buscar_tutor') }}?q=${encodeURIComponent(q)}`)
+                .then(r => r.json())
+                .then(data => {
+                    resultadosDiv.innerHTML = '';
+                    if (data.tutores.length === 0) {
+                        resultadosDiv.innerHTML = '<div class="list-group-item text-muted">No se encontraron tutores</div>';
+                    } else {
+                        data.tutores.forEach(t => {
+                            const item = document.createElement('button');
+                            item.type = 'button';
+                            item.className = 'list-group-item list-group-item-action';
+                            item.textContent = t.texto;
+                            item.addEventListener('click', () => seleccionarTutor(t));
+                            resultadosDiv.appendChild(item);
+                        });
+                    }
+                    resultadosDiv.style.display = 'block';
+                })
+                .catch(err => {
+                    console.error(err);
+                    resultadosDiv.innerHTML = '<div class="list-group-item text-danger">Error al buscar</div>';
+                    resultadosDiv.style.display = 'block';
+                });
+        }, 300); // debounce 300 ms
+    });
+
+    // Autocompleta el formulario con los datos del tutor elegido
+    function seleccionarTutor(tutor) {
+        inputIdTutor.value = tutor.id;
+
+        campoNombre.value    = tutor.nombre || '';
+        campoApellido.value  = tutor.apellido || '';
+        campoDireccion.value = tutor.direccion || '';
+        campoDni.value       = tutor.dni || '';
+        campoOcupacion.value = tutor.ocupacion || '';
+        campoParentesco.value = tutor.parentesco || '';
+        campoFechaNac.value  = tutor.fecha_nacimiento || ''; // formato YYYY-MM-DD
+        campoEmail.value     = tutor.email || '';
+        campoTelefono.value  = tutor.telefono || '';
+
+        // Radios de género del tutor
+        document.querySelectorAll('input[name="genero_t"]').forEach(r => {
+            r.checked = (r.value === tutor.genero);
+        });
+
+        // Radios de legal (true/false)
+        document.querySelectorAll('input[name="legal"]').forEach(r => {
+            r.checked = (r.value === String(tutor.legal));
+        });
+
+        // Bloqueamos los campos: los datos vienen del tutor ya registrado,
+        // así el backend usa tutor_id y no vuelve a leer estos inputs.
+        camposTutor.forEach(c => c.disabled = true);
+        document.querySelectorAll('input[name="genero_t"], input[name="legal"]').forEach(r => r.disabled = true);
+
+        textoTutor.textContent = tutor.texto;
+        tutorSelDiv.style.display = 'flex';
+        inputBuscar.style.display = 'none';
+        btnLimpiar.style.display = 'none';
+        resultadosDiv.style.display = 'none';
+        resultadosDiv.innerHTML = '';
+    }
+
+    // Vuelve al estado de "crear tutor nuevo" / buscar de nuevo
+    function limpiarSeleccion() {
+        inputIdTutor.value = '';
+
+        camposTutor.forEach(c => { c.disabled = false; c.value = ''; });
+        document.querySelectorAll('input[name="genero_t"], input[name="legal"]').forEach(r => {
+            r.disabled = false;
+            r.checked = false;
+        });
+        if (campoParentesco) campoParentesco.selectedIndex = 0;
+
+        textoTutor.textContent = '';
+        tutorSelDiv.style.display = 'none';
+        inputBuscar.style.display = 'block';
+        btnLimpiar.style.display = 'block';
+        inputBuscar.value = '';
+        inputBuscar.focus();
+    }
+
+    btnLimpiar.addEventListener('click', limpiarSeleccion);
+    btnCambiar.addEventListener('click', limpiarSeleccion);
+
+    // Cerrar resultados al hacer clic fuera
+    document.addEventListener('click', function (e) {
+        if (!inputBuscar.contains(e.target) && !resultadosDiv.contains(e.target)) {
+            resultadosDiv.style.display = 'none';
+        }
+    });
+
+    // Antes de enviar: si NO hay tutor seleccionado, exigimos como mínimo
+    // nombre/apellido/dni para no mandar el form vacío (el resto de las
+    // validaciones "duras" -fechas, etc.- las hace el backend).
+    form.addEventListener('submit', function (e) {
+        if (!inputIdTutor.value) {
+            if (!campoNombre.value.trim() || !campoApellido.value.trim() || !campoDni.value.trim()) {
+                e.preventDefault();
+                alert('Completá los datos del tutor o seleccioná uno existente con el buscador.');
+                inputBuscar.focus();
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

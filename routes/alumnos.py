@@ -15,20 +15,18 @@ def requerir_login():
 
 @alumnos.route('/alumnos/home', methods=["GET"]) #listado de alumnos
 def home():
-    # 2. Capturamos el parámetro 'tag' de la URL. 
-    # Usamos '' como valor por defecto si no se envió nada.
+    # Capturamos el parámetro 'tag' de la URL.
     tag_busqueda = request.args.get('tag', '').strip()
     if tag_busqueda:
         # Buscar por apellido O por legajo ignorando mayúsculas/minúsculas (ilike)
         alumnos_db = Alumno.query.filter(
-            (Alumno.apellido.ilike(f'%{tag_busqueda}%')) | 
+            (Alumno.apellido.ilike(f'%{tag_busqueda}%')) |
             (Alumno.legajo.ilike(f'%{tag_busqueda}%'))
         ).all()
     else:
         # Si no hay búsqueda (entro por primera vez), traemos todos
         alumnos_db = Alumno.query.all()
-    #Convertimos los objetos de la DB a una lista de diccionarios
-    # para que tu {{ alumnos | tojson | safe }} en JavaScript funcione correctamente.
+
     lista_alumnos = []
     for a in alumnos_db:
         lista_alumnos.append({
@@ -39,77 +37,66 @@ def home():
             "cuil": a.cuil
         })
     cantidad = len(lista_alumnos)
-    # 5. Pasamos las variables a tu plantilla HTML
-    return render_template('/alumnos/home.html', 
-                           alumnos=lista_alumnos, 
+    return render_template('/alumnos/home.html',
+                           alumnos=lista_alumnos,
                            cantidad=cantidad)
-    """ alumnos = Alumno.query.all()
-    cantidad = len(alumnos)
-    list_alumnos = [alumno.to_dict() for alumno in alumnos]
-    if request.method == "GET" and 'tag':
-        tag = request.args.get('tag')
-        search = "%{}%".format(tag)
-        alumnos = Alumno.query.filter(Alumno.apellido.like(search) | Alumno.legajo.like(search)).all()
-        list_alumnos = [alumno.to_dict() for alumno in alumnos]
-        resultado = len(list_alumnos)
-        if not alumnos:
-            flash('No existe registro...')
-        else:
-            return render_template('/alumnos/home.html', alumnos=list_alumnos, cantidad=resultado)
-    return render_template('/alumnos/home.html', alumnos=list_alumnos, cantidad=cantidad) """
+
 
 @alumnos.route('/inscripcion')
 def inscripcion():
     return render_template('/alumnos/new.html')
+
 
 # --- FUNCIÓN GENERADORA DE LEGAJO ---
 def generar_nuevo_legajo():
     """Genera un legajo con el formato AAAA-NNNN (Ej: 2026-0001)"""
     año_actual = dt.now().year
     prefijo = f"{año_actual}-"
-    
-    # Buscamos el último legajo creado en este año
+
     ultimo_alumno = Alumno.query.filter(
         Alumno.legajo.like(f"{prefijo}%")
     ).order_by(Alumno.legajo.desc()).first()
-    
+
     if ultimo_alumno:
-        # Si existe "2026-0045", separamos por el guion y tomamos el "0045"
         ultimo_numero = int(ultimo_alumno.legajo.split('-')[1])
         nuevo_numero = ultimo_numero + 1
     else:
-        # Es el primer alumno del año
         nuevo_numero = 1
-        
-    # Formateamos el número para que siempre tenga 4 dígitos (rellena con ceros a la izquierda)
+
     return f"{prefijo}{nuevo_numero:04d}"
+
 
 @alumnos.route('/newAlumno', methods=['POST'])
 def new_alumno():
-    colegio = Colegio.query.first() 
-    
-    if request.method == 'POST':
-        try:
-            # 1. Capturar fechas primero
+    colegio = Colegio.query.first()
+
+    try:
+        # 1. Fecha del alumno (siempre obligatoria)
+        f_a = request.form.get('fecha_nacimiento')
+        if not f_a or not f_a.strip():
+            flash('La fecha de nacimiento del alumno es obligatoria.', 'danger')
+            return redirect(url_for('alumnos.inscripcion'))
+
+        # 2. Determinar si se seleccionó un tutor existente (buscador) o hay que crear uno nuevo
+        tutor_id = request.form.get('tutor_id', '').strip()
+
+        if tutor_id:
+            # --- Reutilizar tutor ya registrado ---
+            tutor = Tutor.query.get(tutor_id)
+            if not tutor:
+                flash('El tutor seleccionado no existe. Volvé a buscarlo.', 'danger')
+                return redirect(url_for('alumnos.inscripcion'))
+        else:
+            # --- Crear tutor nuevo: acá sí son obligatorios sus datos ---
             f_t = request.form.get('fecha_nacimiento_t')
-            f_a = request.form.get('fecha_nacimiento')
-            
-            # VALIDACIÓN: Verificar que las fechas no estén vacías o compuestas solo por espacios
             if not f_t or not f_t.strip():
                 flash('La fecha de nacimiento del tutor es obligatoria.', 'danger')
                 return redirect(url_for('alumnos.inscripcion'))
-                
-            if not f_a or not f_a.strip():
-                flash('La fecha de nacimiento del alumno es obligatoria.', 'danger')
-                return redirect(url_for('alumnos.inscripcion'))
-            #asignar booleano al campo legal
-            legal=request.form.get('legal')
-            if legal=='True':
-                l=True
-            else:
-                l=False
-            # 2. Crear el Tutor
-            nuevo_tutor = Tutor(
+
+            legal = request.form.get('legal')
+            l = (legal == 'True')
+
+            tutor = Tutor(
                 nombre=request.form['nombre_t'],
                 apellido=request.form['apellido_t'],
                 dni=request.form['dni_t'],
@@ -122,109 +109,141 @@ def new_alumno():
                 ocupacion=request.form.get('ocupacion'),
                 legal=l
             )
-            db.session.add(nuevo_tutor)
-            
-            # 3. Generar Legajo
-            nuevo_legajo = generar_nuevo_legajo()
-            
-            # 4. Crear el Alumno
-            nuevo_alumno = Alumno(
-                nombre=request.form['nombre'],
-                apellido=request.form['apellido'],
-                dni=request.form['dni'],
-                fecha_nacimiento=dt.strptime(f_a.strip(), '%Y-%m-%d').date(),
-                direccion=request.form['direccion'],
-                telefono=request.form.get('telefono'),
-                email=request.form.get('email'),
-                genero=request.form['genero'],
-                cuil=request.form['cuil'],
-                legajo=nuevo_legajo,
-                id_colegio=colegio.id_colegio if colegio else None 
-            )
-            db.session.add(nuevo_alumno)
-            
-            db.session.flush()
-            
-            # 5. Agregar la relación en la tabla intermedia
-            db.session.execute(
-                alumno_tutor.insert().values(alumno_id=nuevo_alumno.id, tutor_id=nuevo_tutor.id)
-            )
-            
-            # 6. Confirmar todos los cambios
-            db.session.commit()
-            
-            flash('Tutor y Alumno creados exitosamente.', 'success')
-            return redirect(url_for('alumnos.view', id=nuevo_alumno.id))
-            
-        except ValueError:
-            # Captura específica por si el formato de fecha no es 'YYYY-MM-DD'
-            db.session.rollback()
-            flash('El formato de las fechas ingresadas no es válido.', 'danger')
-            return redirect(url_for('alumnos.inscripcion'))
-            
-        except Exception as e:
-            db.session.rollback()
-            flash(f'Error al registrar los datos: {str(e)}', 'danger')
-            return redirect(url_for('alumnos.inscripcion'))
+            db.session.add(tutor)
 
-    return redirect(url_for('alumnos.home'))
+        # 3. Generar Legajo
+        nuevo_legajo = generar_nuevo_legajo()
+
+        # 4. Crear el Alumno
+        nuevo_alumno = Alumno(
+            nombre=request.form['nombre'],
+            apellido=request.form['apellido'],
+            dni=request.form['dni'],
+            fecha_nacimiento=dt.strptime(f_a.strip(), '%Y-%m-%d').date(),
+            direccion=request.form['direccion'],
+            telefono=request.form.get('telefono'),
+            email=request.form.get('email'),
+            genero=request.form['genero'],
+            cuil=request.form['cuil'],
+            legajo=nuevo_legajo,
+            id_colegio=colegio.id_colegio if colegio else None
+        )
+        db.session.add(nuevo_alumno)
+
+        db.session.flush()  # para tener nuevo_alumno.id (y tutor.id si es nuevo)
+
+        # 5. Vincular alumno y tutor en la tabla intermedia
+        db.session.execute(
+            alumno_tutor.insert().values(alumno_id=nuevo_alumno.id, tutor_id=tutor.id)
+        )
+
+        db.session.commit()
+
+        flash('Alumno registrado exitosamente.', 'success')
+        return redirect(url_for('alumnos.view', id=nuevo_alumno.id))
+
+    except ValueError:
+        db.session.rollback()
+        flash('El formato de las fechas ingresadas no es válido.', 'danger')
+        return redirect(url_for('alumnos.inscripcion'))
+
+    except KeyError as e:
+        db.session.rollback()
+        flash(f'Falta completar el campo obligatorio: {str(e)}', 'danger')
+        return redirect(url_for('alumnos.inscripcion'))
+
+    except Exception as e:
+        db.session.rollback()
+        flash(f'Error al registrar los datos: {str(e)}', 'danger')
+        return redirect(url_for('alumnos.inscripcion'))
+
 
 #funcion para calcular la edad del alumno
-def calculateAge(birthDate):#funcion para calcular la edad del alumno
+def calculateAge(birthDate):
     today = dt.today()
-    age = today.year-birthDate.year-((today.month, today.day)<(birthDate.month, birthDate.day))
+    age = today.year - birthDate.year - ((today.month, today.day) < (birthDate.month, birthDate.day))
     return age
+
 
 @alumnos.route('/alumnos/view/<id>', methods=["GET"]) #detalle de alumno
 def view(id):
-    #alumnos = Alumno.query.options(joinedload(Alumno.tutores)).all()#para traer todos los alumnos con sus tutores
-    #alumno = Alumno.query.options(joinedload(Alumno.tutores)).get(id)
     alumno = db.session.query(Alumno).options(joinedload(Alumno.tutores)).get(id)
-    #alumno = Alumno.query.get(id)
-    #tutor = alumno_tutor.query.get(tutor_id==alumno.id)
     age = calculateAge(alumno.fecha_nacimiento)
     return render_template('/alumnos/detailAlumno.html', alumno=alumno, edad=age)
 
-@alumnos.route('/alumnos/update/<alumno>', methods=["POST","GET"])
+
+@alumnos.route('/alumnos/update/<alumno>', methods=["POST", "GET"])
 def update_alumno(alumno):
     alumno = Alumno.query.get(alumno)
     if request.method == "POST":
         alumno.nombre = request.form['nombre']
         alumno.apellido = request.form['apellido']
         alumno.cuil = request.form['cuil']
-        alumno.fecha_nacimiento = request.form['fecha_nacimiento']
+        # Antes se guardaba el string crudo del form; se castea a date igual que en new_alumno
+        alumno.fecha_nacimiento = dt.strptime(request.form['fecha_nacimiento'].strip(), '%Y-%m-%d').date()
         alumno.genero = request.form['genero']
         alumno.direccion = request.form['direccion']
         alumno.telefono = request.form['telefono']
         alumno.email = request.form['email']
-        #----------actualizar datos tutor ----------
-        # for i, tutor in enumerate(alumno.tutores):
-        #     tutor.nombre = request.form[f'nombre_t']
-        #     tutor.apellido = request.form[f'apellido_t']
-        #     tutor.fecha_nacimiento = request.form[f'fecha_nacimiento_t']
-        #     tutor.genero = request.form[f'genero_t']
-        #     tutor.direccion = request.form[f'direccion_t']
-        #     tutor.telefono = request.form[f'telefono_t']
-        #     tutor.email = request.form[f'email_t']
         db.session.commit()
         flash('Datos Actualizados!')
         return redirect(url_for('alumnos.view', id=alumno.id))
     return render_template("/alumnos/updateAlumno.html", alumno=alumno)
 
-@alumnos.route('/alumnos/update_tutor/<alumno>', methods=["POST","GET"])
+
+@alumnos.route('/alumnos/update_tutor/<alumno>', methods=["POST", "GET"])
 def update_tutor(alumno):
     alumno = Alumno.query.get(alumno)
     if request.method == "POST":
-        #----------actualizar datos tutor ----------
-        for i, tutor in enumerate(alumno.tutores):
-            tutor.nombre = request.form[f'nombre_t']
-            tutor.apellido = request.form[f'apellido_t']
-            tutor.fecha_nacimiento = request.form[f'fecha_nacimiento_t']
-            tutor.genero = request.form[f'genero_t']
-            tutor.direccion = request.form[f'direccion_t']
-            tutor.telefono = request.form[f'telefono_t']
-            tutor.email = request.form[f'email_t']
+        for tutor in alumno.tutores:
+            tutor.nombre = request.form['nombre_t']
+            tutor.apellido = request.form['apellido_t']
+            tutor.fecha_nacimiento = dt.strptime(request.form['fecha_nacimiento_t'].strip(), '%Y-%m-%d').date()
+            tutor.genero = request.form['genero_t']
+            tutor.direccion = request.form['direccion_t']
+            tutor.telefono = request.form['telefono_t']
+            tutor.email = request.form['email_t']
         db.session.commit()
         flash('Datos Actualizados!')
         return redirect(url_for('alumnos.view', id=alumno.id))
     return render_template("/alumnos/updateTutor.html", alumno=alumno)
+
+
+#--------------------------------------------------------
+# Buscador de tutores (AJAX)
+#--------------------------------------------------------
+@alumnos.route('/buscar-tutor')
+def buscar_tutor():
+    """Busca tutor por apellido o dni y devuelve todos sus datos
+    para poder autocompletar el formulario en el frontend."""
+    q = request.args.get('q', '').strip()
+
+    if len(q) < 2:
+        return {'tutores': []}
+
+    tutores = Tutor.query.filter(
+        db.or_(
+            Tutor.apellido.ilike(f'%{q}%'),
+            Tutor.dni.ilike(f'%{q}%')
+        )
+    ).order_by(Tutor.apellido, Tutor.nombre).limit(15).all()
+
+    resultado = [
+        {
+            'id': t.id,
+            'nombre': t.nombre,
+            'apellido': t.apellido,
+            'dni': t.dni,
+            'direccion': t.direccion,
+            'telefono': t.telefono,
+            'email': t.email,
+            'genero': t.genero,
+            'parentesco': t.parentesco,
+            'ocupacion': t.ocupacion,
+            'legal': bool(t.legal),
+            'fecha_nacimiento': t.fecha_nacimiento.isoformat() if t.fecha_nacimiento else '',
+            'texto': f"{t.apellido}, {t.nombre} — DNI: {t.dni}"
+        }
+        for t in tutores
+    ]
+    return {'tutores': resultado}
