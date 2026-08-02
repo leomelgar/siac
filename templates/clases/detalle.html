@@ -2,78 +2,104 @@
 {% block title %}Detalle de clase{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h2>{{ clase.asignatura.nombre_asignatura }} — {{ clase.ciclo_lectivo }}</h2>
-    <div>
-      <a href="{{ url_for('clases.editar', id_clase=clase.id_clase) }}" class="btn btn-outline-secondary">Editar</a>
-      <a href="{{ url_for('clases.listar') }}" class="btn btn-outline-secondary">Volver</a>
+<div class="row">
+  <div class="col-md-3">
+   <!-- menu lateral -->
+    {% include 'partials/_sidebar.html' %}
+  </div>
+  <div class="col-md-9">
+    <div class="container mt-4 bg-light p-2 rounded-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>{{ clase.asignatura.nombre_asignatura }} — {{ clase.ciclo_lectivo }}</h2>
+        <div>
+          <a href="{{ url_for('clases.editar', id_clase=clase.id_clase) }}" class="btn btn-outline-primary" title="Modificar Clase Actual"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+          </svg> Editar</a>
+          <a href="{{ url_for('clases.listar') }}" class="btn btn-outline-secondary" title="Volver al Listado"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+          </svg> Volver</a>
+        </div>
+      </div>
+
+      {% with mensajes = get_flashed_messages(with_categories=true) %}
+        {% if mensajes %}
+          {% for categoria, mensaje in mensajes %}
+            <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      <hr class="my-3 text-secondary">
+      <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
+        <div class="row mb-4">
+          <div class="col-md-3"><strong>Docente:</strong> {{ clase.docente.apellido }}, {{ clase.docente.nombre }}</div>
+          <div class="col-md-3"><strong>Aula:</strong> {{ clase.aula.nombre_aula }}</div>
+          <div class="col-md-3"><strong>Turno:</strong> {{ clase.turno.nombre_turno }}</div>
+          <div class="col-md-3"><strong>Ciclo lectivo:</strong> {{ clase.ciclo_lectivo }}</div>
+        </div>
+
+      <h4>Horarios</h4>
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered w-100 align-middle text-center" style="table-layout: fixed;">
+          <thead class="table-info">
+            <tr>
+              <th class="w-25">Día</th>
+              <th class="w-25">Desde</th>
+              <th class="w-25">Hasta</th>
+              <th class="w-25"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for h in clase.horarios %}
+              <tr>
+                <td>{{ h.dia_semana }}</td>
+                <td>{{ h.hora_desde }}</td>
+                <td>{{ h.hora_hasta }}</td>
+                <td>
+                  <form action="{{ url_for('clases.eliminar_horario', id_horario=h.id_horario) }}"
+                        method="post" onsubmit="return confirm('¿Eliminar este horario?');" class="m-0">
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                      </svg> Eliminar
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            {% else %}
+              <tr>
+                <td colspan="4" class="text-muted">Esta clase no tiene horarios cargados.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <h5 class="mt-4">Agregar horario</h5>
+      <form method="post" action="{{ url_for('clases.agregar_horario', id_clase=clase.id_clase) }}" class="row g-2">
+        <div class="col-auto">
+          <select name="dia_semana" class="form-select" required>
+            <option value="">-- Día --</option>
+            {% for dia in dias_semana %}
+              <option value="{{ dia }}">{{ dia }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-auto">
+          <input type="time" name="hora_desde" class="form-control" required>
+        </div>
+        <div class="col-auto">
+          <input type="time" name="hora_hasta" class="form-control" required>
+        </div>
+        <div class="col-auto">
+          <button type="submit" class="btn btn-outline-info text-dark" title="Agregar Horario"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
+            <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71z"/>
+            <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16m7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0"/>
+          </svg> Agregar</button>
+        </div>
+      </form>
     </div>
   </div>
-
-  {% with mensajes = get_flashed_messages(with_categories=true) %}
-    {% if mensajes %}
-      {% for categoria, mensaje in mensajes %}
-        <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
-      {% endfor %}
-    {% endif %}
-  {% endwith %}
-
-  <div class="row mb-4">
-    <div class="col-md-3"><strong>Docente:</strong> {{ clase.docente.apellido }}, {{ clase.docente.nombre }}</div>
-    <div class="col-md-3"><strong>Aula:</strong> {{ clase.aula.nombre_aula }}</div>
-    <div class="col-md-3"><strong>Turno:</strong> {{ clase.turno.nombre_turno }}</div>
-    <div class="col-md-3"><strong>Ciclo lectivo:</strong> {{ clase.ciclo_lectivo }}</div>
-  </div>
-
-  <h4>Horarios</h4>
-  <table class="table table-sm table-bordered w-auto">
-    <thead class="table-light">
-      <tr>
-        <th>Día</th>
-        <th>Desde</th>
-        <th>Hasta</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for h in clase.horarios %}
-        <tr>
-          <td>{{ h.dia_semana }}</td>
-          <td>{{ h.hora_desde }}</td>
-          <td>{{ h.hora_hasta }}</td>
-          <td>
-            <form action="{{ url_for('clases.eliminar_horario', id_horario=h.id_horario) }}"
-                  method="post" onsubmit="return confirm('¿Eliminar este horario?');">
-              <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-      {% else %}
-        <tr><td colspan="4" class="text-muted">Esta clase no tiene horarios cargados.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <h5 class="mt-4">Agregar horario</h5>
-  <form method="post" action="{{ url_for('clases.agregar_horario', id_clase=clase.id_clase) }}" class="row g-2">
-    <div class="col-auto">
-      <select name="dia_semana" class="form-select" required>
-        <option value="">-- Día --</option>
-        {% for dia in dias_semana %}
-          <option value="{{ dia }}">{{ dia }}</option>
-        {% endfor %}
-      </select>
-    </div>
-    <div class="col-auto">
-      <input type="time" name="hora_desde" class="form-control" required>
-    </div>
-    <div class="col-auto">
-      <input type="time" name="hora_hasta" class="form-control" required>
-    </div>
-    <div class="col-auto">
-      <button type="submit" class="btn btn-primary">Agregar</button>
-    </div>
-  </form>
 </div>
 {% endblock %}
