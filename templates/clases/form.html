@@ -1,0 +1,113 @@
+{% extends 'layout.html' %}
+{% block title %}{{ 'Editar clase' if clase else 'Nueva clase' }}{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <h2>{{ 'Editar clase' if clase else 'Nueva clase' }}</h2>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+      {% for categoria, mensaje in mensajes %}
+        <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <form method="post">
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Asignatura</label>
+        <select name="id_asignatura" class="form-select" required>
+          <option value="">-- Seleccione --</option>
+          {% for a in asignaturas %}
+            <option value="{{ a.id_asignatura }}"
+              {% if (clase and clase.id_asignatura == a.id_asignatura) or (form and form.get('id_asignatura')|int == a.id_asignatura) %}selected{% endif %}>
+              {{ a.nombre_asignatura }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <label class="form-label">Docente</label>
+        <select name="id_docente" class="form-select" required>
+          <option value="">-- Seleccione --</option>
+          {% for d in docentes %}
+            <option value="{{ d.id }}"
+              {% if (clase and clase.id_docente == d.id) or (form and form.get('id_docente')|int == d.id) %}selected{% endif %}>
+              {{ d.apellido }}, {{ d.nombre }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Aula</label>
+        <select name="id_aula" class="form-select" required>
+          <option value="">-- Seleccione --</option>
+          {% for a in aulas %}
+            <option value="{{ a.id_aula }}"
+              {% if (clase and clase.id_aula == a.id_aula) or (form and form.get('id_aula')|int == a.id_aula) %}selected{% endif %}>
+              {{ a.nombre_aula }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Turno</label>
+        <select name="id_turno" class="form-select" required>
+          <option value="">-- Seleccione --</option>
+          {% for t in turnos %}
+            <option value="{{ t.id_turno }}"
+              {% if (clase and clase.id_turno == t.id_turno) or (form and form.get('id_turno')|int == t.id_turno) %}selected{% endif %}>
+              {{ t.nombre_turno }} ({{ t.hora_inicio }}-{{ t.hora_fin }})
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-md-4">
+        <label class="form-label">Ciclo lectivo</label>
+        <input type="number" name="ciclo_lectivo" class="form-control" required
+               value="{{ clase.ciclo_lectivo if clase else (form.get('ciclo_lectivo') if form else '') }}">
+      </div>
+
+      {% if not clase %}
+        <hr class="mt-4">
+        <h5>Primer horario de la clase</h5>
+        <p class="text-muted">
+          Se valida que no se solape con otra clase en la misma aula, día y ciclo lectivo.
+        </p>
+
+        <div class="col-md-4">
+          <label class="form-label">Día</label>
+          <select name="dia_semana" class="form-select" required>
+            <option value="">-- Seleccione --</option>
+            {% for dia in dias_semana %}
+              <option value="{{ dia }}" {% if form and form.get('dia_semana') == dia %}selected{% endif %}>
+                {{ dia }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Hora desde</label>
+          <input type="time" name="hora_desde" class="form-control" required
+                 value="{{ form.get('hora_desde') if form else '' }}">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Hora hasta</label>
+          <input type="time" name="hora_hasta" class="form-control" required
+                 value="{{ form.get('hora_hasta') if form else '' }}">
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-outline-primary">Guardar</button>
+      <a href="{{ url_for('clases.listar') }}" class="btn btn-outline-secondary">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

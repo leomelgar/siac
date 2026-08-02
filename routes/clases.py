@@ -1,50 +1,280 @@
-from crypt import methods
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from models.colege import Clase, Curso, Catedra, Horario, Docente
 from utils.db import db
+from models.colege import Clase, Asignatura, Docente, Aula, Turno, Horario
 
-clases = Blueprint("clases", __name__)
+clases_bp = Blueprint('clases', __name__, url_prefix='/clases')
 
-@clases.route('/clases/home')
-def home():
-    #clases = Clase.query.all()
-    clases = Clase.query.join(Catedra, Clase.catedra_id==Catedra.idCatedra).join(Curso, Clase.curso_id==Curso.idCurso).join(Horario, Clase.horario_id==Horario.idHorario).add_columns(Clase.idClase, Clase.nombre_clase, Catedra.nombre_cat, Curso.nombre_curso, Curso.division, Horario.dia, Horario.descripcion)
-    return render_template('/clases/home.html', clases=clases)
+DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 
-@clases.route('/clases/nuevaClase', methods=["POST","GET"])
-def nueva_clase():
-    cursos = Curso.query.all()
-    catedras = Catedra.query.all()
-    catedras = Catedra.query.join(Docente, Catedra.docente_id==Docente.idDocente).add_columns(Catedra.idCatedra, Catedra.nombre_cat, Docente.apellido, Docente.nombre)
-    horarios = Horario.query.all()
-    if request.method == "POST" and 'tag' in request.form:
-        tag = request.form['tag']
-        search = "%{}%".format(tag)
-        catedras = Catedra.query.filter(Catedra.nombre_cat.like(search)).join(Docente, Catedra.docente_id==Docente.idDocente).add_columns(Catedra.nombre_cat, Docente.apellido, Docente.nombre)
-        if not catedras:
-            flash('No existe registro que coincidan')
-        else:
-            return render_template('/clases/nuevaClase.html', catedras=catedras, cursos=cursos, horarios=horarios)
-    return render_template('/clases/nuevaClase.html', catedras=catedras, cursos=cursos, horarios=horarios)
 
-@clases.route('/clases/add_clase', methods=["POST"])
-def add_clase():
-    if request.method=="POST":
-        nombre_clase = request.form['nombre_clase']
-        curso_id = request.form['curso_id']
-        catedra_id = request.form['catedra_id']
-        horario_id = request.form['horario_id']
-        
-        new_clase = Clase(nombre_clase,curso_id,catedra_id,horario_id)
-        db.session.add(new_clase)
+# ==========================================
+# VALIDACIÓN DE SOLAPAMIENTO
+# ==========================================
+def verificar_solapamiento(id_aula, dia_semana, hora_desde, hora_hasta, ciclo_lectivo, excluir_horario_id=None):
+    """
+    Devuelve el registro Horario en conflicto (o None) si en la misma aula, mismo día
+    y mismo ciclo lectivo ya existe una franja horaria que se superpone con la solicitada.
+
+    Dos rangos [hora_desde, hora_hasta) se solapan si:
+        horario.hora_desde < hora_hasta_nueva  AND  horario.hora_hasta > hora_desde_nueva
+    """
+    query = (
+        db.session.query(Horario)
+        .join(Clase, Horario.id_clase == Clase.id_clase)
+        .filter(
+            Clase.id_aula == id_aula,
+            Clase.ciclo_lectivo == ciclo_lectivo,
+            Horario.dia_semana == dia_semana,
+            Horario.hora_desde < hora_hasta,
+            Horario.hora_hasta > hora_desde,
+        )
+    )
+    if excluir_horario_id:
+        query = query.filter(Horario.id_horario != excluir_horario_id)
+    return query.first()
+
+
+# ==========================================
+# LISTADO PAGINADO
+# ==========================================
+@clases_bp.route('/')
+def listar():
+    page = request.args.get('page', 1, type=int)
+    per_page = 10
+
+    ciclo = request.args.get('ciclo_lectivo', type=int)
+    id_docente = request.args.get('id_docente', type=int)
+    id_aula = request.args.get('id_aula', type=int)
+
+    query = Clase.query
+
+    if ciclo:
+        query = query.filter(Clase.ciclo_lectivo == ciclo)
+    if id_docente:
+        query = query.filter(Clase.id_docente == id_docente)
+    if id_aula:
+        query = query.filter(Clase.id_aula == id_aula)
+
+    paginacion = query.order_by(Clase.ciclo_lectivo.desc(), Clase.id_clase.desc()).paginate(
+        page=page, per_page=per_page, error_out=False
+    )
+
+    docentes = Docente.query.order_by(Docente.apellido).all()
+    aulas = Aula.query.order_by(Aula.nombre_aula).all()
+
+    return render_template(
+        'clases/list.html',
+        clases=paginacion.items,
+        paginacion=paginacion,
+        docentes=docentes,
+        aulas=aulas,
+        ciclo_filtro=ciclo,
+        docente_filtro=id_docente,
+        aula_filtro=id_aula,
+    )
+
+
+# ==========================================
+# DETALLE (incluye horarios de la clase)
+# ==========================================
+@clases_bp.route('/<int:id_clase>')
+def detalle(id_clase):
+    clase = Clase.query.get_or_404(id_clase)
+    return render_template('clases/detalle.html', clase=clase, dias_semana=DIAS_SEMANA)
+
+
+# ==========================================
+# ALTA (Clase + primer Horario)
+# ==========================================
+@clases_bp.route('/nueva', methods=['GET', 'POST'])
+def nueva():
+    asignaturas = Asignatura.query.order_by(Asignatura.nombre_asignatura).all()
+    docentes = Docente.query.order_by(Docente.apellido).all()
+    aulas = Aula.query.order_by(Aula.nombre_aula).all()
+    turnos = Turno.query.all()
+
+    if request.method == 'POST':
+        id_asignatura = request.form.get('id_asignatura', type=int)
+        id_docente = request.form.get('id_docente', type=int)
+        id_aula = request.form.get('id_aula', type=int)
+        id_turno = request.form.get('id_turno', type=int)
+        ciclo_lectivo = request.form.get('ciclo_lectivo', type=int)
+
+        dia_semana = request.form.get('dia_semana')
+        hora_desde = request.form.get('hora_desde')
+        hora_hasta = request.form.get('hora_hasta')
+
+        errores = []
+        if not all([id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo]):
+            errores.append('Todos los campos de la clase son obligatorios.')
+        if not all([dia_semana, hora_desde, hora_hasta]):
+            errores.append('Debe indicar día y horario de la clase.')
+        elif hora_desde >= hora_hasta:
+            errores.append('La hora de inicio debe ser menor a la hora de fin.')
+
+        if not errores:
+            conflicto = verificar_solapamiento(id_aula, dia_semana, hora_desde, hora_hasta, ciclo_lectivo)
+            if conflicto:
+                clase_conflicto = conflicto.clase
+                errores.append(
+                    f'El aula ya está ocupada el {dia_semana} de {conflicto.hora_desde} a '
+                    f'{conflicto.hora_hasta} por la clase de '
+                    f'"{clase_conflicto.asignatura.nombre_asignatura}" (Docente: '
+                    f'{clase_conflicto.docente.nombre} {clase_conflicto.docente.apellido}).'
+                )
+
+        if errores:
+            for e in errores:
+                flash(e, 'danger')
+            return render_template(
+                'clases/form.html',
+                asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
+                dias_semana=DIAS_SEMANA, clase=None, form=request.form,
+            )
+
+        nueva_clase = Clase(
+            id_asignatura=id_asignatura,
+            id_docente=id_docente,
+            id_aula=id_aula,
+            id_turno=id_turno,
+            ciclo_lectivo=ciclo_lectivo,
+        )
+        db.session.add(nueva_clase)
+        db.session.flush()  # obtenemos id_clase antes del commit final
+
+        horario = Horario(
+            id_clase=nueva_clase.id_clase,
+            dia_semana=dia_semana,
+            hora_desde=hora_desde,
+            hora_hasta=hora_hasta,
+        )
+        db.session.add(horario)
         db.session.commit()
-        flash('Clase añadido correctamente!')
-        return redirect(url_for('clases.home'))
 
-@clases.route('/clases/delete/<idClase>')
-def delete(idClase):
-    clase = Clase.query.get(idClase)
-    db.session.delete(clase)
+        flash('Clase creada correctamente.', 'success')
+        return redirect(url_for('clases.detalle', id_clase=nueva_clase.id_clase))
+
+    return render_template(
+        'clases/form.html',
+        asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
+        dias_semana=DIAS_SEMANA, clase=None, form=None,
+    )
+
+
+# ==========================================
+# EDICIÓN (datos generales de la clase)
+# ==========================================
+@clases_bp.route('/<int:id_clase>/editar', methods=['GET', 'POST'])
+def editar(id_clase):
+    clase = Clase.query.get_or_404(id_clase)
+    asignaturas = Asignatura.query.order_by(Asignatura.nombre_asignatura).all()
+    docentes = Docente.query.order_by(Docente.apellido).all()
+    aulas = Aula.query.order_by(Aula.nombre_aula).all()
+    turnos = Turno.query.all()
+
+    if request.method == 'POST':
+        id_asignatura = request.form.get('id_asignatura', type=int)
+        id_docente = request.form.get('id_docente', type=int)
+        id_aula = request.form.get('id_aula', type=int)
+        id_turno = request.form.get('id_turno', type=int)
+        ciclo_lectivo = request.form.get('ciclo_lectivo', type=int)
+
+        errores = []
+        if not all([id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo]):
+            errores.append('Todos los campos son obligatorios.')
+
+        if not errores:
+            # Revalidamos CADA horario existente contra la nueva combinación aula/ciclo
+            for horario in clase.horarios:
+                conflicto = verificar_solapamiento(
+                    id_aula, horario.dia_semana, horario.hora_desde, horario.hora_hasta,
+                    ciclo_lectivo, excluir_horario_id=horario.id_horario,
+                )
+                if conflicto:
+                    clase_conflicto = conflicto.clase
+                    errores.append(
+                        f'El cambio genera un conflicto el {horario.dia_semana} '
+                        f'({horario.hora_desde}-{horario.hora_hasta}) con la clase de '
+                        f'"{clase_conflicto.asignatura.nombre_asignatura}".'
+                    )
+                    break
+
+        if errores:
+            for e in errores:
+                flash(e, 'danger')
+            return render_template(
+                'clases/form.html',
+                asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
+                dias_semana=DIAS_SEMANA, clase=clase, form=request.form,
+            )
+
+        clase.id_asignatura = id_asignatura
+        clase.id_docente = id_docente
+        clase.id_aula = id_aula
+        clase.id_turno = id_turno
+        clase.ciclo_lectivo = ciclo_lectivo
+        db.session.commit()
+
+        flash('Clase actualizada correctamente.', 'success')
+        return redirect(url_for('clases.detalle', id_clase=clase.id_clase))
+
+    return render_template(
+        'clases/form.html',
+        asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
+        dias_semana=DIAS_SEMANA, clase=clase, form=None,
+    )
+
+
+# ==========================================
+# BAJA
+# ==========================================
+@clases_bp.route('/<int:id_clase>/eliminar', methods=['POST'])
+def eliminar(id_clase):
+    clase = Clase.query.get_or_404(id_clase)
+    db.session.delete(clase)  # cascade="all, delete-orphan" borra también sus Horario
     db.session.commit()
-    flash('Clase Borrada!')
-    return redirect(url_for('clases.home'))
+    flash('Clase eliminada.', 'success')
+    return redirect(url_for('clases.listar'))
+
+
+# ==========================================
+# HORARIOS DE UNA CLASE (alta / baja)
+# ==========================================
+@clases_bp.route('/<int:id_clase>/horarios/nuevo', methods=['POST'])
+def agregar_horario(id_clase):
+    clase = Clase.query.get_or_404(id_clase)
+
+    dia_semana = request.form.get('dia_semana')
+    hora_desde = request.form.get('hora_desde')
+    hora_hasta = request.form.get('hora_hasta')
+
+    if not all([dia_semana, hora_desde, hora_hasta]) or hora_desde >= hora_hasta:
+        flash('Datos de horario inválidos: revise el día y el rango horario.', 'danger')
+        return redirect(url_for('clases.detalle', id_clase=id_clase))
+
+    conflicto = verificar_solapamiento(clase.id_aula, dia_semana, hora_desde, hora_hasta, clase.ciclo_lectivo)
+    if conflicto:
+        clase_conflicto = conflicto.clase
+        flash(
+            f'Conflicto de horario: el aula "{clase.aula.nombre_aula}" ya está ocupada el {dia_semana} '
+            f'de {conflicto.hora_desde} a {conflicto.hora_hasta} por la clase de '
+            f'"{clase_conflicto.asignatura.nombre_asignatura}".',
+            'danger',
+        )
+        return redirect(url_for('clases.detalle', id_clase=id_clase))
+
+    horario = Horario(id_clase=id_clase, dia_semana=dia_semana, hora_desde=hora_desde, hora_hasta=hora_hasta)
+    db.session.add(horario)
+    db.session.commit()
+    flash('Horario agregado a la clase.', 'success')
+    return redirect(url_for('clases.detalle', id_clase=id_clase))
+
+
+@clases_bp.route('/horarios/<int:id_horario>/eliminar', methods=['POST'])
+def eliminar_horario(id_horario):
+    horario = Horario.query.get_or_404(id_horario)
+    id_clase = horario.id_clase
+    db.session.delete(horario)
+    db.session.commit()
+    flash('Horario eliminado.', 'success')
+    return redirect(url_for('clases.detalle', id_clase=id_clase))

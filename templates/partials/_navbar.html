@@ -44,10 +44,10 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" role="button"
              data-bs-toggle="dropdown" aria-expanded="false">
-            Registros Académicos
+            Seccion Académica
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Clases</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('clases.listar') }}">Clases</a></li>
             <li><a class="dropdown-item" href="#">Agregar Clase</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ url_for('aulas.home') }}">Aulas</a></li>

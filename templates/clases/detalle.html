@@ -1,0 +1,79 @@
+{% extends 'layout.html' %}
+{% block title %}Detalle de clase{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>{{ clase.asignatura.nombre_asignatura }} — {{ clase.ciclo_lectivo }}</h2>
+    <div>
+      <a href="{{ url_for('clases.editar', id_clase=clase.id_clase) }}" class="btn btn-outline-secondary">Editar</a>
+      <a href="{{ url_for('clases.listar') }}" class="btn btn-outline-secondary">Volver</a>
+    </div>
+  </div>
+
+  {% with mensajes = get_flashed_messages(with_categories=true) %}
+    {% if mensajes %}
+      {% for categoria, mensaje in mensajes %}
+        <div class="alert alert-{{ categoria }}">{{ mensaje }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="row mb-4">
+    <div class="col-md-3"><strong>Docente:</strong> {{ clase.docente.apellido }}, {{ clase.docente.nombre }}</div>
+    <div class="col-md-3"><strong>Aula:</strong> {{ clase.aula.nombre_aula }}</div>
+    <div class="col-md-3"><strong>Turno:</strong> {{ clase.turno.nombre_turno }}</div>
+    <div class="col-md-3"><strong>Ciclo lectivo:</strong> {{ clase.ciclo_lectivo }}</div>
+  </div>
+
+  <h4>Horarios</h4>
+  <table class="table table-sm table-bordered w-auto">
+    <thead class="table-light">
+      <tr>
+        <th>Día</th>
+        <th>Desde</th>
+        <th>Hasta</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for h in clase.horarios %}
+        <tr>
+          <td>{{ h.dia_semana }}</td>
+          <td>{{ h.hora_desde }}</td>
+          <td>{{ h.hora_hasta }}</td>
+          <td>
+            <form action="{{ url_for('clases.eliminar_horario', id_horario=h.id_horario) }}"
+                  method="post" onsubmit="return confirm('¿Eliminar este horario?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="4" class="text-muted">Esta clase no tiene horarios cargados.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h5 class="mt-4">Agregar horario</h5>
+  <form method="post" action="{{ url_for('clases.agregar_horario', id_clase=clase.id_clase) }}" class="row g-2">
+    <div class="col-auto">
+      <select name="dia_semana" class="form-select" required>
+        <option value="">-- Día --</option>
+        {% for dia in dias_semana %}
+          <option value="{{ dia }}">{{ dia }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-auto">
+      <input type="time" name="hora_desde" class="form-control" required>
+    </div>
+    <div class="col-auto">
+      <input type="time" name="hora_hasta" class="form-control" required>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-primary">Agregar</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
