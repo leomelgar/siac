@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+{% block title %}Panel de Asistencia{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Clases del {{ dia_nombre }} {{ fecha.strftime('%d/%m/%Y') }}</h2>
+        <form method="get" class="d-flex gap-2">
+            <input type="date" name="fecha" value="{{ fecha.isoformat() }}" class="form-control">
+            <button type="submit" class="btn btn-outline-primary">Ver</button>
+        </form>
+    </div>
+
+    {% if not clases %}
+        <div class="alert alert-info">No hay clases programadas para este día.</div>
+    {% else %}
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Turno</th>
+                <th>Asignatura</th>
+                <th>Docente</th>
+                <th>Aula</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for clase in clases %}
+            <tr>
+                <td>{{ clase.turno.nombre_turno }}</td>
+                <td>{{ clase.asignatura.nombre_asignatura }}</td>
+                <td>{{ clase.docente.apellido }}, {{ clase.docente.nombre }}</td>
+                <td>{{ clase.aula.nombre_aula }}</td>
+                <td>
+                    <a href="{{ url_for('asistencia.tomar_asistencia', id_clase=clase.id_clase, fecha=fecha.isoformat()) }}"
+                       class="btn btn-sm btn-primary">
+                        Tomar asistencia
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</div>
+{% endblock %}

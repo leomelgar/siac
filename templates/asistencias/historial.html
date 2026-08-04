@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block title %}Historial de Asistencia{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>{{ alumno.apellido }}, {{ alumno.nombre }}</h2>
+    <p class="text-muted">Legajo: {{ alumno.legajo }} &middot; Período: {{ periodo }}</p>
+
+    {% if estado %}
+    <div class="alert {{ 'alert-danger' if 'Libre' in estado.condicion else 'alert-success' }}">
+        <strong>Condición:</strong> {{ estado.condicion }} &middot;
+        Faltas: {{ estado.total_faltas }} / {{ estado.limite_actual }} &middot;
+        Justificadas: {{ estado.total_faltas_justificadas }}
+        <a href="{{ url_for('asistencia.ver_regularidad', id_matricula=estado.id_matricula) }}"
+           class="ms-2">Ver detalle</a>
+    </div>
+    {% endif %}
+
+    <form method="get" class="d-flex gap-2 mb-3" style="max-width: 200px;">
+        <input type="number" name="periodo" value="{{ periodo }}" class="form-control">
+        <button type="submit" class="btn btn-outline-primary">Ver</button>
+    </form>
+
+    <table class="table table-hover">
+        <thead class="table-light">
+            <tr>
+                <th>Fecha</th>
+                <th>Asignatura</th>
+                <th>Registro</th>
+                <th>Valor</th>
+                <th>Justificada</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for a in asistencias %}
+            <tr>
+                <td>{{ a.fecha.strftime('%d/%m/%Y') }}</td>
+                <td>{{ a.clase.asignatura.nombre_asignatura }}</td>
+                <td>{{ a.tipo_registro }}</td>
+                <td>{{ a.valor_falta }}</td>
+                <td>
+                    {% if a.justificada %}
+                        <span class="badge bg-success">Sí</span>
+                    {% else %}
+                        <span class="badge bg-secondary">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if a.valor_falta > 0 and not a.justificada %}
+                    <a href="{{ url_for('asistencia.justificar', id_asistencia=a.id_asistencia) }}"
+                       class="btn btn-sm btn-outline-warning">Justificar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted">Sin registros para este período.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

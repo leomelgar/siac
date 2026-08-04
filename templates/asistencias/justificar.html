@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+{% block title %}Justificar Falta{% endblock %}
+
+{% block body %}
+<div class="container mt-4" style="max-width: 500px;">
+    <h2>Justificar falta</h2>
+    <p class="text-muted">
+        {{ registro.alumno.apellido }}, {{ registro.alumno.nombre }} &middot;
+        {{ registro.fecha.strftime('%d/%m/%Y') }} &middot;
+        {{ registro.clase.asignatura.nombre_asignatura }} &middot;
+        {{ registro.tipo_registro }} ({{ registro.valor_falta }})
+    </p>
+
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Motivo de la justificación</label>
+            <textarea name="motivo" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Justificar</button>
+        <a href="{{ url_for('asistencia.historial_alumno', id_alumno=registro.id_alumno) }}"
+           class="btn btn-link">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

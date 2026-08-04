@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Tomar Asistencia{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>{{ clase.asignatura.nombre_asignatura }}</h2>
+    <p class="text-muted">
+        Docente: {{ clase.docente.apellido }}, {{ clase.docente.nombre }} &middot;
+        Aula: {{ clase.aula.nombre_aula }} &middot;
+        Turno: {{ clase.turno.nombre_turno }} &middot;
+        Ciclo: {{ clase.ciclo_lectivo }}
+    </p>
+
+    <form method="get" class="d-flex gap-2 mb-3" style="max-width: 300px;">
+        <input type="date" name="fecha" value="{{ fecha.isoformat() }}" class="form-control">
+        <button type="submit" class="btn btn-outline-primary">Ir</button>
+    </form>
+
+    {% if not alumnos %}
+        <div class="alert alert-warning">
+            Esta clase no tiene alumnos inscriptos. Verificá la inscripción en <code>clase_matricula</code>.
+        </div>
+    {% else %}
+    <form method="post" action="{{ url_for('asistencia.guardar_asistencia', id_clase=clase.id_clase) }}">
+        <input type="hidden" name="fecha" value="{{ fecha.isoformat() }}">
+
+        <table class="table align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Alumno</th>
+                    <th>Legajo</th>
+                    <th style="width: 280px;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for alumno in alumnos %}
+                {% set registro = registros.get(alumno.id) %}
+                <tr>
+                    <td>
+                        {{ alumno.apellido }}, {{ alumno.nombre }}
+                        <input type="hidden" name="id_alumno" value="{{ alumno.id }}">
+                    </td>
+                    <td>{{ alumno.legajo }}</td>
+                    <td>
+                        <select name="tipo_{{ alumno.id }}" class="form-select form-select-sm">
+                            {% for tipo in tipos %}
+                            <option value="{{ tipo }}"
+                                {% if registro and registro.tipo_registro == tipo %}selected
+                                {% elif not registro and tipo == 'Presente' %}selected{% endif %}>
+                                {{ tipo }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">Guardar asistencia</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}
