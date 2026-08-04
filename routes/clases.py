@@ -1,8 +1,14 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask_login import login_required
 from utils.db import db
 from models.colege import Clase, Asignatura, Docente, Aula, Turno, Horario
 
 clases_bp = Blueprint('clases', __name__, url_prefix='/clases')
+
+@clases_bp.before_request
+@login_required
+def requerir_login():
+    pass
 
 DIAS_SEMANA = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 
