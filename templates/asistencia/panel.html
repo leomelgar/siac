@@ -2,7 +2,13 @@
 {% block title %}Panel de Asistencia{% endblock %}
 
 {% block body %}
-<div class="container mt-4">
+<div class="row">
+  <div class="col-md-2">
+   <!-- menu lateral -->
+    {% include 'partials/_sidebar.html' %}
+  </div>
+  <div class="col-md-10">
+    <div class="container mt-4 bg-light p-2 rounded-3">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Clases del {{ dia_nombre }} {{ fecha.strftime('%d/%m/%Y') }}</h2>
         <form method="get" class="d-flex gap-2">
@@ -43,4 +49,6 @@
     </table>
     {% endif %}
 </div>
+    </div>
+</div>    
 {% endblock %}
