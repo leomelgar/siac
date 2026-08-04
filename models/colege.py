@@ -293,6 +293,13 @@ class Usuario(db.Model, UserMixin):
 # ==========================================
 # 4. NUEVOS MODELOS (GESTIÓN ACADÉMICA)
 # ==========================================
+
+# Tabla asociativa Muchos a Muchos: Clase <-> Matricula
+clase_matricula = db.Table('clase_matricula',
+    db.Column('id_clase', db.Integer, db.ForeignKey('clase.id_clase', ondelete='CASCADE'), primary_key=True),
+    db.Column('id_matricula', db.Integer, db.ForeignKey('matricula.id_matricula', ondelete='CASCADE'), primary_key=True)
+)
+
 class Clase(db.Model):
     """Representa la sección o grupo específico (Ej: Matemática de 5to Año, Aula 3, Turno Mañana)."""
     __tablename__ = 'clase'
@@ -309,6 +316,7 @@ class Clase(db.Model):
     turno = db.relationship('Turno', back_populates='clases')
     horarios = db.relationship('Horario', back_populates='clase', lazy=True, cascade="all, delete-orphan")
     asistencias = db.relationship('Asistencia', back_populates='clase', lazy=True)
+    matriculas = db.relationship('Matricula', secondary=clase_matricula, backref='clases_inscriptas')
 
     def __init__(self, id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo):
         self.id_asignatura = id_asignatura
@@ -317,7 +325,8 @@ class Clase(db.Model):
         self.id_turno = id_turno
         self.ciclo_lectivo = ciclo_lectivo
     
-    def repr(self):return f"<Clase ID: {self.id_clase} - Asignatura: {self.id_asignatura} - Año: {self.ciclo_lectivo}>"
+    def __repr__(self):
+        return f"<Clase ID: {self.id_clase} - Asignatura: {self.id_asignatura} - Año: {self.ciclo_lectivo}>"
 
 class Calificacion(db.Model):
     __tablename__ = 'calificacion'
