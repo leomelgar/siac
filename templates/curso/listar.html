@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Cursos{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Cursos</h2>
+        <a href="{{ url_for('curso.crear') }}" class="btn btn-primary">Nuevo curso</a>
+    </div>
+
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-auto">
+            <select name="id_colegio" class="form-select">
+                <option value="">Todos los colegios</option>
+                {% for c in colegios %}
+                <option value="{{ c.id_colegio }}" {% if id_colegio == c.id_colegio %}selected{% endif %}>
+                    {{ c.nombre_colegio }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-auto">
+            <input type="number" name="periodo" value="{{ periodo or '' }}" placeholder="Período"
+                   class="form-control" style="width: 130px;">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-outline-primary">Filtrar</button>
+        </div>
+    </form>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th>Curso</th>
+                <th>Colegio</th>
+                <th>Período</th>
+                <th>Turno</th>
+                <th>Alumnos</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('curso.detalle', id_curso=curso.id_curso) }}">
+                        {{ curso.nombre_completo() }}
+                    </a>
+                </td>
+                <td>{{ curso.colegio.nombre_colegio }}</td>
+                <td>{{ curso.periodo_lectivo }}</td>
+                <td>{{ curso.turno_preferente or '-' }}</td>
+                <td>{{ curso.cantidad_alumnos() }}</td>
+                <td>
+                    <a href="{{ url_for('curso.editar', id_curso=curso.id_curso) }}"
+                       class="btn btn-sm btn-outline-secondary">Editar</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center text-muted">No hay cursos cargados.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

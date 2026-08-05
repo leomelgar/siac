@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}{{ curso.nombre_completo() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>{{ curso.nombre_completo() }}</h2>
+            <p class="text-muted mb-0">
+                {{ curso.colegio.nombre_colegio }} &middot; Período {{ curso.periodo_lectivo }}
+                {% if curso.turno_preferente %} &middot; Turno {{ curso.turno_preferente }}{% endif %}
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('curso.editar', id_curso=curso.id_curso) }}" class="btn btn-outline-secondary">Editar</a>
+            <form method="post" action="{{ url_for('curso.eliminar', id_curso=curso.id_curso) }}"
+                  class="d-inline" onsubmit="return confirm('¿Eliminar este curso?');">
+                <button type="submit" class="btn btn-outline-danger">Eliminar</button>
+            </form>
+        </div>
+    </div>
+
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link active" href="#alumnos" data-bs-toggle="tab">Alumnos ({{ matriculas|length }})</a></li>
+        <li class="nav-item"><a class="nav-link" href="#clases" data-bs-toggle="tab">Clases ({{ clases|length }})</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="alumnos">
+            <a href="{{ url_for('curso.matricular_masivo_form', id_curso=curso.id_curso) }}"
+               class="btn btn-outline-primary mb-3">
+                Agregar alumnos
+            </a>
+
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Alumno</th>
+                        <th>Legajo</th>
+                        <th>Estado matrícula</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in matriculas %}
+                    <tr>
+                        <td>
+                            <a href="{{ url_for('asistencia.historial_alumno', id_alumno=m.alumno.id) }}">
+                                {{ m.alumno.apellido }}, {{ m.alumno.nombre }}
+                            </a>
+                        </td>
+                        <td>{{ m.alumno.legajo }}</td>
+                        <td>{{ m.estado_matricula }}</td>
+                        <td>
+                            <form method="post"
+                                  action="{{ url_for('curso.desmatricular', id_curso=curso.id_curso, id_matricula=m.id_matricula) }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Quitar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="4" class="text-center text-muted">Sin alumnos asignados.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="clases">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Docente</th>
+                        <th>Aula</th>
+                        <th>Turno</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for clase in clases %}
+                    <tr>
+                        <td>{{ clase.asignatura.nombre_asignatura }}</td>
+                        <td>{{ clase.docente.apellido }}, {{ clase.docente.nombre }}</td>
+                        <td>{{ clase.aula.nombre_aula }}</td>
+                        <td>{{ clase.turno.nombre_turno }}</td>
+                        <td>
+                            <a href="{{ url_for('asistencia.tomar_asistencia', id_clase=clase.id_clase) }}"
+                               class="btn btn-sm btn-primary">Tomar asistencia</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr><td colspan="5" class="text-center text-muted">Sin clases asignadas a este curso.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

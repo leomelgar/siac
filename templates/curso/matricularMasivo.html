@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}Agregar alumnos - {{ curso.nombre_completo() }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>Agregar alumnos a {{ curso.nombre_completo() }}</h2>
+            <p class="text-muted mb-0">
+                {{ curso.colegio.nombre_colegio }} &middot; Período {{ curso.periodo_lectivo }}
+            </p>
+        </div>
+        <a href="{{ url_for('curso.detalle', id_curso=curso.id_curso) }}" class="btn btn-link">Volver al curso</a>
+    </div>
+
+    <form method="get" class="d-flex gap-2 mb-3" style="max-width: 400px;">
+        <input type="text" name="q" value="{{ q }}" class="form-control"
+               placeholder="Buscar por apellido, nombre o legajo">
+        <button type="submit" class="btn btn-outline-primary">Buscar</button>
+    </form>
+
+    <p class="text-muted">
+        Mostrando alumnos matriculados en {{ curso.colegio.nombre_colegio }} para {{ curso.periodo_lectivo }}
+        que todavía no tienen curso asignado.
+    </p>
+
+    {% if not matriculas %}
+        <div class="alert alert-info">
+            No hay alumnos disponibles{% if q %} para "{{ q }}"{% endif %}.
+        </div>
+    {% else %}
+    <form method="post" action="{{ url_for('curso.matricular_masivo', id_curso=curso.id_curso) }}">
+        <input type="hidden" name="q" value="{{ q }}">
+
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 40px;">
+                        <input type="checkbox" onclick="document.querySelectorAll('.chk-alumno').forEach(c => c.checked = this.checked)">
+                    </th>
+                    <th>Alumno</th>
+                    <th>Legajo</th>
+                    <th>Grado/nivel (dato original)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in matriculas %}
+                <tr>
+                    <td>
+                        <input class="form-check-input chk-alumno" type="checkbox"
+                               name="id_matricula" value="{{ m.id_matricula }}">
+                    </td>
+                    <td>{{ m.alumno.apellido }}, {{ m.alumno.nombre }}</td>
+                    <td>{{ m.alumno.legajo }}</td>
+                    <td>{{ m.grado_nivel }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <button type="submit" class="btn btn-success">Agregar seleccionados al curso</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

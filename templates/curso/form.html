@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar curso' if curso else 'Nuevo curso' }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 500px;">
+    <h2>{{ 'Editar curso' if curso else 'Nuevo curso' }}</h2>
+
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Colegio</label>
+            <select name="id_colegio" class="form-select" required>
+                <option value="">Seleccionar...</option>
+                {% for c in colegios %}
+                <option value="{{ c.id_colegio }}"
+                    {% if (curso and curso.id_colegio == c.id_colegio) or (form and form.get('id_colegio')|int == c.id_colegio) %}
+                        selected
+                    {% endif %}>
+                    {{ c.nombre_colegio }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="row">
+            <div class="col-6 mb-3">
+                <label class="form-label">Año</label>
+                <input type="text" name="anio" class="form-control" placeholder='Ej: 5to'
+                       value="{{ (curso.anio if curso else (form.get('anio') if form else '')) }}" required>
+            </div>
+            <div class="col-6 mb-3">
+                <label class="form-label">División</label>
+                <input type="text" name="division" class="form-control" placeholder='Ej: A'
+                       value="{{ (curso.division if curso else (form.get('division') if form else '')) }}" required>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Período lectivo</label>
+            <input type="number" name="periodo_lectivo" class="form-control"
+                   value="{{ (curso.periodo_lectivo if curso else (form.get('periodo_lectivo') if form else '')) }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Turno preferente (opcional)</label>
+            <input type="text" name="turno_preferente" class="form-control" placeholder="Ej: Mañana"
+                   value="{{ (curso.turno_preferente if curso else (form.get('turno_preferente') if form else '')) or '' }}">
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar</button>
+        <a href="{{ url_for('curso.listar') }}" class="btn btn-link">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
