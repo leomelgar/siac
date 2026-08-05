@@ -108,6 +108,54 @@ class Asignatura(db.Model):
             "creditos": self.creditos
         }
 
+class Curso(db.Model):
+    __tablename__ = 'curso'
+    id_curso = db.Column(db.Integer, primary_key=True)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    anio = db.Column(db.String(20), nullable=False)               # Ej: "1ro", "5to"
+    division = db.Column(db.String(10), nullable=False)           # Ej: "A", "B"
+    periodo_lectivo = db.Column(db.Integer, nullable=False)       # Ej: 2026
+    turno_preferente = db.Column(db.String(20), nullable=True)    # Informativo, no obliga a las Clases
+
+    colegio = db.relationship('Colegio', backref='cursos')
+    matriculas = db.relationship('Matricula', back_populates='curso', lazy=True)
+    clases = db.relationship('Clase', back_populates='curso', lazy=True)
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            'id_colegio', 'anio', 'division', 'periodo_lectivo',
+            name='uq_curso_colegio_anio_division_periodo'
+        ),
+    )
+
+    def __init__(self, id_colegio, anio, division, periodo_lectivo, turno_preferente=None):
+        self.id_colegio = id_colegio
+        self.anio = anio
+        self.division = division
+        self.periodo_lectivo = periodo_lectivo
+        self.turno_preferente = turno_preferente
+
+    def __repr__(self):
+        return f"<Curso {self.anio} '{self.division}' - {self.periodo_lectivo}>"
+
+    def nombre_completo(self):
+        return f'{self.anio} "{self.division}"'
+
+    def cantidad_alumnos(self):
+        return len(self.matriculas)
+
+    def to_dict(self):
+        return {
+            "id_curso": self.id_curso,
+            "id_colegio": self.id_colegio,
+            "anio": self.anio,
+            "division": self.division,
+            "periodo_lectivo": self.periodo_lectivo,
+            "turno_preferente": self.turno_preferente,
+            "nombre_completo": self.nombre_completo(),
+            "cantidad_alumnos": self.cantidad_alumnos()
+        }
+
 # ==========================================
 # 3. POLIMORFISMO (PERSONAS)
 # ==========================================
@@ -308,22 +356,25 @@ class Clase(db.Model):
     id_docente = db.Column(db.Integer, db.ForeignKey('docente.id'), nullable=False)
     id_aula = db.Column(db.Integer, db.ForeignKey('aula.id_aula'), nullable=False)
     id_turno = db.Column(db.Integer, db.ForeignKey('turno.id_turno'), nullable=False)
+    id_curso = db.Column(db.Integer, db.ForeignKey('curso.id_curso'), nullable=True)
     ciclo_lectivo = db.Column(db.Integer, nullable=False) # Ej: 2026
 
     asignatura = db.relationship('Asignatura', back_populates='clases')
     docente = db.relationship('Docente', back_populates='clases')
     aula = db.relationship('Aula', back_populates='clases')
     turno = db.relationship('Turno', back_populates='clases')
+    curso = db.relationship('Curso', back_populates='clases')
     horarios = db.relationship('Horario', back_populates='clase', lazy=True, cascade="all, delete-orphan")
     asistencias = db.relationship('Asistencia', back_populates='clase', lazy=True)
     matriculas = db.relationship('Matricula', secondary=clase_matricula, backref='clases_inscriptas')
 
-    def __init__(self, id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo):
+    def __init__(self, id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo,id_curso=None):
         self.id_asignatura = id_asignatura
         self.id_docente = id_docente
         self.id_aula = id_aula
         self.id_turno = id_turno
         self.ciclo_lectivo = ciclo_lectivo
+        self.id_curso = id_curso
     
     def __repr__(self):
         return f"<Clase ID: {self.id_clase} - Asignatura: {self.id_asignatura} - Año: {self.ciclo_lectivo}>"
@@ -439,6 +490,7 @@ class Matricula(db.Model):
     id_matricula = db.Column(db.Integer, primary_key=True)
     id_alumno = db.Column(db.Integer, db.ForeignKey('alumno.id'), nullable=False)
     id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    id_curso = db.Column(db.Integer, db.ForeignKey('curso.id_curso'), nullable=True)
     fecha_inscripcion = db.Column(db.Date, nullable=False)
     grado_nivel = db.Column(db.String(50), nullable=False)
     periodo_lectivo = db.Column(db.Integer, nullable=False)
@@ -451,6 +503,7 @@ class Matricula(db.Model):
     # Relaciones
     alumno = db.relationship('Alumno', back_populates='matriculas')
     colegio = db.relationship('Colegio', back_populates='matriculas')
+    curso = db.relationship('Curso', back_populates='matriculas')
 
     __table_args__ = (
         db.UniqueConstraint(
@@ -460,7 +513,7 @@ class Matricula(db.Model):
     )
 
     def __init__(self, id_alumno, id_colegio, fecha_inscripcion, grado_nivel,
-                 periodo_lectivo, tipo_ingreso, estado_matricula="Activo"):
+                 periodo_lectivo, tipo_ingreso, estado_matricula="Activo", id_curso=None):
         self.id_alumno = id_alumno
         self.id_colegio = id_colegio
         self.fecha_inscripcion = fecha_inscripcion
@@ -468,7 +521,8 @@ class Matricula(db.Model):
         self.periodo_lectivo = periodo_lectivo
         self.tipo_ingreso = tipo_ingreso
         self.estado_matricula = estado_matricula
-
+        self.id_curso = id_curso
+    
     def __repr__(self):
         return f"<Matricula Alumno ID: {self.id_alumno} - Grado: {self.grado_nivel} ({self.periodo_lectivo})>"
 
