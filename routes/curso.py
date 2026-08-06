@@ -6,7 +6,7 @@ from flask_login import login_required
 from sqlalchemy.exc import IntegrityError
 
 from utils.db import db
-from models import Curso, Colegio, Matricula, Clase, Alumno
+from models.colege import Curso, Colegio, Matricula, Clase, Alumno
 
 curso_bp = Blueprint('curso', __name__, url_prefix='/cursos')
 
@@ -19,14 +19,23 @@ curso_bp = Blueprint('curso', __name__, url_prefix='/cursos')
 def listar():
     id_colegio = request.args.get('id_colegio', type=int)
     periodo = request.args.get('periodo', type=int)
+    page = request.args.get('page', 1, type=int)
+    per_page = 15  # cantidad de cursos por página
 
     query = Curso.query
+
     if id_colegio:
         query = query.filter_by(id_colegio=id_colegio)
     if periodo:
         query = query.filter_by(periodo_lectivo=periodo)
 
-    cursos = query.order_by(Curso.periodo_lectivo.desc(), Curso.anio, Curso.division).all()
+    pagination = query.order_by(
+        Curso.periodo_lectivo.desc(),
+        Curso.anio,
+        Curso.division
+    ).paginate(page=page, per_page=per_page, error_out=False)
+
+    cursos = pagination.items
     colegios = Colegio.query.order_by(Colegio.nombre_colegio).all()
 
     return render_template(
@@ -34,7 +43,8 @@ def listar():
         cursos=cursos,
         colegios=colegios,
         id_colegio=id_colegio,
-        periodo=periodo
+        periodo=periodo,
+        pagination=pagination
     )
 
 
@@ -172,7 +182,7 @@ def matricular_masivo_form(id_curso):
     matriculas_disponibles = query.order_by(Alumno.apellido, Alumno.nombre).all()
 
     return render_template(
-        'cursos/matricular_masivo.html',
+        'cursos/matricularMasivo.html',
         curso=curso,
         matriculas=matriculas_disponibles,
         q=q

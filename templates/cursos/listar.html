@@ -1,0 +1,170 @@
+{% extends "layout.html" %}
+{% block title %}Cursos{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-2">
+   <!-- menu lateral -->
+    {% include 'partials/_sidebar.html' %}
+  </div>
+  <div class="col-md-10">
+<div class="container mt-4 bg-light p-2 rounded-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        
+        <h2>Cursos</h2>
+        <a href="{{ url_for('curso.crear') }}" class="btn btn-outline-primary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-journal-plus" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 5.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 .5-.5"/>
+            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+          </svg> curso</a>
+    </div>
+    <hr class="my-3 text-secondary">
+    <form method="get" class="row g-2 align-items-center mb-3">
+    <div class="col-auto">
+        <select name="id_colegio" class="form-select" style="height: 38px; min-width: 200px;">
+            <option value="">Todos los colegios</option>
+            {% for c in colegios %}
+            <option value="{{ c.id_colegio }}" {% if id_colegio == c.id_colegio %}selected{% endif %}>
+                {{ c.nombre_colegio }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-auto">
+        <input type="number" 
+               name="periodo" 
+               value="{{ periodo or '' }}" 
+               placeholder="Período"
+               class="form-control" 
+               style="width: 130px; height: 38px;">
+    </div>
+
+    <div class="col-auto">
+        <button type="submit" 
+                class="btn btn-outline-primary d-inline-flex align-items-center gap-1"
+                style="height: 38px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z"/>
+            </svg>
+            Filtrar
+        </button>
+    </div>
+</form>
+
+    <div class="table-responsive rounded-3 shadow-sm border">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="ps-3">Curso</th>
+                <th scope="col">Colegio</th>
+                <th scope="col">Período</th>
+                <th scope="col">Turno</th>
+                <th scope="col" class="text-center">Alumnos</th>
+                <th scope="col" class="text-end pe-3" style="width: 120px;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+            <tr>
+                <td class="ps-3">
+                    <a href="{{ url_for('curso.detalle', id_curso=curso.id_curso) }}"
+                       class="text-decoration-none fw-medium text-body">
+                        {{ curso.nombre_completo() }}
+                    </a>
+                </td>
+                <td>
+                    <span class="text-muted">{{ curso.colegio.nombre_colegio }}</span>
+                </td>
+                <td>
+                    <span class="badge bg-light text-dark border">
+                        {{ curso.periodo_lectivo }}
+                    </span>
+                </td>
+                <td>
+                    {% if curso.turno_preferente %}
+                        <span class="badge bg-primary-subtle text-primary rounded-pill">
+                            {{ curso.turno_preferente }}
+                        </span>
+                    {% else %}
+                        <span class="text-muted">—</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <span class="badge bg-secondary-subtle text-secondary rounded-pill">
+                        {{ curso.cantidad_alumnos() }}
+                    </span>
+                </td>
+                <td class="text-end pe-3">
+                    <a href="{{ url_for('curso.editar', id_curso=curso.id_curso) }}"
+                       class="btn btn-sm btn-outline-secondary d-inline-flex align-items-center gap-1"
+                       title="Editar curso">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                        </svg>
+                        <span class="d-none d-md-inline">Editar</span>
+                    </a>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="6" class="text-center text-muted py-5">
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-journal-x text-secondary opacity-50" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708"/>
+                            <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                            <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                        </svg>
+                        <span>No hay cursos cargados.</span>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pagination and pagination.pages > 1 %}
+<nav class="d-flex justify-content-between align-items-center mt-3 px-1" aria-label="Paginación">
+    <div class="text-muted small">
+        Mostrando 
+        <strong>{{ pagination.first }}</strong>–<strong>{{ pagination.last }}</strong> 
+        de <strong>{{ pagination.total }}</strong>
+    </div>
+
+    <ul class="pagination pagination-sm mb-0">
+        <li class="page-item {% if not pagination.has_prev %}disabled{% endif %}">
+            <a class="page-link" 
+               href="{{ url_for(request.endpoint, page=pagination.prev_num, **request.args) if pagination.has_prev else '#' }}">
+                ‹
+            </a>
+        </li>
+
+        {% for p in pagination.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2) %}
+            {% if p %}
+                <li class="page-item {% if p == pagination.page %}active{% endif %}">
+                    <a class="page-link" href="{{ url_for(request.endpoint, page=p, **request.args) }}">
+                        {{ p }}
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">…</span>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        <li class="page-item {% if not pagination.has_next %}disabled{% endif %}">
+            <a class="page-link" 
+               href="{{ url_for(request.endpoint, page=pagination.next_num, **request.args) if pagination.has_next else '#' }}">
+                ›
+            </a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+</div>
+    </div>
+</div>
+{% endblock %}

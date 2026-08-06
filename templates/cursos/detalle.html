@@ -1,0 +1,193 @@
+{% extends "layout.html" %}
+{% block title %}{{ curso.nombre_completo() }}{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-2">
+   <!-- menu lateral -->
+    {% include 'partials/_sidebar.html' %}
+  </div>
+  <div class="col-md-10">
+<div class="container mt-4 bg-light p-2 rounded-3">
+    <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2><span class="badge bg-light text-dark border">{{ curso.nombre_completo() }}</span></h2>
+            <p class="text-muted mb-0">
+                {{ curso.colegio.nombre_colegio }} &middot; <span class="badge bg-light text-dark border">Período {{ curso.periodo_lectivo }}</span>
+                {% if curso.turno_preferente %} &middot; Turno {{ curso.turno_preferente }}{% endif %}
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('curso.listar') }}" class="btn btn-outline-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                </svg> Volver</a>
+            <a href="{{ url_for('curso.editar', id_curso=curso.id_curso) }}" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square me-2" viewBox="0 0 16 16">
+                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                </svg> Editar</a>
+            <form method="post" action="{{ url_for('curso.eliminar', id_curso=curso.id_curso) }}"
+                  class="d-inline" onsubmit="return confirm('¿Eliminar este curso?');">
+                <button type="submit" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                </svg> Eliminar</button>
+            </form>
+        </div>
+    </div>
+    <hr class="my-3 text-secondary">
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link active" href="#alumnos" data-bs-toggle="tab">Alumnos ({{ matriculas|length }})</a></li>
+        <li class="nav-item"><a class="nav-link" href="#clases" data-bs-toggle="tab">Clases ({{ clases|length }})</a></li>
+    </ul>
+
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="alumnos">
+            <a href="{{ url_for('curso.matricular_masivo_form', id_curso=curso.id_curso) }}"
+               class="btn btn-outline-primary mb-3"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus" viewBox="0 0 16 16">
+                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H1s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C9.516 10.68 8.289 10 6 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"/>
+                </svg>
+                Agregar alumnos
+            </a>
+
+            <div class="table-responsive rounded-3 shadow-sm border">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" class="ps-3">Alumno</th>
+                            <th scope="col">Legajo</th>
+                            <th scope="col">Estado matrícula</th>
+                            <th scope="col" class="text-end pe-3" style="width: 120px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for m in matriculas %}
+                        <tr>
+                            <td class="ps-3">
+                                <a href="{{ url_for('asistencia.historial_alumno', id_alumno=m.alumno.id) }}"
+                                class="text-decoration-none fw-medium text-body">
+                                    {{ m.alumno.apellido }}, {{ m.alumno.nombre }}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    {{ m.alumno.legajo }}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge 
+                                    {% if m.estado_matricula|lower == 'activa' or m.estado_matricula|lower == 'activo' %}
+                                        bg-success-subtle text-success
+                                    {% elif m.estado_matricula|lower == 'pendiente' %}
+                                        bg-warning-subtle text-warning
+                                    {% else %}
+                                        bg-secondary-subtle text-secondary
+                                    {% endif %}
+                                    rounded-pill">
+                                    {{ m.estado_matricula }}
+                                </span>
+                            </td>
+                            <td class="text-end pe-3">
+                                <form method="post"
+                                    action="{{ url_for('curso.desmatricular', id_curso=curso.id_curso, id_matricula=m.id_matricula) }}"
+                                    class="d-inline"
+                                    onsubmit="return confirm('¿Estás seguro de que deseas quitar a este alumno?');">
+                                    <button type="submit" 
+                                            class="btn btn-sm btn-outline-danger d-inline-flex align-items-center gap-1"
+                                            title="Quitar alumno">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
+                                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m.256 7a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
+                                            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708"/>
+                                        </svg>
+                                        <span class="d-none d-sm-inline">Quitar</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-5">
+                                <div class="d-flex flex-column align-items-center gap-2">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-people text-secondary opacity-50" viewBox="0 0 16 16">
+                                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.246.154-.986.832-1.664C8.484 10.68 9.711 10 12 10c.26 0 .516.014.765.041C14.907 10.453 16 11.962 16 13.5c0 .987-.58 1.5-1.5 1.5z"/>
+                                        <path d="M3 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1z"/>
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                    </svg>
+                                    <span>Sin alumnos asignados.</span>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="clases">
+    <div class="table-responsive rounded-3 shadow-sm border">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col" class="ps-3">Asignatura</th>
+                    <th scope="col">Docente</th>
+                    <th scope="col">Aula</th>
+                    <th scope="col">Turno</th>
+                    <th scope="col" class="text-end pe-3" style="width: 160px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for clase in clases %}
+                <tr>
+                    <td class="ps-3">
+                        <span class="fw-medium">{{ clase.asignatura.nombre_asignatura }}</span>
+                    </td>
+                    <td>
+                        {{ clase.docente.apellido }}, {{ clase.docente.nombre }}
+                    </td>
+                    <td>
+                        <span class="badge bg-light text-dark border">
+                            {{ clase.aula.nombre_aula }}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge bg-primary-subtle text-primary rounded-pill">
+                            {{ clase.turno.nombre_turno }}
+                        </span>
+                    </td>
+                    <td class="text-end pe-3">
+                        <a href="{{ url_for('asistencia.tomar_asistencia', id_clase=clase.id_clase) }}"
+                           class="btn btn-sm btn-primary d-inline-flex align-items-center gap-1"
+                           title="Tomar asistencia">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clipboard-check" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
+                                <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1z"/>
+                                <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0z"/>
+                            </svg>
+                            <span class="d-none d-sm-inline">Tomar asistencia</span>
+                        </a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted py-5">
+                        <div class="d-flex flex-column align-items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-journal-x text-secondary opacity-50" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M6.146 6.146a.5.5 0 0 1 .708 0L8 7.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 8l1.147 1.146a.5.5 0 0 1-.708.708L8 8.707 6.854 9.854a.5.5 0 0 1-.708-.708L7.293 8 6.146 6.854a.5.5 0 0 1 0-.708"/>
+                                <path d="M3 0h10a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-1h1v1a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v1H1V2a2 2 0 0 1 2-2"/>
+                                <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
+                            </svg>
+                            <span>Sin clases asignadas a este curso.</span>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+</div>
+</div>
+</div>
+{% endblock %}

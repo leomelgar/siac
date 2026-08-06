@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+{% block title %}Agregar alumnos - {{ curso.nombre_completo() }}{% endblock %}
+
+{% block body %}
+<div class="row">
+  <div class="col-md-2">
+   <!-- menu lateral -->
+    {% include 'partials/_sidebar.html' %}
+  </div>
+  <div class="col-md-10">
+<div class="container mt-4 bg-light p-2 rounded-3">
+    <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>Agregar alumnos a <span class="badge bg-light text-dark border">{{ curso.nombre_completo() }}</span></h2>
+            <p class="text-muted mb-0">
+                {{ curso.colegio.nombre_colegio }} &middot; <span class="badge bg-light text-dark border">Período {{ curso.periodo_lectivo }}</span>
+            </p>
+        </div>
+        <a href="{{ url_for('curso.detalle', id_curso=curso.id_curso) }}" class="btn btn-outline-secondary"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                                </svg> Volver al curso</a>
+    </div>
+    <hr class="my-3 text-secondary">
+    <form method="get" class="mb-3" style="max-width: 420px;">
+    <div class="input-group">
+        <input type="text" 
+               name="q" 
+               value="{{ q }}" 
+               class="form-control"
+               placeholder="Buscar por apellido, nombre o legajo">
+        
+        <button type="submit" class="btn btn-outline-primary d-inline-flex align-items-center gap-1">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-funnel-fill" viewBox="0 0 16 16">
+                <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5z"/>
+            </svg>
+            Buscar
+        </button>
+    </div>
+</form>
+
+    <p class="text-muted">
+        Mostrando alumnos matriculados en {{ curso.colegio.nombre_colegio }} para {{ curso.periodo_lectivo }}
+        que todavía no tienen curso asignado.
+    </p>
+
+    {% if not matriculas %}
+        <div class="alert alert-info">
+            No hay alumnos disponibles{% if q %} para "{{ q }}"{% endif %}.
+        </div>
+    {% else %}
+    <form method="post" action="{{ url_for('curso.matricular_masivo', id_curso=curso.id_curso) }}">
+        <input type="hidden" name="q" value="{{ q }}">
+
+        <div class="table-responsive rounded-3 shadow-sm border">
+    <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+            <tr>
+                <th scope="col" class="ps-3" style="width: 48px;">
+                    <input type="checkbox" 
+                           class="form-check-input"
+                           onclick="document.querySelectorAll('.chk-alumno').forEach(c => c.checked = this.checked)"
+                           title="Seleccionar todos">
+                </th>
+                <th scope="col">Alumno</th>
+                <th scope="col">Legajo</th>
+                <th scope="col" class="pe-3">Grado/nivel (dato original)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for m in matriculas %}
+            <tr>
+                <td class="ps-3">
+                    <input class="form-check-input chk-alumno" 
+                           type="checkbox"
+                           name="id_matricula" 
+                           value="{{ m.id_matricula }}">
+                </td>
+                <td>
+                    <span class="fw-medium">{{ m.alumno.apellido }}, {{ m.alumno.nombre }}</span>
+                </td>
+                <td>
+                    <span class="badge bg-light text-dark border">
+                        {{ m.alumno.legajo }}
+                    </span>
+                </td>
+                <td class="pe-3">
+                    <span class="badge bg-secondary-subtle text-secondary rounded-pill">
+                        {{ m.grado_nivel }}
+                    </span>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="4" class="text-center text-muted py-5">
+                    <div class="d-flex flex-column align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-people text-secondary opacity-50" viewBox="0 0 16 16">
+                            <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.246.154-.986.832-1.664C8.484 10.68 9.711 10 12 10c.26 0 .516.014.765.041C14.907 10.453 16 11.962 16 13.5c0 .987-.58 1.5-1.5 1.5z"/>
+                            <path d="M3 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1z"/>
+                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                        <span>Sin alumnos disponibles.</span>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+        <button type="submit" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-add" viewBox="0 0 16 16">
+            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0"/>
+            <path d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"/>
+            </svg> Agregar seleccionados al curso</button>
+    </form>
+    {% endif %}
+</div>
+</div>
+  </div>
+</div>
+{% endblock %}
