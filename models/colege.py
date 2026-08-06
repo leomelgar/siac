@@ -310,33 +310,69 @@ class Usuario(db.Model, UserMixin):
     username = db.Column(db.String(50), unique=True, nullable=False)
     password_hash = db.Column(db.String(255), nullable=False)
     activo = db.Column(db.Boolean, default=True)
+    avatar = db.Column(db.String(255), nullable=True)   # ← NUEVO (ruta de la imagen)
  
     persona = db.relationship('Persona', backref=db.backref('usuario', uselist=False))
     rol = db.relationship('Rol', backref='usuarios')
  
-    def __init__(self, id_persona, id_rol, username, password_hash, activo=True):
+    def __init__(self, id_persona, id_rol, username, password_hash, activo=True, avatar=None):
         self.id_persona = id_persona
         self.id_rol = id_rol
         self.username = username
         self.password_hash = password_hash
         self.activo = activo
+        self.avatar = avatar
  
     # --- Requerido por Flask-Login ---
     def get_id(self):
         return str(self.id_usuario)
  
-    # UserMixin ya provee por defecto:
-    #   is_authenticated -> True
-    #   is_anonymous     -> False
-    # Pero is_active lo sobreescribimos para que respete tu columna 'activo'
     @property
     def is_active(self):
         return self.activo
+
     @property
     def avatar_url(self):
         if self.avatar:
             return url_for('static', filename=self.avatar)
         return url_for('avatar_svg', username=self.username or 'U')
+
+# class Usuario(db.Model, UserMixin):
+#     __tablename__ = 'usuario'
+#     id_usuario = db.Column(db.Integer, primary_key=True)
+#     id_persona = db.Column(db.Integer, db.ForeignKey('persona.id'), unique=True, nullable=False)
+#     id_rol = db.Column(db.Integer, db.ForeignKey('rol.id_rol'), nullable=False)
+ 
+#     username = db.Column(db.String(50), unique=True, nullable=False)
+#     password_hash = db.Column(db.String(255), nullable=False)
+#     activo = db.Column(db.Boolean, default=True)
+ 
+#     persona = db.relationship('Persona', backref=db.backref('usuario', uselist=False))
+#     rol = db.relationship('Rol', backref='usuarios')
+ 
+#     def __init__(self, id_persona, id_rol, username, password_hash, activo=True):
+#         self.id_persona = id_persona
+#         self.id_rol = id_rol
+#         self.username = username
+#         self.password_hash = password_hash
+#         self.activo = activo
+ 
+#     # --- Requerido por Flask-Login ---
+#     def get_id(self):
+#         return str(self.id_usuario)
+ 
+#     # UserMixin ya provee por defecto:
+#     #   is_authenticated -> True
+#     #   is_anonymous     -> False
+#     # Pero is_active lo sobreescribimos para que respete tu columna 'activo'
+#     @property
+#     def is_active(self):
+#         return self.activo
+#     @property
+#     def avatar_url(self):
+#         if self.avatar:
+#             return url_for('static', filename=self.avatar)
+#         return url_for('avatar_svg', username=self.username or 'U')
 
 # ==========================================
 # 4. NUEVOS MODELOS (GESTIÓN ACADÉMICA)
@@ -469,22 +505,66 @@ class Horario(db.Model):
     __tablename__ = 'horario'
     id_horario = db.Column(db.Integer, primary_key=True)
     id_clase = db.Column(db.Integer, db.ForeignKey('clase.id_clase', ondelete='CASCADE'), nullable=False)
-    dia_semana = db.Column(db.String(15), nullable=False) # Lunes, Martes, etc.
+    dia_semana = db.Column(db.String(15), nullable=False)  # Lunes, Martes, etc.
     hora_desde = db.Column(db.Time, nullable=False)
     hora_hasta = db.Column(db.Time, nullable=False)
 
     clase = db.relationship('Clase', back_populates='horarios')
 
-    def init(self, id_clase, dia_semana, hora_desde, hora_hasta):
+    def __init__(self, id_clase, dia_semana, hora_desde, hora_hasta):
         self.id_clase = id_clase
         self.dia_semana = dia_semana
         self.hora_desde = hora_desde
         self.hora_hasta = hora_hasta
 
-    def repr(self):return f"<Horario {self.dia_semana} {self.hora_desde} - {self.hora_hasta}>"
+    def __repr__(self):
+        return f"<Horario {self.dia_semana} {self.hora_desde} - {self.hora_hasta}>"
 
 class Matricula(db.Model):
     """Vincula a un alumno con una institución y un año escolar determinado."""
+    __tablename__ = 'matricula'
+
+    id_matricula = db.Column(db.Integer, primary_key=True)
+    id_alumno = db.Column(db.Integer, db.ForeignKey('alumno.id'), nullable=False)
+    id_colegio = db.Column(db.Integer, db.ForeignKey('colegio.id_colegio'), nullable=False)
+    id_curso = db.Column(db.Integer, db.ForeignKey('curso.id_curso'), nullable=True)
+    fecha_inscripcion = db.Column(db.Date, nullable=False)
+    grado_nivel = db.Column(db.String(50), nullable=False)
+    periodo_lectivo = db.Column(db.Integer, nullable=False)
+    estado_matricula = db.Column(db.String(20), default="Activo")
+    
+    # Nuevo campo
+    tipo_ingreso = db.Column(db.String(50), nullable=False)
+    # Valores: "Ingreso desde primaria" | "Pase de otro establecimiento"
+
+    # Relaciones
+    alumno = db.relationship('Alumno', back_populates='matriculas')
+    colegio = db.relationship('Colegio', back_populates='matriculas')
+    curso = db.relationship('Curso', back_populates='matriculas')
+
+    __table_args__ = (
+        db.UniqueConstraint(
+            'id_alumno', 'id_colegio', 'periodo_lectivo',
+            name='uq_matricula_alumno_colegio_periodo'
+        ),
+    )
+
+    def __init__(self, id_alumno, id_colegio, fecha_inscripcion, grado_nivel,
+                 periodo_lectivo, tipo_ingreso, estado_matricula="Activo", id_curso=None):
+        self.id_alumno = id_alumno
+        self.id_colegio = id_colegio
+        self.fecha_inscripcion = fecha_inscripcion
+        self.grado_nivel = grado_nivel
+        self.periodo_lectivo = periodo_lectivo
+        self.tipo_ingreso = tipo_ingreso
+        self.estado_matricula = estado_matricula
+        self.id_curso = id_curso
+    
+    def __repr__(self):
+        return f"<Matricula Alumno ID: {self.id_alumno} - Grado: {self.grado_nivel} ({self.periodo_lectivo})>"
+
+""" class Matricula(db.Model):
+    
     __tablename__ = 'matricula'
 
     id_matricula = db.Column(db.Integer, primary_key=True)
@@ -532,7 +612,7 @@ class Matricula(db.Model):
             'id_alumno', 'id_colegio', 'periodo_lectivo',
             name='uq_matricula_alumno_colegio_periodo'
         ),
-    )
+    ) """
 
 # ==========================================
 # ASISTENCIA DIARIA (Modificada)
