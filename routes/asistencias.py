@@ -53,14 +53,25 @@ def tomar_asistencia(id_clase):
     fecha_str = request.args.get('fecha')
     fecha = datetime.strptime(fecha_str, '%Y-%m-%d').date() if fecha_str else date.today()
 
-    alumnos = (
-        Alumno.query
-        .join(Matricula, Matricula.id_alumno == Alumno.id)
-        .join(Matricula.clases_inscriptas)
-        .filter(Clase.id_clase == id_clase)
-        .order_by(Alumno.apellido, Alumno.nombre)
-        .all()
-    )
+    if clase.id_curso:
+        # Camino principal: la clase pertenece a un Curso -> alumnos matriculados en ese curso
+        alumnos = (
+            Alumno.query
+            .join(Matricula, Matricula.id_alumno == Alumno.id)
+            .filter(Matricula.id_curso == clase.id_curso)
+            .order_by(Alumno.apellido, Alumno.nombre)
+            .all()
+        )
+    else:
+        # Excepción: clase sin curso fijo (electiva/optativa) -> inscripción puntual vía clase_matricula
+        alumnos = (
+            Alumno.query
+            .join(Matricula, Matricula.id_alumno == Alumno.id)
+            .join(Matricula.clases_inscriptas)
+            .filter(Clase.id_clase == id_clase)
+            .order_by(Alumno.apellido, Alumno.nombre)
+            .all()
+        )
 
     registros_existentes = {
         a.id_alumno: a

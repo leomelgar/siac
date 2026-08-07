@@ -79,6 +79,20 @@
               <input type="number" name="ciclo_lectivo" class="form-control" required
                     value="{{ clase.ciclo_lectivo if clase else (form.get('ciclo_lectivo') if form else '') }}">
             </div>
+            <div class="mb-3">
+              <label class="form-label">Curso (opcional — vacío = electiva/optativa)</label>
+              <select name="id_curso" class="form-select">
+                  <option value="">Sin curso fijo</option>
+                  {% for c in cursos %}
+                  <option value="{{ c.id_curso }}"
+                      {% if (clase and clase.id_curso == c.id_curso) or (form and form.get('id_curso')|int == c.id_curso) %}
+                          selected
+                      {% endif %}>
+                      {{ c.nombre_completo() }} ({{ c.periodo_lectivo }})
+                  </option>
+                  {% endfor %}
+              </select>
+          </div>
 
             {% if not clase %}
               <hr class="mt-4">

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from utils.db import db
-from models.colege import Clase, Asignatura, Docente, Aula, Turno, Horario
+from models.colege import Clase, Asignatura, Docente, Aula, Turno, Horario, Curso
 
 clases_bp = Blueprint('clases', __name__, url_prefix='/clases')
 
@@ -98,6 +98,7 @@ def nueva():
     docentes = Docente.query.order_by(Docente.apellido).all()
     aulas = Aula.query.order_by(Aula.nombre_aula).all()
     turnos = Turno.query.all()
+    cursos = Curso.query.order_by(Curso.periodo_lectivo.desc(), Curso.anio, Curso.division).all()
 
     if request.method == 'POST':
         id_asignatura = request.form.get('id_asignatura', type=int)
@@ -105,6 +106,8 @@ def nueva():
         id_aula = request.form.get('id_aula', type=int)
         id_turno = request.form.get('id_turno', type=int)
         ciclo_lectivo = request.form.get('ciclo_lectivo', type=int)
+        # Opcional: una Clase sin curso fijo es una electiva/optativa (usa clase_matricula)
+        id_curso = request.form.get('id_curso', type=int) or None
 
         dia_semana = request.form.get('dia_semana')
         hora_desde = request.form.get('hora_desde')
@@ -117,6 +120,11 @@ def nueva():
             errores.append('Debe indicar día y horario de la clase.')
         elif hora_desde >= hora_hasta:
             errores.append('La hora de inicio debe ser menor a la hora de fin.')
+
+        if id_curso:
+            curso_seleccionado = Curso.query.get(id_curso)
+            if not curso_seleccionado or curso_seleccionado.periodo_lectivo != ciclo_lectivo:
+                errores.append('El curso seleccionado no corresponde al ciclo lectivo indicado.')
 
         if not errores:
             conflicto = verificar_solapamiento(id_aula, dia_semana, hora_desde, hora_hasta, ciclo_lectivo)
@@ -135,7 +143,7 @@ def nueva():
             return render_template(
                 'clases/form.html',
                 asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
-                dias_semana=DIAS_SEMANA, clase=None, form=request.form,
+                cursos=cursos, dias_semana=DIAS_SEMANA, clase=None, form=request.form,
             )
 
         nueva_clase = Clase(
@@ -144,6 +152,7 @@ def nueva():
             id_aula=id_aula,
             id_turno=id_turno,
             ciclo_lectivo=ciclo_lectivo,
+            id_curso=id_curso,
         )
         db.session.add(nueva_clase)
         db.session.flush()  # obtenemos id_clase antes del commit final
@@ -163,7 +172,7 @@ def nueva():
     return render_template(
         'clases/form.html',
         asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
-        dias_semana=DIAS_SEMANA, clase=None, form=None,
+        cursos=cursos, dias_semana=DIAS_SEMANA, clase=None, form=None,
     )
 
 
@@ -177,6 +186,7 @@ def editar(id_clase):
     docentes = Docente.query.order_by(Docente.apellido).all()
     aulas = Aula.query.order_by(Aula.nombre_aula).all()
     turnos = Turno.query.all()
+    cursos = Curso.query.order_by(Curso.periodo_lectivo.desc(), Curso.anio, Curso.division).all()
 
     if request.method == 'POST':
         id_asignatura = request.form.get('id_asignatura', type=int)
@@ -184,10 +194,16 @@ def editar(id_clase):
         id_aula = request.form.get('id_aula', type=int)
         id_turno = request.form.get('id_turno', type=int)
         ciclo_lectivo = request.form.get('ciclo_lectivo', type=int)
+        id_curso = request.form.get('id_curso', type=int) or None
 
         errores = []
         if not all([id_asignatura, id_docente, id_aula, id_turno, ciclo_lectivo]):
             errores.append('Todos los campos son obligatorios.')
+
+        if id_curso:
+            curso_seleccionado = Curso.query.get(id_curso)
+            if not curso_seleccionado or curso_seleccionado.periodo_lectivo != ciclo_lectivo:
+                errores.append('El curso seleccionado no corresponde al ciclo lectivo indicado.')
 
         if not errores:
             # Revalidamos CADA horario existente contra la nueva combinación aula/ciclo
@@ -211,7 +227,7 @@ def editar(id_clase):
             return render_template(
                 'clases/form.html',
                 asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
-                dias_semana=DIAS_SEMANA, clase=clase, form=request.form,
+                cursos=cursos, dias_semana=DIAS_SEMANA, clase=clase, form=request.form,
             )
 
         clase.id_asignatura = id_asignatura
@@ -219,6 +235,7 @@ def editar(id_clase):
         clase.id_aula = id_aula
         clase.id_turno = id_turno
         clase.ciclo_lectivo = ciclo_lectivo
+        clase.id_curso = id_curso
         db.session.commit()
 
         flash('Clase actualizada correctamente.', 'success')
@@ -227,7 +244,7 @@ def editar(id_clase):
     return render_template(
         'clases/form.html',
         asignaturas=asignaturas, docentes=docentes, aulas=aulas, turnos=turnos,
-        dias_semana=DIAS_SEMANA, clase=clase, form=None,
+        cursos=cursos, dias_semana=DIAS_SEMANA, clase=clase, form=None,
     )
 
 

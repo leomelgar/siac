@@ -650,34 +650,45 @@ class Asistencia(db.Model):
 # ==========================================
 # ESTADO DE REGULARIDAD (Totalizador)
 # ==========================================
+from decimal import Decimal
+
 class EstadoRegularidad(db.Model):
     """
     Lleva el conteo global anual del alumno y su estado (Regular/Libre). 
     Evita tener que hacer un SUM() de todas las asistencias cada vez que se carga una falta.
     """
     __tablename__ = 'estado_regularidad'
+    
     id_regularidad = db.Column(db.Integer, primary_key=True)
     id_matricula = db.Column(db.Integer, db.ForeignKey('matricula.id_matricula'), unique=True, nullable=False)
     
     # Contadores actualizados automáticamente (mediante triggers de BD o lógica en la app)
-    total_faltas = db.Column(db.Numeric(5, 2), default=0.0)
-    total_faltas_justificadas = db.Column(db.Numeric(5, 2), default=0.0)
+    total_faltas = db.Column(db.Numeric(5, 2), default=0.0, nullable=False)
+    total_faltas_justificadas = db.Column(db.Numeric(5, 2), default=0.0, nullable=False)
     
     # Estados: "Regular", "Libre (15 faltas)", "Reincorporado", "Libre Definitivo"
-    condicion = db.Column(db.String(50), default="Regular")
+    condicion = db.Column(db.String(50), default="Regular", nullable=False)
     
     # Límite dinámico: Empieza en 15.0, sube a 25.0 si se aprueba la 1ra reincorporación
-    limite_actual = db.Column(db.Numeric(4, 2), default=15.0) 
+    limite_actual = db.Column(db.Numeric(4, 2), default=15.0, nullable=False)
     
     matricula = db.relationship('Matricula', backref=db.backref('estado_regularidad', uselist=False))
 
     def verificar_estado(self):
-        """Método de ayuda para evaluar si el alumno quedó libre."""
-        if self.total_faltas >= self.limite_actual:
-            if self.limite_actual == 15.0:
+        """Evalúa si el alumno quedó libre y actualiza la condición."""
+        # Garantizamos que nunca sean None (protección extra)
+        total = self.total_faltas if self.total_faltas is not None else Decimal('0.0')
+        limite = self.limite_actual if self.limite_actual is not None else Decimal('15.0')
+
+        if total >= limite:
+            if limite == Decimal('15.0') or limite == 15:
                 self.condicion = "Libre (15 faltas)"
             else:
                 self.condicion = "Libre Definitivo"
+        else:
+            self.condicion = "Regular"
+
+        return self.condicion
 
 # ==========================================
 # TRÁMITE DE REINCORPORACIÓN
