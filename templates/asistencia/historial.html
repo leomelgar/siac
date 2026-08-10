@@ -9,62 +9,81 @@
   </div>
   <div class="col-md-10">
     <div class="container mt-4 bg-light p-2 rounded-3">
-    <h2>{{ alumno.apellido }}, {{ alumno.nombre }}</h2>
-    <p class="text-muted">Legajo: {{ alumno.legajo }} &middot; Período: {{ periodo }}</p>
+        <div class="card shadow p-3 mb-5 bg-body rounded border-2 h-100">
+            <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h2>{{ alumno.apellido }}, {{ alumno.nombre }}</h2>
+                        <p class="text-muted mb-0">Legajo: {{ alumno.legajo }} &middot; Período: {{ periodo }}</p>
+                    </div>
+                    <div>
+                        <a href="{{ url_for('asistencia.panel_diario')}}" class="btn btn-outline-secondary d-inline-flex align-items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-circle" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.5-.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5z"/>
+                            </svg>
+                            Volver
+                        </a>
+                    </div>
+                </div>
+            <hr class="my-3 text-secondary">
+                {% if estado %}
+                <div class="alert {{ 'alert-danger' if 'Libre' in estado.condicion else 'alert-success' }} mb-0">
+                    <strong>Condición:</strong> {{ estado.condicion }} &middot;
+                    Faltas: {{ estado.total_faltas }} / {{ estado.limite_actual }} &middot;
+                    Justificadas: {{ estado.total_faltas_justificadas }}
+                    <a href="{{ url_for('asistencia.ver_regularidad', id_matricula=estado.id_matricula) }}" class="ms-2">Ver detalle</a>
+                </div>
+                {% endif %}
+            </div>
+            <form method="get" class="d-flex gap-2 mb-3 align-items-center" style="max-width: 220px;">
+                <input type="number" name="periodo" value="{{ periodo }}" class="form-control form-control-sm">
+                <button type="submit" class="btn btn-outline-primary btn-sm d-inline-flex align-items-center gap-1" title="Buscar por año">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                    Ver
+                </button>
+            </form>
 
-    {% if estado %}
-    <div class="alert {{ 'alert-danger' if 'Libre' in estado.condicion else 'alert-success' }}">
-        <strong>Condición:</strong> {{ estado.condicion }} &middot;
-        Faltas: {{ estado.total_faltas }} / {{ estado.limite_actual }} &middot;
-        Justificadas: {{ estado.total_faltas_justificadas }}
-        <a href="{{ url_for('asistencia.ver_regularidad', id_matricula=estado.id_matricula) }}"
-           class="ms-2">Ver detalle</a>
-    </div>
-    {% endif %}
-
-    <form method="get" class="d-flex gap-2 mb-3" style="max-width: 200px;">
-        <input type="number" name="periodo" value="{{ periodo }}" class="form-control">
-        <button type="submit" class="btn btn-outline-primary">Ver</button>
-    </form>
-
-    <table class="table table-hover">
-        <thead class="table-light">
-            <tr>
-                <th>Fecha</th>
-                <th>Asignatura</th>
-                <th>Registro</th>
-                <th>Valor</th>
-                <th>Justificada</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for a in asistencias %}
-            <tr>
-                <td>{{ a.fecha.strftime('%d/%m/%Y') }}</td>
-                <td>{{ a.clase.asignatura.nombre_asignatura }}</td>
-                <td>{{ a.tipo_registro }}</td>
-                <td>{{ a.valor_falta }}</td>
-                <td>
-                    {% if a.justificada %}
-                        <span class="badge bg-success">Sí</span>
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Asignatura</th>
+                        <th>Registro</th>
+                        <th>Valor</th>
+                        <th>Justificada</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for a in asistencias %}
+                    <tr>
+                        <td>{{ a.fecha.strftime('%d/%m/%Y') }}</td>
+                        <td>{{ a.clase.asignatura.nombre_asignatura }}</td>
+                        <td>{{ a.tipo_registro }}</td>
+                        <td>{{ a.valor_falta }}</td>
+                        <td>
+                            {% if a.justificada %}
+                                <span class="badge bg-success">Sí</span>
+                            {% else %}
+                                <span class="badge bg-secondary">No</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if a.valor_falta > 0 and not a.justificada %}
+                            <a href="{{ url_for('asistencia.justificar', id_asistencia=a.id_asistencia) }}"
+                            class="btn btn-sm btn-outline-warning">Justificar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
                     {% else %}
-                        <span class="badge bg-secondary">No</span>
-                    {% endif %}
-                </td>
-                <td>
-                    {% if a.valor_falta > 0 and not a.justificada %}
-                    <a href="{{ url_for('asistencia.justificar', id_asistencia=a.id_asistencia) }}"
-                       class="btn btn-sm btn-outline-warning">Justificar</a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% else %}
-            <tr><td colspan="6" class="text-center text-muted">Sin registros para este período.</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+                    <tr><td colspan="6" class="text-center text-muted">Sin registros para este período.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
     </div>
   </div>
 </div>
