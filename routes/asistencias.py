@@ -123,7 +123,7 @@ def guardar_asistencia(id_clase):
 
     db.session.commit()
     flash('Asistencia guardada correctamente.', 'success')
-    return redirect(url_for('asistencia.tomar_asistencia', id_clase=id_clase, fecha=fecha_str))
+    return redirect(url_for('curso.listar'))
 
 
 # ------------------------------------------
