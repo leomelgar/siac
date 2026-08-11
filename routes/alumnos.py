@@ -2,9 +2,9 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from models.colege import Alumno, Tutor, Persona, Colegio, alumno_tutor
 from utils.db import db
-from datetime import datetime as dt
+from datetime import datetime as dt, date
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 
 alumnos = Blueprint("alumnos", __name__)
 
@@ -13,33 +13,43 @@ alumnos = Blueprint("alumnos", __name__)
 def requerir_login():
     pass
 
-@alumnos.route('/alumnos/home', methods=["GET"]) #listado de alumnos
+from sqlalchemy.orm import selectinload
+
+@alumnos.route('/alumnos/home', methods=["GET"])  # listado de alumnos
 def home():
-    # Capturamos el parámetro 'tag' de la URL.
     tag_busqueda = request.args.get('tag', '').strip()
+
+    query = Alumno.query.options(selectinload(Alumno.matriculas))
+
     if tag_busqueda:
-        # Buscar por apellido O por legajo ignorando mayúsculas/minúsculas (ilike)
-        alumnos_db = Alumno.query.filter(
+        query = query.filter(
             (Alumno.apellido.ilike(f'%{tag_busqueda}%')) |
             (Alumno.legajo.ilike(f'%{tag_busqueda}%'))
-        ).all()
-    else:
-        # Si no hay búsqueda (entro por primera vez), traemos todos
-        alumnos_db = Alumno.query.all()
+        )
+
+    alumnos_db = query.all()
 
     lista_alumnos = []
     for a in alumnos_db:
+        # Sin matrícula = nunca se matriculó (no tiene ningún registro en Matricula)
+        tiene_matricula = len(a.matriculas) > 0
+
         lista_alumnos.append({
             "id": a.id,
             "legajo": a.legajo,
             "apellido": a.apellido,
             "nombre": a.nombre,
-            "cuil": a.cuil
+            "cuil": a.cuil,
+            "tiene_matricula": tiene_matricula
         })
+
     cantidad = len(lista_alumnos)
+    sin_matricula = sum(1 for al in lista_alumnos if not al["tiene_matricula"])
+
     return render_template('/alumnos/home.html',
                            alumnos=lista_alumnos,
-                           cantidad=cantidad)
+                           cantidad=cantidad,
+                           sin_matricula=sin_matricula)
 
 
 @alumnos.route('/inscripcion')
