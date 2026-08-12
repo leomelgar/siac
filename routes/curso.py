@@ -4,6 +4,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.orm import joinedload
 
 from utils.db import db
 from models.colege import Curso, Colegio, Matricula, Clase, Alumno
@@ -20,9 +21,14 @@ def listar():
     id_colegio = request.args.get('id_colegio', type=int)
     periodo = request.args.get('periodo', type=int)
     page = request.args.get('page', 1, type=int)
-    per_page = 15  # cantidad de cursos por página
+    per_page = 15
 
-    query = Curso.query
+    query = (
+        Curso.query
+        .options(
+            joinedload(Curso.clases).joinedload(Clase.aula)
+        )
+    )
 
     if id_colegio:
         query = query.filter_by(id_colegio=id_colegio)

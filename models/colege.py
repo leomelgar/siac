@@ -144,6 +144,14 @@ class Curso(db.Model):
     def cantidad_alumnos(self):
         return len(self.matriculas)
 
+    def aulas_asignadas(self):
+    # Devuelve una lista de aulas únicas asociadas a las clases del curso
+        aulas = {}
+        for clase in self.clases:
+            if clase.aula and clase.aula.id_aula not in aulas:
+                aulas[clase.aula.id_aula] = clase.aula
+        return list(aulas.values())
+
     def to_dict(self):
         return {
             "id_curso": self.id_curso,
