@@ -43,7 +43,7 @@ def listar():
 
     cursos = pagination.items
     colegios = Colegio.query.order_by(Colegio.nombre_colegio).all()
-
+    
     return render_template(
         'cursos/listar.html',
         cursos=cursos,
