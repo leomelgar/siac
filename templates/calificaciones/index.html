@@ -1,0 +1,53 @@
+{% extends "layout.html" %}
+{% block title %} Calificaciones - Ciclo {{ ciclo_lectivo }} {% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
+    <h1 class="h3 mb-4 text-center">Calificaciones - Ciclo lectivo {{ ciclo_lectivo }}</h1>
+    <hr class="my-3 text-success">
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card h-100 shadow border-2">
+                <div class="card-body">
+                <h2 class="h5">Cargar notas trimestrales</h2>
+                <p class="text-muted">Elegí una clase (asignatura + curso) para cargar las notas del trimestre.</p>
+                <a class="btn btn-outline-primary" href="{{ url_for('calificaciones.listar_clases', ciclo_lectivo=ciclo_lectivo) }}">
+                    Ver clases
+                </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 shadow border-2">
+                <div class="card-body">
+                <h2 class="h5">Mesas de diciembre y febrero</h2>
+                <p class="text-muted">Alumnos con materias pendientes de aprobación y carga de notas de mesa.</p>
+                <a class="btn btn-outline-primary" href="{{ url_for('calificaciones.mesas', ciclo_lectivo=ciclo_lectivo) }}">
+                    Ver mesas
+                </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+        <div class="card h-100 shadow border-2">
+            <div class="card-body">
+            <h2 class="h5">Boletín de alumno</h2>
+            <p class="text-muted">Buscá un alumno por DNI o apellido para ver su boletín completo.</p>
+            <form class="d-flex gap-2" method="get" action="#">
+                <input type="text" class="form-control" name="q" placeholder="DNI o apellido" disabled>
+                <button class="btn btn-outline-secondary" type="button" disabled>Buscar</button>
+            </form>
+            <small class="text-muted d-block mt-2">
+                (Conectar este buscador al listado de alumnos del colegio; mientras
+                tanto se accede directamente a
+                <code>/calificaciones/alumno/&lt;id&gt;/boletin</code>.)
+            </small>
+            </div>
+        </div>
+        </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

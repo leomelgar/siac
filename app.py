@@ -12,6 +12,7 @@ from routes.matriculas import matricula_bp
 from routes.clases import clases_bp
 from routes.asistencias import asistencia_bp
 from routes.curso import curso_bp
+from routes.calificaciones import calificaciones_bp
 from config import DATABASE_CONNECTION_URI
 from utils.db import db
 
@@ -60,6 +61,7 @@ def create_app():
     app.register_blueprint(clases_bp)
     app.register_blueprint(asistencia_bp)
     app.register_blueprint(curso_bp)
+    app.register_blueprint(calificaciones_bp)
 
     # ============================================================
     # IMPORTANTE: Con Flask-Migrate YA NO uses db.create_all()

@@ -48,10 +48,12 @@
           </a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="{{ url_for('clases.listar') }}">Clases</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('curso.listar') }}">Cursos</a></li>
+            <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ url_for('asistencia.panel_diario') }}">Asistencias</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('calificaciones.index', ciclo_lectivo=ciclo_lectivo) }}">Calificaciones</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{{ url_for('aulas.home') }}">Aulas</a></li>
-            <li><a class="dropdown-item" href="{{ url_for('curso.listar') }}">Cursos</a></li>
           </ul>
         </li>
       </ul>
