@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+{% block title %} Resumen - {{ clase.asignatura.nombre_asignatura }} {% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
+    <h1 class="h4 mb-1 text-center">{{ clase.asignatura.nombre_asignatura }}</h1>
+    <hr class="my-3 text-success">
+    <p class="text-muted mb-4">
+    {% if clase.curso %}{{ clase.curso.nombre_completo() }} · {% endif %}
+    Prof. {{ clase.docente.apellido }}, {{ clase.docente.nombre }} · Ciclo {{ clase.ciclo_lectivo }}
+  </p>
+
+    <table class="table table-bordered align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>Alumno</th>
+            {% for t in trimestres %}<th class="text-center">{{ t }}</th>{% endfor %}
+            <th class="text-center">Promedio</th>
+            <th class="text-center">Estado</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for alumno in alumnos %}
+            {% set info = por_alumno[alumno.id] %}
+            {% set resultado = info.resultado %}
+            <tr>
+            <td>{{ alumno.apellido }}, {{ alumno.nombre }}</td>
+            {% for t in trimestres %}
+                {% set cal = info.notas.get(t) %}
+                <td class="text-center">{{ cal.valor if cal else "-" }}</td>
+            {% endfor %}
+            <td class="text-center">{{ resultado.promedio_trimestral if resultado.promedio_trimestral is not none else "-" }}</td>
+            <td class="text-center">
+                {% if resultado.estado == "Aprobada" %}
+                <span class="badge bg-success">{{ resultado.estado }}</span>
+                {% elif resultado.estado == "Pendiente de mesa" %}
+                <span class="badge bg-warning text-dark">{{ resultado.estado }}</span>
+                {% elif resultado.estado == "Desaprobada" %}
+                <span class="badge bg-danger">{{ resultado.estado }}</span>
+                {% else %}
+                <span class="badge bg-secondary">{{ resultado.estado }}</span>
+                {% endif %}
+            </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-outline-secondary" href="{{ url_for('calificaciones.listar_clases', ciclo_lectivo=clase.ciclo_lectivo) }}">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+          </svg> Volver a clases
+    </a>
+
+    <hr class="my-3 text-success">
+    <h2 class="h6">Cerrar trimestre (congela las notas en el boletín oficial)</h2>
+    <div class="d-flex gap-2">
+        {% for n in ["1", "2", "3"] %}
+        <form method="post" action="{{ url_for('calificaciones.cerrar_trimestre', id_clase=clase.id_clase, num_trimestre=n) }}"
+                onsubmit="return confirm('¿Cerrar el trimestre {{ n }}?');">
+            <button type="submit" class="btn btn-outline-danger btn-sm">Cerrar {{ trimestres[n | int - 1] }}</button>
+        </form>
+        {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

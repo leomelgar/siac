@@ -1,0 +1,77 @@
+{% extends "layout.html" %}
+{% block title %} Boletín oficial - {{ alumno.apellido }}, {{ alumno.nombre }} {% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
+    <h1 class="h3 mb-4 text-center">{{ alumno.apellido }}, {{ alumno.nombre }}</h1>
+    <hr class="my-3 text-success">
+    <p class="text-muted mb-4">
+    DNI {{ alumno.dni }} · Ciclo lectivo {{ periodo_lectivo }}
+    {% if boletin %}
+      · {% if boletin.estado_cierre %}
+        <span class="badge bg-success">Ciclo lectivo cerrado</span>
+      {% else %}
+        <span class="badge bg-warning text-dark">En curso</span>
+      {% endif %}
+      {% if boletin.fecha_emision %} · Emitido el {{ boletin.fecha_emision.strftime('%d/%m/%Y') }}{% endif %}
+    {% endif %}
+  </p>
+
+  {% if not boletin %}
+    <p class="text-muted">
+      Todavía no hay boletín oficial generado para este alumno en este ciclo
+      lectivo (se genera automáticamente al cerrar el primer trimestre de
+      alguna de sus materias).
+    </p>
+  {% else %}
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th>Materia</th>
+          <th class="text-center">1er Trim.</th>
+          <th class="text-center">2do Trim.</th>
+          <th class="text-center">3er Trim.</th>
+          <th class="text-center">Mesa Dic.</th>
+          <th class="text-center">Mesa Feb.</th>
+          <th class="text-center">Promedio anual</th>
+          <th class="text-center">Faltas</th>
+          <th class="text-center">Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in detalles %}
+          <tr>
+            <td>{{ d.asignatura.nombre_asignatura }}</td>
+            <td class="text-center">{{ d.nota_t1 or "-" }}</td>
+            <td class="text-center">{{ d.nota_t2 or "-" }}</td>
+            <td class="text-center">{{ d.nota_t3 or "-" }}</td>
+            <td class="text-center">{{ d.nota_diciembre or "-" }}</td>
+            <td class="text-center">{{ d.nota_marzo or "-" }}</td>
+            <td class="text-center">{{ d.promedio_anual if d.promedio_anual is not none else "-" }}</td>
+            <td class="text-center">{{ d.total_faltas if d.total_faltas is not none else "-" }}</td>
+            <td class="text-center">
+              {% if d.estado_materia == "Aprobada" %}
+                <span class="badge bg-success">{{ d.estado_materia }}</span>
+              {% elif d.estado_materia == "Desaprobada" %}
+                <span class="badge bg-danger">{{ d.estado_materia }}</span>
+              {% elif d.estado_materia in ("Pendiente de mesa", "Cursando") %}
+                <span class="badge bg-warning text-dark">{{ d.estado_materia }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ d.estado_materia }}</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="9" class="text-center text-muted">Todavía no se cerró ningún trimestre.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+
+  <a class="btn btn-outline-secondary" href="{{ url_for('calificaciones.boletin_alumno', id_alumno=alumno.id, ciclo_lectivo=periodo_lectivo) }}">
+    Ver avance en vivo
+  </a>
+    
+  </div>
+</div>
+{% endblock %}

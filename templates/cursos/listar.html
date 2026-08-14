@@ -67,7 +67,9 @@
         <tbody>
             {% for curso in cursos %}
 <tr>
-    <td>{{ curso.nombre_completo() }}</td>
+    <td><a href="{{ url_for('curso.detalle', id_curso=curso.id_curso) }}">
+                        {{ curso.nombre_completo() }}
+                    </a></td>
     <td>
         {% for aula in curso.aulas_asignadas() %}
         <span class="badge bg-secondary me-1">{{ aula.nombre_aula }}</span>

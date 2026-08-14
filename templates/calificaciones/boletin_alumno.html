@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block title %} Boletín - {{ alumno.apellido }}, {{ alumno.nombre }} {% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
+    <h1 class="h3 mb-4 text-center">{{ alumno.apellido }}, {{ alumno.nombre }}</h1>
+    <hr class="my-3 text-success">
+    <p class="text-muted mb-4">
+    DNI {{ alumno.dni }} · Ciclo lectivo {{ ciclo_lectivo }}
+    ·
+    <a href="{{ url_for('calificaciones.boletin_oficial', id_alumno=alumno.id, periodo_lectivo=ciclo_lectivo) }}">
+      Ver boletín oficial
+    </a>
+  </p>
+  <p class="text-muted small">
+    Esta vista muestra el avance en vivo (lo que van cargando los docentes).
+    El boletín oficial solo muestra lo que ya quedó cerrado/congelado.
+  </p>
+
+  <table class="table table-bordered align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Materia</th>
+        {% for t in trimestres %}<th class="text-center">{{ t }}</th>{% endfor %}
+        <th class="text-center">Mesa Dic.</th>
+        <th class="text-center">Mesa Feb.</th>
+        <th class="text-center">Nota final</th>
+        <th class="text-center">Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in materias %}
+        {% set resultado = m.resultado %}
+        <tr>
+          <td>{{ m.clase.asignatura.nombre_asignatura }}</td>
+          {% for t in trimestres %}
+            {% set cal = m.notas.get(t) %}
+            <td class="text-center">{{ cal.valor if cal else "-" }}</td>
+          {% endfor %}
+          {% set mesa_dic = m.notas.get("Mesa Diciembre") %}
+          {% set mesa_feb = m.notas.get("Mesa Febrero") %}
+          <td class="text-center">{{ mesa_dic.valor if mesa_dic else "-" }}</td>
+          <td class="text-center">{{ mesa_feb.valor if mesa_feb else "-" }}</td>
+          <td class="text-center">{{ resultado.nota_final if resultado.nota_final is not none else "-" }}</td>
+          <td class="text-center">
+            {% if resultado.estado == "Aprobada" %}
+              <span class="badge bg-success">{{ resultado.estado }}</span>
+            {% elif resultado.estado == "Pendiente de mesa" %}
+              <span class="badge bg-warning text-dark">{{ resultado.estado }}</span>
+            {% elif resultado.estado == "Desaprobada" %}
+              <span class="badge bg-danger">{{ resultado.estado }}</span>
+            {% else %}
+              <span class="badge bg-secondary">{{ resultado.estado }}</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" class="text-center text-muted">El alumno no tiene materias registradas este ciclo lectivo.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+    
+  </div>
+</div>
+{% endblock %}

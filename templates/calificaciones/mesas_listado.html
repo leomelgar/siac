@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+{% block title %} Mesas de examen - Ciclo {{ ciclo_lectivo }} {% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
+    <h1 class="h3 mb-4 text-center">Mesas de diciembre y febrero - Ciclo lectivo {{ ciclo_lectivo }}</h1>
+    <hr class="my-3 text-success">
+    {% if not resumen_por_clase %}
+    <p class="text-muted">No hay materias con alumnos pendientes de aprobación.</p>
+  {% endif %}
+
+  {% for item in resumen_por_clase %}
+    {% set clase = item.clase %}
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>
+          <strong>{{ clase.asignatura.nombre_asignatura }}</strong>
+          {% if clase.curso %} · {{ clase.curso.nombre_completo() }}{% endif %}
+          · Prof. {{ clase.docente.apellido }}
+        </span>
+        <div class="btn-group btn-group-sm">
+          <a class="btn btn-outline-primary" href="{{ url_for('calificaciones.planilla_mesa', id_clase=clase.id_clase, instancia='Mesa Diciembre') }}">
+            Cargar Mesa Diciembre
+          </a>
+          <a class="btn btn-outline-primary" href="{{ url_for('calificaciones.planilla_mesa', id_clase=clase.id_clase, instancia='Mesa Febrero') }}">
+            Cargar Mesa Febrero
+          </a>
+          <form method="post" action="{{ url_for('calificaciones.cerrar_mesas', id_clase=clase.id_clase) }}"
+                onsubmit="return confirm('¿Cerrar mesas de {{ clase.asignatura.nombre_asignatura }}? Se congela el estado final de cada alumno en el boletín oficial.');">
+            <button type="submit" class="btn btn-outline-danger">Cerrar mesas</button>
+          </form>
+        </div>
+      </div>
+      <ul class="list-group list-group-flush">
+        {% for alumno, resultado in item.pendientes %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>{{ alumno.apellido }}, {{ alumno.nombre }}</span>
+            <span class="text-muted">
+              Promedio trimestral:
+              {{ resultado.promedio_trimestral if resultado.promedio_trimestral is not none else "-" }}
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>    
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block title %} {{ instancia }} - {{ clase.asignatura.nombre_asignatura }} {% endblock %}
+{% block body %}
+<div class="row">
+  <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
+    <div class="d-flex align-items-center mb-3">
+      <div class="flex-grow-1 text-start">
+        <a href="#" class="btn btn-outline-secondary" title="Volver al Listado">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8"/>
+          </svg> Volver
+        </a>
+      </div>
+      <div class="flex-grow-1 text-center">
+        <h1 class="h4 mb-1">{{ instancia }} · {{ clase.asignatura.nombre_asignatura }}</h1>
+      </div>
+      <div class="flex-grow-1"></div> <!-- Espacio vacío para equilibrar y centrar el título -->
+    </div>
+    <hr class="my-3 text-success">
+    <p class="text-muted mb-4">
+    {% if clase.curso %}{{ clase.curso.nombre_completo() }} · {% endif %}
+    Prof. {{ clase.docente.apellido }}, {{ clase.docente.nombre }} · Ciclo {{ clase.ciclo_lectivo }}
+  </p>
+
+  <form method="post">
+    <table class="table table-bordered align-middle">
+      <thead class="table-light">
+        <tr>
+          <th style="width: 40%">Alumno (con materia pendiente)</th>
+          <th style="width: 15%">Nota</th>
+          <th>Observaciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for alumno in alumnos %}
+          {% set cal = notas_por_alumno.get(alumno.id) %}
+          <tr>
+            <td>{{ alumno.apellido }}, {{ alumno.nombre }}</td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                name="nota_{{ alumno.id }}"
+                value="{{ cal.valor if cal else '' }}"
+                maxlength="10"
+                placeholder="Ej: 6">
+            </td>
+            <td>
+              <input
+                type="text"
+                class="form-control"
+                name="obs_{{ alumno.id }}"
+                value="{{ cal.observaciones if cal else '' }}"
+                maxlength="255"
+                placeholder="Opcional">
+            </td>
+          </tr>
+        {% else %}
+          <tr><td colspan="3" class="text-center text-muted">No hay alumnos pendientes en esta materia.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <button type="submit" class="btn btn-primary">Guardar notas de {{ instancia }}</button>
+    <a class="btn btn-link" href="{{ url_for('calificaciones.mesas', ciclo_lectivo=clase.ciclo_lectivo) }}">
+      Volver a mesas
+    </a>
+  </form>
+  </div>
+</div>
+{% endblock %}
