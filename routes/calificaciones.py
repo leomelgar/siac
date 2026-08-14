@@ -183,7 +183,7 @@ def planilla_trimestre(id_clase, num_trimestre):
     if instancia is None:
         abort(404)
 
-    alumnos = obtener_alumnos_de_clase(clase)
+    alumnos = obtener_alumnos_de_clase(clase.curso)
 
     if request.method == "POST":
         for alumno in alumnos:
