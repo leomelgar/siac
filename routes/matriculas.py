@@ -2,7 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from datetime import date
 from sqlalchemy import and_
-from models.colege import db, Matricula, Alumno, Colegio
+from models.colege import db, Matricula, Alumno, Colegio, Curso
+from utils.utils_matriculacion import vincular_matricula_a_clases_del_curso
 
 matricula_bp = Blueprint('matricula', __name__, url_prefix='/matriculas')
 
@@ -84,6 +85,12 @@ def nueva_matricula():
     if id_alumno_preseleccionado:
         alumno_preseleccionado = Alumno.query.get(id_alumno_preseleccionado)
 
+    # Cursos vigentes del colegio, para el selector del form. Se listan todos
+    # (no solo los del período actual) porque el form permite elegir el
+    # período lectivo; si preferís acotarlos, filtrá por periodo_lectivo
+    # una vez que el usuario lo elija (requeriría un fetch dinámico por AJAX).
+    cursos = Curso.query.order_by(Curso.periodo_lectivo.desc(), Curso.anio, Curso.division).all()
+
     if request.method == 'POST':
         try:
             id_alumno = int(request.form['id_alumno'])
@@ -92,6 +99,9 @@ def nueva_matricula():
             periodo_lectivo = int(request.form['periodo_lectivo'])
             tipo_ingreso = request.form.get('tipo_ingreso', '').strip()
             estado_matricula = request.form.get('estado_matricula', 'Activo')
+            # NUEVO: curso real al que se matricula (necesario para que el
+            # alumno aparezca en las Clases de ese curso al cargar notas).
+            id_curso = request.form.get('id_curso', type=int)
 
             # Para no perder el alumno si hay error de validación
             alumno_preseleccionado = Alumno.query.get(id_alumno)
@@ -101,6 +111,7 @@ def nueva_matricula():
                 return render_template('matricula/form.html',
                                        colegio=colegio,
                                        tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
                                        matricula=None,
                                        alumno_preseleccionado=alumno_preseleccionado,
                                        fecha_hoy=date.today().isoformat())
@@ -110,6 +121,21 @@ def nueva_matricula():
                 return render_template('matricula/form.html',
                                        colegio=colegio,
                                        tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
+                                       matricula=None,
+                                       alumno_preseleccionado=alumno_preseleccionado,
+                                       fecha_hoy=date.today().isoformat())
+
+            if not id_curso:
+                # Lo tratamos como obligatorio: sin curso, el alumno no queda
+                # vinculado a ninguna Clase y no se le van a poder cargar
+                # notas. Si en tu institución hay matrículas legítimamente
+                # sin curso asignado todavía, cambiar esto por un warning.
+                flash('Debe seleccionar el curso (año y división) del alumno.', 'danger')
+                return render_template('matricula/form.html',
+                                       colegio=colegio,
+                                       tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
                                        matricula=None,
                                        alumno_preseleccionado=alumno_preseleccionado,
                                        fecha_hoy=date.today().isoformat())
@@ -119,6 +145,7 @@ def nueva_matricula():
                 return render_template('matricula/form.html',
                                        colegio=colegio,
                                        tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
                                        matricula=None,
                                        alumno_preseleccionado=alumno_preseleccionado,
                                        fecha_hoy=date.today().isoformat())
@@ -130,9 +157,17 @@ def nueva_matricula():
                 grado_nivel=grado_nivel,
                 periodo_lectivo=periodo_lectivo,
                 tipo_ingreso=tipo_ingreso,
-                estado_matricula=estado_matricula
+                estado_matricula=estado_matricula,
+                id_curso=id_curso,
             )
             db.session.add(nueva)
+            db.session.flush()  # necesitamos nueva.id_matricula antes de vincular
+
+            # Vincula al alumno con todas las Clases que ya existan para ese
+            # curso y ese ciclo lectivo (soluciona el bug de "no aparecen
+            # los alumnos" en la carga de notas).
+            vincular_matricula_a_clases_del_curso(nueva)
+
             db.session.commit()
             flash('Matrícula registrada correctamente.', 'success')
 
@@ -148,6 +183,7 @@ def nueva_matricula():
         'matricula/form.html',
         colegio=colegio,
         tipos_ingreso=TIPOS_INGRESO,
+        cursos=cursos,
         matricula=None,
         alumno_preseleccionado=alumno_preseleccionado,
         fecha_hoy=date.today().isoformat()
@@ -162,6 +198,7 @@ def editar_matricula(id_matricula):
     matricula = Matricula.query.get_or_404(id_matricula)
     alumnos = Alumno.query.order_by(Alumno.apellido, Alumno.nombre).all()
     colegio = _obtener_colegio_unico()
+    cursos = Curso.query.order_by(Curso.periodo_lectivo.desc(), Curso.anio, Curso.division).all()
 
     if request.method == 'POST':
         try:
@@ -171,12 +208,14 @@ def editar_matricula(id_matricula):
             periodo_lectivo = int(request.form['periodo_lectivo'])
             tipo_ingreso = request.form.get('tipo_ingreso', '').strip()
             estado_matricula = request.form.get('estado_matricula', 'Activo')
+            id_curso = request.form.get('id_curso', type=int)
 
             if not grado_nivel:
                 flash('El grado/nivel es obligatorio.', 'danger')
                 return render_template('matricula/form.html',
                                        alumnos=alumnos, colegio=colegio,
                                        tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
                                        matricula=matricula)
 
             if tipo_ingreso not in TIPOS_INGRESO:
@@ -184,6 +223,15 @@ def editar_matricula(id_matricula):
                 return render_template('matricula/form.html',
                                        alumnos=alumnos, colegio=colegio,
                                        tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
+                                       matricula=matricula)
+
+            if not id_curso:
+                flash('Debe seleccionar el curso (año y división) del alumno.', 'danger')
+                return render_template('matricula/form.html',
+                                       alumnos=alumnos, colegio=colegio,
+                                       tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
                                        matricula=matricula)
 
             if _existe_matricula(id_alumno, periodo_lectivo, excluir_id=id_matricula):
@@ -191,7 +239,10 @@ def editar_matricula(id_matricula):
                 return render_template('matricula/form.html',
                                        alumnos=alumnos, colegio=colegio,
                                        tipos_ingreso=TIPOS_INGRESO,
+                                       cursos=cursos,
                                        matricula=matricula)
+
+            curso_cambio = matricula.id_curso != id_curso
 
             matricula.id_alumno = id_alumno
             matricula.id_colegio = colegio.id_colegio   # siempre el único colegio
@@ -200,6 +251,15 @@ def editar_matricula(id_matricula):
             matricula.periodo_lectivo = periodo_lectivo
             matricula.tipo_ingreso = tipo_ingreso
             matricula.estado_matricula = estado_matricula
+            matricula.id_curso = id_curso
+
+            if curso_cambio:
+                # Si cambió de curso, hay que sacarlo de las Clases del
+                # curso viejo antes de vincularlo a las del curso nuevo;
+                # si no, queda "matriculado" en materias que ya no cursa.
+                matricula.clases_inscriptas = []
+                db.session.flush()
+                vincular_matricula_a_clases_del_curso(matricula)
 
             db.session.commit()
             flash('Matrícula actualizada correctamente.', 'success')
@@ -214,6 +274,7 @@ def editar_matricula(id_matricula):
         alumnos=alumnos,
         colegio=colegio,
         tipos_ingreso=TIPOS_INGRESO,
+        cursos=cursos,
         matricula=matricula
     )
 

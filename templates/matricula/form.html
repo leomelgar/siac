@@ -130,7 +130,18 @@
                 {% endfor %}
             </select>
         </div>
-
+        <div class="mb-3">
+            <label class="form-label">Curso</label>
+            <select name="id_curso" class="form-select" required>
+                <option value="">Seleccionar...</option>
+                {% for curso in cursos %}
+                <option value="{{ curso.id_curso }}"
+                    {% if matricula and matricula.id_curso == curso.id_curso %}selected{% endif %}>
+                    {{ curso.nombre_completo() }} · {{ curso.periodo_lectivo }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
         <div class="mb-3">
             <label for="periodo_lectivo" class="form-label">Período lectivo</label>
             <input type="number" name="periodo_lectivo" id="periodo_lectivo"

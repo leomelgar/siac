@@ -5,7 +5,7 @@
   <div class="col-md-12 mt-4 bg-light p-2 rounded-3">
     <h1 class="h3 mb-4 text-center">Mesas de diciembre y febrero - Ciclo lectivo {{ ciclo_lectivo }}</h1>
     <hr class="my-3 text-success">
-    {% if not resumen_por_clase %}
+  {% if not resumen_por_clase %}
     <p class="text-muted">No hay materias con alumnos pendientes de aprobación.</p>
   {% endif %}
 
@@ -43,6 +43,7 @@
         {% endfor %}
       </ul>
     </div>    
+    {% endfor %}
   </div>
 </div>
 {% endblock %}

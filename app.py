@@ -100,7 +100,6 @@ def create_app():
 def load_user(id_usuario):
     return Usuario.query.get(int(id_usuario))
 
-
 if __name__ == '__main__':
     app = create_app()
     app.run(debug=True, host="0.0.0.0")

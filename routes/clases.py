@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import login_required
 from utils.db import db
+from utils.utils_matriculacion import vincular_clase_a_matriculas_del_curso
 from models.colege import Clase, Asignatura, Docente, Aula, Turno, Horario, Curso
 
 clases_bp = Blueprint('clases', __name__, url_prefix='/clases')
@@ -156,6 +157,8 @@ def nueva():
         )
         db.session.add(nueva_clase)
         db.session.flush()  # obtenemos id_clase antes del commit final
+        db.session.refresh(nueva_clase)  # Asegura que el objeto esté actualizado con la base de datos
+        vincular_clase_a_matriculas_del_curso(nueva_clase)
 
         horario = Horario(
             id_clase=nueva_clase.id_clase,
