@@ -15,6 +15,7 @@ PERMISOS = [
     ('CARGAR_DOCENTE', 'Crear, editar y borrar docentes'),
     ('CARGAR_ALUMNO', 'Crear, editar y borrar alumnos'),
     ('CARGAR_NOTAS', 'Cargar calificaciones'),
+    ('CERRAR_NOTAS', 'Cerrar calificaciones de un trimestre'),
     ('VER_NOTAS', 'Ver calificaciones'),
     ('CARGAR_ASISTENCIA', 'Registrar asistencia diaria'),
     ('GESTION_CLASES', 'Crear, editar y borrar clases'),
@@ -22,8 +23,8 @@ PERMISOS = [
 
 # Qué permisos tiene cada rol
 ROLES = {
-    'DIRECTIVO': ['CARGAR_DOCENTE', 'CARGAR_ALUMNO', 'CARGAR_NOTAS', 'VER_NOTAS', 'CARGAR_ASISTENCIA', 'GESTION_CLASES'],
-    'PRECEPTOR': ['CARGAR_ASISTENCIA', 'VER_NOTAS', 'GESTION_CLASES'],
+    'DIRECTIVO': ['CARGAR_DOCENTE', 'CARGAR_ALUMNO', 'CARGAR_NOTAS', 'CERRAR_NOTAS', 'VER_NOTAS', 'CARGAR_ASISTENCIA', 'GESTION_CLASES'],
+    'PRECEPTOR': ['CARGAR_ASISTENCIA', 'VER_NOTAS', 'CARGAR_NOTAS', 'GESTION_CLASES', 'CERRAR_NOTAS'],
     'DOCENTE':   ['CARGAR_NOTAS', 'VER_NOTAS'],
 }
 

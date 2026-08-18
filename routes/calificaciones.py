@@ -72,6 +72,8 @@ from utils.services import (
     cerrar_trimestre_clase,
     cerrar_mesas_clase,
 )
+from flask_login import login_required
+from routes.decorators import permiso_requerido
 
 calificaciones_bp = Blueprint(
     "calificaciones",
@@ -124,12 +126,18 @@ def _upsert_calificacion(id_alumno, id_clase, instancia, valor, observaciones):
         calificacion.observaciones = observaciones
         calificacion.fecha_carga = datetime.utcnow()
 
+#se necesita estar logueado para acceder a las rutas de calificaciones
+@calificaciones_bp.before_request
+@login_required
+def requerir_login():
+    pass
 
 # ---------------------------------------------------------------------------
 # Panel principal
 # ---------------------------------------------------------------------------
 
 @calificaciones_bp.route("/")
+@permiso_requerido('VER_NOTAS')
 def index():
     ciclo_lectivo = request.args.get("ciclo_lectivo", type=int) or _ciclo_lectivo_actual()
     return render_template(
@@ -143,6 +151,7 @@ def index():
 # ---------------------------------------------------------------------------
 
 @calificaciones_bp.route("/clases")
+@permiso_requerido('VER_NOTAS')
 def listar_clases():
     ciclo_lectivo = request.args.get("ciclo_lectivo", type=int) or _ciclo_lectivo_actual()
     id_docente = request.args.get("id_docente", type=int)
@@ -177,6 +186,7 @@ def listar_clases():
     "/clase/<int:id_clase>/trimestre/<string:num_trimestre>",
     methods=["GET", "POST"],
 )
+@permiso_requerido('CARGAR_NOTAS')
 def planilla_trimestre(id_clase, num_trimestre):
     clase = _get_clase_o_404(id_clase)
     instancia = TRIMESTRE_POR_NUMERO.get(num_trimestre)
@@ -253,6 +263,7 @@ def resumen_clase(id_clase):
 @calificaciones_bp.route(
     "/clase/<int:id_clase>/cerrar-trimestre/<string:num_trimestre>", methods=["POST"]
 )
+@permiso_requerido('CERRAR_NOTAS')
 def cerrar_trimestre(id_clase, num_trimestre):
     clase = _get_clase_o_404(id_clase)
     if num_trimestre not in TRIMESTRE_POR_NUMERO:
@@ -273,6 +284,7 @@ def cerrar_trimestre(id_clase, num_trimestre):
 # ---------------------------------------------------------------------------
 
 @calificaciones_bp.route("/alumno/<int:id_alumno>/boletin")
+@permiso_requerido('VER_NOTAS')
 def boletin_alumno(id_alumno):
     alumno = Alumno.query.get_or_404(id_alumno)
     ciclo_lectivo = request.args.get("ciclo_lectivo", type=int) or _ciclo_lectivo_actual()
@@ -310,6 +322,7 @@ def boletin_alumno(id_alumno):
 # ---------------------------------------------------------------------------
 
 @calificaciones_bp.route("/mesas")
+@permiso_requerido('CARGAR_NOTAS')
 def mesas():
     ciclo_lectivo = request.args.get("ciclo_lectivo", type=int) or _ciclo_lectivo_actual()
     clases = Clase.query.filter_by(ciclo_lectivo=ciclo_lectivo).join(Asignatura).order_by(
@@ -333,6 +346,7 @@ def mesas():
 @calificaciones_bp.route(
     "/clase/<int:id_clase>/mesa/<string:instancia>", methods=["GET", "POST"]
 )
+@permiso_requerido('CARGAR_NOTAS')
 def planilla_mesa(id_clase, instancia):
     if instancia not in INSTANCIAS_MESA:
         abort(404)
@@ -384,6 +398,7 @@ def cerrar_mesas(id_clase):
 # ---------------------------------------------------------------------------
 
 @calificaciones_bp.route("/alumno/<int:id_alumno>/boletin-oficial")
+@permiso_requerido('VER_NOTAS')
 def boletin_oficial(id_alumno):
     alumno = Alumno.query.get_or_404(id_alumno)
     periodo_lectivo = request.args.get("periodo_lectivo", type=int) or _ciclo_lectivo_actual()
@@ -408,6 +423,7 @@ def boletin_oficial(id_alumno):
 # ---------------------------------------------------------------------------
 
 @calificaciones_bp.route("/calificacion/<int:id_calificacion>/eliminar", methods=["POST"])
+@permiso_requerido('CARGAR_NOTAS')
 def eliminar_calificacion(id_calificacion):
     calificacion = Calificacion.query.get_or_404(id_calificacion)
     id_clase = calificacion.id_clase

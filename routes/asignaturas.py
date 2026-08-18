@@ -1,11 +1,13 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, jsonify
 from models.colege import Asignatura
+from flask_login import login_required
 from utils.db import db
 
 
 asignaturas = Blueprint("asignaturas", __name__)
 
 @asignaturas.route("/asignaturas/list")
+@login_required
 def list():
     asignaturas = Asignatura.query.all()
     cantidad = len(asignaturas)
@@ -14,6 +16,7 @@ def list():
     return render_template("/asignaturas/list.html", asignaturas=lista_asignaturas, cantidad=cantidad)
 
 @asignaturas.route("/asignaturas/new", methods=["POST"])
+@login_required
 def new():
     if request.method == 'POST':
         nombre = request.form['nombre_asignatura']
@@ -27,6 +30,7 @@ def new():
         return redirect(url_for('asignaturas.list'))
 
 @asignaturas.route("/asignaturas/update/<id_asignatura>", methods=["POST","GET"])
+@login_required
 def update(id_asignatura):
     asignatura = Asignatura.query.get(id_asignatura)
     if request.method == "POST":
@@ -39,6 +43,7 @@ def update(id_asignatura):
     return render_template("/asignaturas/update.html", asignatura=asignatura)
 
 @asignaturas.route("/asignaturas/delete/<id_asignatura>")
+@login_required
 def delete(id_asignatura):
     asignatura = Asignatura.query.get(id_asignatura)
     db.session.delete(asignatura)
@@ -47,6 +52,7 @@ def delete(id_asignatura):
     return redirect(url_for('asignaturas.list'))
 
 @asignaturas.route('/searchAsignatura', methods=['POST'])
+@login_required
 def searchAsignatura():
     if request.method == 'POST':
         tag = request.form.get('tag')
