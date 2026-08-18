@@ -1,39 +1,181 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-  SIAC | Home 
+  SIAC | Inicio 
 {% endblock %}
 
 {% block body %}
 
-    <!-- FORM -->
-    <div class="row">
+<div class="container-fluid py-4">
 
-    <div class="col-md-5 p-5">
-      <!-- MESSAGE -->
+  {# Mensajes flash #}
+  <div class="row mb-4">
+    <div class="col-12">
       {% include 'partials/_message.html' %}
     </div>
+  </div>
 
-    <!-- colegio -->
-     {% for colegio in colegio %}
-    <div class="card text-center">
-      <div class="card-header">
-        <h5 class="card-title">{{ colegio.nombre_colegio}}</h5>
-      </div>
-      <div class="card-body">
-        <h5 class="card-title">Breve Descripcion del Colegio</h5>
-        <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Possimus eligendi at consequatur, obcaecati eveniet fugiat pariatur quam magnam rem unde! Ex id suscipit incidunt blanditiis pariatur aliquid dicta architecto. Expedita.</p>
-        <span class="badge bg-primary"> Correo Electronico:</span>
-        <div class="d-inline p-2">{{ colegio.email }}</div>
-        <span class="badge bg-primary">telefono:</span>
-        <div class="d-inline p-2">{{ colegio.telefono }}</div>
-      </div>
-      {% endfor %}
-      <div class="card-footer text-muted">
-        Fecha de hoy
+  {# ========== Información del Colegio ========== #}
+  {% for colegio in colegio %}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">{{ colegio.nombre_colegio }}</h4>
+        </div>
+        <div class="card-body">
+          <p class="card-text text-muted">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure expedita provident 
+            nihil velit tenetur nisi vel ullam eaque est magni eveniet, eligendi atque libero
+             illum? Cum rerum quia pariatur deleniti.
+          </p>
+          <div class="d-flex flex-wrap gap-3 mt-3">
+            <div>
+              <span class="badge bg-primary me-1">Email</span>
+              <span>{{ colegio.email }}</span>
+            </div>
+            <div>
+              <span class="badge bg-primary me-1">Teléfono</span>
+              <span>{{ colegio.telefono }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="card-footer text-muted small">
+          Direccion: 
+        </div>
       </div>
     </div>
   </div>
+  {% else %}
+  <div class="alert alert-warning">No hay colegios cargados.</div>
+  {% endfor %}
+
+  {# ========== Gestión Alumnos / Docentes ========== #}
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Gestión de Alumnos y Docentes</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+
+            {# Alumnos #}
+            <div class="col-md-4">
+              <div class="card h-100 shadow-sm border">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">Alumnos</h5>
+                  <p class="card-text text-muted flex-grow-1">
+                    Administrá la información de los alumnos del colegio.
+                  </p>
+                  <a href="{{ url_for('alumnos.home') }}" class="btn btn-outline-primary mt-auto">
+                    <i class="bi bi-person-vcard me-1"></i> Ir a Alumnos
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {# Docentes #}
+            <div class="col-md-4">
+              <div class="card h-100 shadow-sm border">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">Docentes</h5>
+                  <p class="card-text text-muted flex-grow-1">
+                    Consultá y administrá el personal docente del establecimiento.
+                  </p>
+                  <a href="{{ url_for('docentes.home') }}" class="btn btn-outline-primary mt-auto">
+                    <i class="bi bi-person-video3 me-1"></i> Ir a Docentes
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {# Espacio reservado / futuro #}
+            <div class="col-md-4">
+              <div class="card h-100 shadow-sm border bg-light">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title text-muted">Próximamente</h5>
+                  <p class="card-text text-muted flex-grow-1">
+                    Aquí podrás agregar más módulos (horarios, asistencia, etc.).
+                  </p>
+                  <button class="btn btn-outline-secondary mt-auto" disabled>
+                    Disponible pronto
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# ========== Gestión Académica ========== #}
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-light">
+          <h5 class="mb-0">Gestión Académica</h5>
+        </div>
+        <div class="card-body">
+          <div class="row g-4">
+
+            {# Cargar notas #}
+            <div class="col-md-4">
+              <div class="card h-100 shadow-sm border">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">Notas trimestrales</h5>
+                  <p class="card-text text-muted flex-grow-1">
+                    Elegí una clase (asignatura + curso) para cargar las notas del trimestre.
+                  </p>
+                  <a href="{{ url_for('calificaciones.listar_clases', ciclo_lectivo=ciclo_lectivo) }}"
+                     class="btn btn-outline-primary mt-auto">
+                    <i class="bi bi-book me-1"></i> Ver clases
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {# Mesas #}
+            <div class="col-md-4">
+              <div class="card h-100 shadow-sm border">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">Mesas de diciembre y febrero</h5>
+                  <p class="card-text text-muted flex-grow-1">
+                    Alumnos con materias pendientes y carga de notas de mesa.
+                  </p>
+                  <a href="{{ url_for('calificaciones.mesas', ciclo_lectivo=ciclo_lectivo) }}"
+                     class="btn btn-outline-primary mt-auto">
+                    <i class="bi bi-table me-1"></i> Ver mesas
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            {# Boletín #}
+            <div class="col-md-4">
+              <div class="card h-100 shadow-sm border">
+                <div class="card-body d-flex flex-column">
+                  <h5 class="card-title">Boletín de alumno</h5>
+                  <p class="card-text text-muted">
+                    Buscá un alumno por DNI o apellido.
+                  </p>
+                  <form class="d-flex gap-2 mt-auto" method="get" action="#">
+                    <input type="text" class="form-control" name="q" placeholder="DNI o apellido" required disabled>
+                    <button class="btn btn-outline-primary" type="submit">
+                      <i class="bi bi-search me-1"></i>Buscar</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 
 {% endblock %}
