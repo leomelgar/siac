@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from utils.db import db
-from models.colege import Usuario, Persona, Rol
+from models.colege import Usuario, Persona, Rol, Colegio
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -15,7 +15,7 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for('alumnos.home'))  # ajustá al endpoint que uses como "inicio, por ahora es el listado de alumnos"
+        return redirect(url_for('colegio.index', colegio=Colegio.query.first() if Colegio.query.first() else None))
 
     if request.method == 'GET':
         return render_template('auth/login.html')
@@ -39,7 +39,7 @@ def login():
 
     login_user(usuario, remember=bool(request.form.get('remember')))
     flash(f'Bienvenido, {usuario.username}', 'success')
-    return redirect(url_for('alumnos.home'))  # ajustá al endpoint que uses como "inicio"
+    return redirect(url_for('colegio.index', colegio=Colegio.query.first() if Colegio.query.first() else None))
 
 
 @auth.route('/logout')
